@@ -16,20 +16,20 @@
 
     <form action="{{ url('/Login') }}" method="POST" class="auth-form">
         @csrf
-        <input type="hidden" name="role" value="user">
+        <input type="hidden" name="role" value="student">
 
         <div class="auth-field">
-            <label for="email"><i class="fas fa-envelope" aria-hidden="true"></i> Email address</label>
+            <label for="university_number"><i class="fas fa-id-card" aria-hidden="true"></i> University number</label>
             <input
-                type="email"
-                id="email"
-                name="email"
-                value="{{ old('email') }}"
-                placeholder="you@university.edu"
-                autocomplete="email"
+                type="text"
+                id="university_number"
+                name="university_number"
+                value="{{ old('university_number') }}"
+                placeholder="Your university number"
+                autocomplete="username"
                 required
             >
-            @error('email')
+            @error('university_number')
                 <span class="auth-field-error">{{ $message }}</span>
             @enderror
         </div>

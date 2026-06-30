@@ -18,7 +18,7 @@ class EnsureStudent
 
         $user = Auth::user();
 
-        if (! $user->hasRole('user')) {
+        if (! $user->hasRole('student')) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
