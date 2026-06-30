@@ -81,7 +81,7 @@ class ProjectSubmissionController extends Controller
         $submission->load('project');
         $user = Auth::user();
 
-        if ($user->hasRole('user')) {
+        if ($user->hasRole('student')) {
             $enrollment = StudentEnrollmentService::resolve(Session::get('name'));
             if ($enrollment['project']?->id !== $submission->project_id) {
                 abort(403);

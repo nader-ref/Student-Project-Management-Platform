@@ -29,13 +29,15 @@ class UserController extends Controller
         
             request()->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'university_number' => 'required|string|max:255|unique:users,university_number',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             ]);
 
             // Create a new user instance
             $user = User::create([
                 'name'=> request('name'),
+                'university_number' => request('university_number'),
                 'email'=>request('email'),
                 'password'=>Hash::make(request('password'))
             ]);
@@ -45,10 +47,10 @@ class UserController extends Controller
             }
 
             Role::firstOrCreate(
-                ['name' => 'user'],
-                ['display_name' => 'User', 'description' => 'Student portal user']
+                ['name' => 'student'],
+                ['display_name' => 'Student', 'description' => 'Student role']
             );
-            $user->addRole('user');
+            $user->addRole('student');
             //how to see the cookie
             //Right-click your page → Inspect → Application tab
             //Go to Storage → Cookies → your site
@@ -77,7 +79,7 @@ class UserController extends Controller
     public function Enter(Request $request)
     {
                     $log =request()->validate([
-                        'email' => 'required|string|email',
+                        'university_number' => 'required|string',
                         'password' => 'required|string',
                     ]);
                    
@@ -92,19 +94,19 @@ class UserController extends Controller
                     //    }
 
                         throw ValidationException::withMessages([
-                        'email' =>'sorry you dont have ana account',
+                        'university_number' =>'sorry you dont have an account',
                         
                         ]);
                     };
                     if (request()->has('remember')) {
-                        cookie()->queue('remember_user', User::where('email', request('email'))->first()->id, 60 * 24 * 7); // 7 days
+                        cookie()->queue('remember_user', User::where('university_number', request('university_number'))->first()->id, 60 * 24 * 7); // 7 days
                     }
-                    $user = User::where('email', request('email'))->first();
+                    $user = User::where('university_number', request('university_number'))->first();
                     if (! $user->hasRole($request->role)) {
                         Auth::logout();
 
                         throw ValidationException::withMessages([
-                            'email' => 'This account does not have student access.',
+                            'university_number' => 'This account does not have student access.',
                         ]);
                     }
 
@@ -117,7 +119,7 @@ class UserController extends Controller
          
                     
                     request()->session()->regenerate();
-                    Session::put('email',request('email'));
+                    Session::put('email',$user->email);
                     Session::put('name',$user->name);
                     return redirect('/StudentDashboard')->with('success', 'User registered successfully!');
       

@@ -34,6 +34,22 @@
         </div>
 
         <div class="auth-field">
+            <label for="university_number"><i class="fas fa-id-card" aria-hidden="true"></i> University number</label>
+            <input
+                type="text"
+                id="university_number"
+                name="university_number"
+                value="{{ old('university_number') }}"
+                placeholder="Your university number"
+                autocomplete="username"
+                required
+            >
+            @error('university_number')
+                <span class="auth-field-error">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="auth-field">
             <label for="email"><i class="fas fa-envelope" aria-hidden="true"></i> Email address</label>
             <input
                 type="email"
