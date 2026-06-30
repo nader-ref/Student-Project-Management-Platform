@@ -1,0 +1,421 @@
+/* Supervisor dark mode – cool charcoal + steel blue (high contrast, no student-blue leak) */
+
+body.supervisor-portal.dark-mode {
+    --sup-dm-bg: #14181e;
+    --sup-dm-surface: #1a2028;
+    --sup-dm-card: #222a34;
+    --sup-dm-elevated: #2a3440;
+    --sup-dm-input: #252d38;
+    --sup-dm-border: #3a4554;
+    --sup-dm-border-soft: #4a5568;
+    --sup-dm-text: #e8ecf0;
+    --sup-dm-text-muted: #9aa5b4;
+
+    --sup-dm-blue: #6b9fd4;
+    --sup-dm-blue-dim: #5b8fc4;
+    --sup-dm-blue-deep: #4a7ab5;
+    --sup-dm-blue-soft: #1e2d3d;
+
+    --sup-dm-glow: rgba(107, 159, 212, 0.12);
+    --sup-dm-shadow: rgba(0, 0, 0, 0.35);
+
+    /* aliases */
+    --sup-dm-gold: var(--sup-dm-blue);
+    --sup-dm-gold-dim: var(--sup-dm-blue-dim);
+    --sup-dm-gold-soft: var(--sup-dm-blue-soft);
+    --sup-dm-chrome: var(--sup-dm-text);
+
+    background-color: var(--sup-dm-bg);
+    color: var(--sup-dm-text);
+}
+
+/* Shell */
+body.supervisor-portal.dark-mode .dashboard {
+    background-color: var(--sup-dm-surface);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .content-panel {
+    background-color: var(--sup-dm-surface);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .dashboard-footer-accent {
+    background: linear-gradient(90deg, #0e1218, var(--sup-dm-blue-dim), #0e1218);
+}
+
+/* Navbar */
+body.supervisor-portal.dark-mode .navbar-pro {
+    background: linear-gradient(135deg, #0e1218 0%, #1a2028 100%);
+    border-bottom: 2px solid var(--sup-dm-blue-dim);
+    box-shadow: 0 4px 20px var(--sup-dm-shadow);
+}
+
+body.supervisor-portal.dark-mode .navbar-pro::after {
+    background: radial-gradient(circle, var(--sup-dm-glow) 0%, transparent 70%);
+}
+
+body.supervisor-portal.dark-mode .navbar-brand-icon {
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .navbar-user-chip {
+    background: rgba(107, 159, 212, 0.08);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .navbar-user-avatar {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .navbar-user-dropdown {
+    background: var(--sup-dm-card);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .navbar-dropdown-item {
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .navbar-dropdown-item i {
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .navbar-dropdown-item:hover {
+    background: var(--sup-dm-elevated);
+}
+
+/* Hero */
+body.supervisor-portal.dark-mode .acceptance-hero {
+    background: linear-gradient(135deg, #14181e 0%, #222a34 100%);
+    border: 1px solid var(--sup-dm-border);
+    border-left: 4px solid var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .acceptance-hero h1,
+body.supervisor-portal.dark-mode .acceptance-hero p {
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .btn-hero-solid {
+    color: #ffffff;
+    background: linear-gradient(180deg, var(--sup-dm-blue) 0%, var(--sup-dm-blue-dim) 100%);
+}
+
+body.supervisor-portal.dark-mode .btn-hero-outline {
+    border-color: rgba(107, 159, 212, 0.45);
+    color: var(--sup-dm-text);
+}
+
+/* Tabs */
+body.supervisor-portal.dark-mode .dash-nav,
+body.supervisor-portal.dark-mode .tabs-container {
+    background: var(--sup-dm-card);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .tab-btn {
+    background: var(--sup-dm-input);
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text-muted);
+}
+
+body.supervisor-portal.dark-mode .tab-btn:hover,
+body.supervisor-portal.dark-mode .dash-nav .tab-btn:hover {
+    background: var(--sup-dm-elevated);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .tab-btn.active,
+body.supervisor-portal.dark-mode .dash-nav .tab-btn.active {
+    background: var(--sup-dm-blue-soft);
+    border-color: var(--sup-dm-blue-dim);
+    color: var(--sup-dm-text);
+    box-shadow: 0 0 0 1px var(--sup-dm-blue-dim);
+}
+
+body.supervisor-portal.dark-mode .tab-btn.active i {
+    color: var(--sup-dm-blue);
+}
+
+/* Cards */
+body.supervisor-portal.dark-mode .kpi-card,
+body.supervisor-portal.dark-mode .request-item,
+body.supervisor-portal.dark-mode .project-item,
+body.supervisor-portal.dark-mode .quick-action-card,
+body.supervisor-portal.dark-mode .insight-card,
+body.supervisor-portal.dark-mode .activity-card,
+body.supervisor-portal.dark-mode .setting-card,
+body.supervisor-portal.dark-mode .form-pro-card,
+body.supervisor-portal.dark-mode .report-card,
+body.supervisor-portal.dark-mode .profile-card,
+body.supervisor-portal.dark-mode .project-toolbar,
+body.supervisor-portal.dark-mode .filter-btn,
+body.supervisor-portal.dark-mode .stat-card,
+body.supervisor-portal.dark-mode .request-container,
+body.supervisor-portal.dark-mode .settings-container,
+body.supervisor-portal.dark-mode .empty-state {
+    background: var(--sup-dm-card);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .quick-action-card:hover {
+    border-color: var(--sup-dm-blue-dim);
+    background: var(--sup-dm-elevated);
+}
+
+/* Typography */
+body.supervisor-portal.dark-mode .kpi-value,
+body.supervisor-portal.dark-mode .toolbar-title,
+body.supervisor-portal.dark-mode .request-item-top h3,
+body.supervisor-portal.dark-mode .tab-panel-header h2,
+body.supervisor-portal.dark-mode .quick-action-card strong,
+body.supervisor-portal.dark-mode .insight-card h3,
+body.supervisor-portal.dark-mode .activity-card h3,
+body.supervisor-portal.dark-mode .empty-state h3,
+body.supervisor-portal.dark-mode .section-label,
+body.supervisor-portal.dark-mode .form-field label,
+body.supervisor-portal.dark-mode .form-field-pro label,
+body.supervisor-portal.dark-mode .meta-block span,
+body.supervisor-portal.dark-mode .report-card h3,
+body.supervisor-portal.dark-mode .profile-row span,
+body.supervisor-portal.dark-mode .report-stat-row span:last-child,
+body.supervisor-portal.dark-mode .form-pro-card-header h3,
+body.supervisor-portal.dark-mode .project-edit-panel summary,
+body.supervisor-portal.dark-mode .section-title,
+body.supervisor-portal.dark-mode .deadline-alert strong {
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .kpi-label,
+body.supervisor-portal.dark-mode .kpi-meta,
+body.supervisor-portal.dark-mode .meta-block label,
+body.supervisor-portal.dark-mode .quick-action-card span,
+body.supervisor-portal.dark-mode .tab-panel-header p,
+body.supervisor-portal.dark-mode .empty-state p,
+body.supervisor-portal.dark-mode .report-stat-row,
+body.supervisor-portal.dark-mode .report-bar-row label,
+body.supervisor-portal.dark-mode .profile-row label,
+body.supervisor-portal.dark-mode .activity-item,
+body.supervisor-portal.dark-mode .deadline-alert {
+    color: var(--sup-dm-text-muted);
+}
+
+body.supervisor-portal.dark-mode .request-ref,
+body.supervisor-portal.dark-mode .section-title i,
+body.supervisor-portal.dark-mode .tab-panel-header h2 i,
+body.supervisor-portal.dark-mode .deadline-alert i {
+    color: var(--sup-dm-blue);
+}
+
+/* KPI bars */
+body.supervisor-portal.dark-mode .kpi-bar,
+body.supervisor-portal.dark-mode .distribution-track,
+body.supervisor-portal.dark-mode .report-bar-track {
+    background: var(--sup-dm-elevated);
+}
+
+body.supervisor-portal.dark-mode .kpi-bar-fill,
+body.supervisor-portal.dark-mode .report-bar-fill,
+body.supervisor-portal.dark-mode .distribution-fill.taken {
+    background: linear-gradient(90deg, var(--sup-dm-blue-dim), var(--sup-dm-blue));
+}
+
+body.supervisor-portal.dark-mode .kpi-card.total .kpi-icon,
+body.supervisor-portal.dark-mode .kpi-card.pending .kpi-icon,
+body.supervisor-portal.dark-mode .quick-action-icon {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .kpi-card.available .kpi-icon {
+    background: #1a2e24;
+    color: #7dcea0;
+}
+
+/* Status */
+body.supervisor-portal.dark-mode .status-pill.accepted {
+    background: #1a2e24;
+    color: #7dcea0;
+    border-color: #3d6a50;
+}
+
+body.supervisor-portal.dark-mode .status-pill.pending {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+    border-color: var(--sup-dm-border-soft);
+}
+
+body.supervisor-portal.dark-mode .status-pill.rejected {
+    background: #2a1c1c;
+    color: #ffb4a8;
+    border-color: #6a4040;
+}
+
+/* Forms */
+body.supervisor-portal.dark-mode .form-pro-card-header {
+    background: linear-gradient(180deg, var(--sup-dm-elevated) 0%, var(--sup-dm-card) 100%);
+    border-bottom-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .form-step-badge {
+    background: var(--sup-dm-blue-dim);
+    color: #ffffff;
+}
+
+body.supervisor-portal.dark-mode .form-badge.required-badge {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .form-field input,
+body.supervisor-portal.dark-mode .form-field-pro input,
+body.supervisor-portal.dark-mode .form-field-pro select,
+body.supervisor-portal.dark-mode .form-field-pro textarea,
+body.supervisor-portal.dark-mode .project-toolbar input[type="search"],
+body.supervisor-portal.dark-mode .project-toolbar select {
+    background: var(--sup-dm-input);
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .form-field-pro input:focus,
+body.supervisor-portal.dark-mode .form-field-pro select:focus,
+body.supervisor-portal.dark-mode .project-toolbar input:focus {
+    border-color: var(--sup-dm-blue-dim);
+    box-shadow: 0 0 0 3px rgba(107, 159, 212, 0.2);
+}
+
+body.supervisor-portal.dark-mode .form-pro-alert.success {
+    background: #1a2e24;
+    border-color: #3d6a50;
+    color: #7dcea0;
+}
+
+body.supervisor-portal.dark-mode .form-pro-alert.error {
+    background: #2a1c1c;
+    border-color: #6a4040;
+    color: #ffb4a8;
+}
+
+body.supervisor-portal.dark-mode .acceptance-note,
+body.supervisor-portal.dark-mode .settings-note {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+    border-color: var(--sup-dm-border-soft);
+}
+
+/* Buttons */
+body.supervisor-portal.dark-mode .btn-primary {
+    background: linear-gradient(180deg, var(--sup-dm-blue) 0%, var(--sup-dm-blue-dim) 100%);
+    color: #ffffff;
+    border: 1px solid var(--sup-dm-blue-dim);
+}
+
+body.supervisor-portal.dark-mode .btn-primary:hover {
+    background: var(--sup-dm-blue-dim);
+}
+
+body.supervisor-portal.dark-mode .btn-secondary {
+    background: var(--sup-dm-elevated);
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .toggle-switch {
+    background: var(--sup-dm-blue-dim);
+}
+
+body.supervisor-portal.dark-mode .toggle-switch.off {
+    background: var(--sup-dm-border);
+}
+
+/* Filters */
+body.supervisor-portal.dark-mode .filter-btn,
+body.supervisor-portal.dark-mode .history-subtab {
+    background: var(--sup-dm-input);
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text-muted);
+}
+
+body.supervisor-portal.dark-mode .filter-btn.active,
+body.supervisor-portal.dark-mode .history-subtab.active {
+    background: var(--sup-dm-blue-soft);
+    border-color: var(--sup-dm-blue-dim);
+    color: var(--sup-dm-text);
+}
+
+/* Misc */
+body.supervisor-portal.dark-mode .reply-bubble {
+    background: var(--sup-dm-elevated);
+    border-left-color: var(--sup-dm-blue);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .reply-bubble label {
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .deadline-alert {
+    background: linear-gradient(90deg, var(--sup-dm-blue-soft) 0%, var(--sup-dm-card) 100%);
+    border-color: var(--sup-dm-border-soft);
+}
+
+body.supervisor-portal.dark-mode .deadline-alert .days-badge {
+    background: var(--sup-dm-blue-dim);
+    color: #ffffff;
+}
+
+body.supervisor-portal.dark-mode .avatar-initial {
+    background: var(--sup-dm-elevated);
+    color: var(--sup-dm-blue);
+    border: 1px solid var(--sup-dm-border-soft);
+}
+
+body.supervisor-portal.dark-mode .color-badge {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .empty-state-icon {
+    background: var(--sup-dm-blue-soft);
+}
+
+body.supervisor-portal.dark-mode .empty-state-icon i {
+    color: var(--sup-dm-blue);
+}
+
+body.supervisor-portal.dark-mode .report-stat-row,
+body.supervisor-portal.dark-mode .profile-row,
+body.supervisor-portal.dark-mode .acceptance-toolbar,
+body.supervisor-portal.dark-mode .reply-form-inline {
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .activity-item i {
+    color: var(--sup-dm-blue);
+}
+
+/* Block student blue (#0a2942) leaks from shared styles */
+body.supervisor-portal.dark-mode .stat-icon,
+body.supervisor-portal.dark-mode .chart-box,
+body.supervisor-portal.dark-mode .hint-box {
+    background: var(--sup-dm-card);
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text-muted);
+}
+
+body.supervisor-portal.dark-mode .sidebar-link.outline {
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .summary-chip {
+    background: var(--sup-dm-card);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .page-back-link {
+    color: var(--sup-dm-blue);
+}

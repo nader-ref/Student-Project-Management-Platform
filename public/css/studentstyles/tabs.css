@@ -1,0 +1,48 @@
+﻿/* Tab navigation */
+
+/* TABS */
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    background: #f5f7fa;
+    border-bottom: 1px solid #dce3eb;
+}
+
+.tab-btn {
+    background: #ffffff;
+    border: 1px solid #dce3eb;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0a2942;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: 0.2s ease;
+}
+
+.tab-btn i {
+    font-size: 1rem;
+}
+
+.tab-btn:hover {
+    background: #e8f1ff;
+    border-color: #b5cff5;
+}
+
+.tab-btn.active {
+    background: #0a2942;
+    color: #0a2942;
+    border-color: #0a2942;
+}
+
+.tab-btn.active i {
+    color: #0a2942;
+}
+
+

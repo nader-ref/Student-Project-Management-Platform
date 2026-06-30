@@ -1,0 +1,53 @@
+<div class="tab-panel-header">
+    <h2><i class="fas fa-chart-line"></i> Project Progress</h2>
+    <p>Track your graduation project phase and milestone completion.</p>
+</div>
+
+@if ($progress)
+    <div class="progress-overview-card">
+        <div class="progress-overview-top">
+            <div>
+                <span class="kpi-label">Overall Progress</span>
+                <div class="progress-percent">{{ $progress['percent'] }}%</div>
+                <p class="progress-phase">Current phase: <strong>{{ $progress['current_phase'] }}</strong></p>
+            </div>
+            <div class="progress-ring" @style(['--bar-width: '.$progress['percent'].'%' => true])>
+                <span>{{ $progress['percent'] }}%</span>
+            </div>
+        </div>
+        <div class="kpi-bar" @style(['--bar-width: '.$progress['percent'].'%' => true])>
+            <div class="kpi-bar-fill"></div>
+        </div>
+    </div>
+
+    <div class="progress-steps-grid">
+        @foreach ($progress['steps'] as $step)
+            <div class="progress-step-card {{ $step['done'] ? 'done' : 'upcoming' }}">
+                <div class="progress-step-icon">
+                    <i class="fas fa-{{ $step['done'] ? 'check' : 'circle' }}"></i>
+                </div>
+                <div>
+                    <strong>{{ $step['label'] }}</strong>
+                    @if (!empty($step['date']))
+                        <span>{{ $step['date'] }}</span>
+                    @endif
+                    <span class="status-pill {{ $step['done'] ? 'accepted' : 'pending' }}" style="margin-top: 0.35rem; display: inline-flex;">
+                        {{ $step['done'] ? 'Complete' : 'Upcoming' }}
+                    </span>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <div class="insight-card" style="margin-top: 1.25rem;">
+        <h3><i class="fas fa-file-upload"></i> Submission Summary</h3>
+        <div class="report-stat-row"><span>Total uploads</span><span>{{ $submissions->count() }}</span></div>
+        <div class="report-stat-row"><span>Approved</span><span>{{ $submissions->where('status', 'approved')->count() }}</span></div>
+        <div class="report-stat-row"><span>Needs revision</span><span>{{ $submissions->where('status', 'needs_revision')->count() }}</span></div>
+        <div class="empty-state-actions" style="margin-top: 1rem;">
+            <button type="button" class="btn-primary dash-tab-trigger" data-tab="submissions">
+                <i class="fas fa-upload"></i> Submit a File
+            </button>
+        </div>
+    </div>
+@endif

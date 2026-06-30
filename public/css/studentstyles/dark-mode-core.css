@@ -1,0 +1,103 @@
+﻿/* Dark mode – core components (tabs, cards, forms) */
+
+/* DARK MODE */
+body.dark-mode {
+    background-color: #0d1117;
+    color: #e6edf3;
+}
+
+body.dark-mode .dashboard {
+    background-color: #161b22;
+    border-color: #30363d;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .dashboard-footer-accent {
+    background: #21262d;
+}
+
+body.dark-mode .content-panel {
+    background-color: #161b22;
+    color: #e6edf3;
+}
+
+body.dark-mode .section-title,
+body.dark-mode .stat-info h3,
+body.dark-mode .stat-value,
+body.dark-mode .project-header-modern,
+body.dark-mode .project-body-modern .row span:first-child,
+body.dark-mode .section-label,
+body.dark-mode .form-field label,
+body.dark-mode .setting-info,
+body.dark-mode .dashboard-footnote {
+    color: #e6edf3;
+}
+
+body.dark-mode .section-title i {
+    color: #8bb9e0;
+}
+
+body.dark-mode .tabs-container {
+    background: #21262d;
+    border-bottom-color: #30363d;
+}
+
+body.dark-mode .tab-btn {
+    background: #161b22;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark-mode .tab-btn:hover {
+    background: #1c2128;
+    border-color: #484f58;
+}
+
+body.dark-mode .tab-btn.active {
+    background: #0a2942;
+    border-color: #0a2942;
+    color: #ffffff;
+}
+
+body.dark-mode .stat-card,
+body.dark-mode .project-card-modern,
+body.dark-mode .request-container,
+body.dark-mode .settings-container {
+    background: #21262d;
+    border-color: #30363d;
+}
+
+body.dark-mode .stat-icon {
+    background: #0a2942;
+    color: #8bb9e0;
+}
+
+body.dark-mode .chart-box {
+    background: #21262d;
+    border-color: #30363d;
+    color: #8bb9e0;
+}
+
+body.dark-mode .project-body-modern .row {
+    border-bottom-color: #30363d;
+}
+
+body.dark-mode .form-field input,
+body.dark-mode .form-field select,
+body.dark-mode .form-field textarea {
+    background: #161b22;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark-mode .hint-box,
+body.dark-mode .settings-note {
+    background: #1c2128;
+    color: #8bb9e0;
+}
+
+body.dark-mode .setting-item {
+    border-bottom-color: #30363d;
+}
+
+

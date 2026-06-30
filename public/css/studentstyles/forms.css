@@ -1,0 +1,259 @@
+﻿/* Classic forms, buttons, settings */
+
+/* FORMS */
+.request-container {
+    max-width: 900px;
+    margin: auto;
+    background: #ffffff;
+    border: 1px solid #dce6f3;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.request-header {
+    background: #0a2942;
+    color: white;
+    padding: 1.4rem 1.8rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.request-header .icon {
+    background: white;
+    color: #0a2942;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.request-form {
+    padding: 2rem;
+}
+
+.form-error {
+    background: #ffe5e5;
+    color: #b30000;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.form-success {
+    background: #e5f8e5;
+    color: #0a7a0a;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.section-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a2942;
+    margin-bottom: 1rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+}
+
+.form-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0a2942;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    margin-top: 0.4rem;
+    padding: 0.8rem;
+    border: 1px solid #bcd0e0;
+    border-radius: 8px;
+    background: #f8fbff;
+    transition: 0.2s ease;
+    font: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #0a2942;
+    box-shadow: 0 0 0 3px rgba(10, 41, 66, 0.2);
+    outline: none;
+}
+
+.required {
+    color: #d40000;
+    font-weight: 700;
+}
+
+.error-text {
+    color: #b30000;
+    font-size: 0.9rem;
+}
+
+.hint-box {
+    background: #eef6ff;
+    padding: 1rem;
+    border-radius: 10px;
+    color: #0a2942;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-primary {
+    background: #0a2942;
+    color: white;
+    padding: 0.9rem 1.6rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary:hover {
+    background: #082033;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding: 0.9rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.request-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* SETTINGS */
+.settings-container {
+    background: #ffffff;
+    border: 1px solid #dce6f3;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    max-width: 700px;
+    margin: auto;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eef3f8;
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.1rem;
+    color: #0a2942;
+    font-weight: 600;
+}
+
+.setting-info i {
+    color: #0a2942;
+    font-size: 1.3rem;
+}
+
+.toggle-switch {
+    width: 48px;
+    height: 24px;
+    background: #0a2942;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.toggle-switch::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s ease;
+}
+
+.toggle-switch.off {
+    background: #b5b5b5;
+}
+
+.toggle-switch.off::after {
+    left: 26px;
+}
+
+.color-badge {
+    background: #0a2942;
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.settings-note {
+    margin-top: 1.5rem;
+    background: #eef6ff;
+    padding: 1rem;
+    border-radius: 12px;
+    color: #0a2942;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+

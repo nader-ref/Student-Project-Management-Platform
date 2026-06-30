@@ -1,0 +1,102 @@
+﻿/* Mobile and tablet breakpoints */
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+    body {
+        padding: 0.75rem;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: start;
+        gap: 0.8rem;
+    }
+
+    .navbar-pro {
+        padding: 0.75rem 1rem;
+    }
+
+    .navbar-pro-inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navbar-quick-links {
+        justify-content: flex-start;
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0.15rem;
+    }
+
+    .navbar-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .navbar-user-info {
+        max-width: 120px;
+    }
+
+    .navbar-logout span {
+        display: none;
+    }
+
+    .user-area {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .tabs-container {
+        padding: 0.5rem 1rem;
+    }
+
+    .tab-btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .content-panel {
+        padding: 1.5rem;
+    }
+
+    .acceptance-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .acceptance-hero {
+        padding: 1.35rem 1.25rem;
+    }
+
+    .acceptance-hero h1 {
+        font-size: 1.45rem;
+    }
+
+    .dash-kpi-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .overview-split {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-nav .tab-btn {
+        flex: 1 1 calc(50% - 0.35rem);
+        font-size: 0.82rem;
+        padding: 0.65rem 0.75rem;
+    }
+
+    .form-pro-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-pro-sidebar {
+        position: static;
+    }
+
+    .member-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

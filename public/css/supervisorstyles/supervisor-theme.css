@@ -1,0 +1,319 @@
+/* Supervisor portal – cool charcoal + steel blue accents */
+
+body.supervisor-portal {
+    --sup-text: #2c3238;
+    --sup-text-muted: #5c6570;
+    --sup-surface: #f4f6f8;
+    --sup-card: #ffffff;
+    --sup-border: #dde2e8;
+    --sup-border-soft: #e8ecf0;
+
+    --sup-charcoal: #3d4654;
+    --sup-charcoal-deep: #2c3238;
+    --sup-charcoal-dark: #1e242c;
+
+    --sup-blue: #3d6b9e;
+    --sup-blue-light: #5b8fc4;
+    --sup-blue-deep: #2d5580;
+    --sup-blue-soft: #e8f0f8;
+    --sup-blue-muted: #d4e3f2;
+
+    --sup-glow: rgba(61, 107, 158, 0.14);
+    --sup-shadow: rgba(30, 36, 44, 0.08);
+
+    /* aliases used across dashboard CSS */
+    --sup-chrome: var(--sup-charcoal);
+    --sup-chrome-deep: var(--sup-charcoal-deep);
+    --sup-gold: var(--sup-blue);
+    --sup-gold-light: var(--sup-blue-light);
+    --sup-gold-deep: var(--sup-blue-deep);
+    --sup-gold-soft: var(--sup-blue-soft);
+    --sup-gold-muted: var(--sup-blue-muted);
+    --sup-primary: var(--sup-charcoal-deep);
+    --sup-primary-mid: var(--sup-charcoal);
+    --sup-primary-dark: var(--sup-charcoal-dark);
+    --sup-accent: var(--sup-blue);
+    --sup-accent-light: var(--sup-blue-light);
+    --sup-accent-soft: var(--sup-blue-soft);
+    --sup-accent-muted: var(--sup-blue-muted);
+
+    background-color: var(--sup-surface);
+}
+
+body.supervisor-portal .dashboard {
+    background: var(--sup-card);
+    border-color: var(--sup-border);
+}
+
+body.supervisor-portal .dashboard-footer-accent {
+    background: linear-gradient(90deg, var(--sup-charcoal-dark), var(--sup-blue), var(--sup-charcoal-dark));
+}
+
+/* Navbar */
+body.supervisor-portal .navbar-pro {
+    background: linear-gradient(135deg, var(--sup-charcoal-dark) 0%, var(--sup-charcoal-deep) 100%);
+    box-shadow: 0 4px 20px var(--sup-shadow);
+    border-bottom: 2px solid var(--sup-blue);
+}
+
+body.supervisor-portal .navbar-pro::after {
+    background: radial-gradient(circle, var(--sup-glow) 0%, transparent 70%);
+}
+
+body.supervisor-portal .navbar-brand-icon {
+    color: var(--sup-blue-light);
+    border-color: rgba(91, 143, 196, 0.4);
+}
+
+body.supervisor-portal .navbar-user-avatar {
+    background: rgba(61, 107, 158, 0.2);
+    border-color: rgba(91, 143, 196, 0.4);
+    color: var(--sup-blue-soft);
+}
+
+/* Hero */
+body.supervisor-portal .acceptance-hero {
+    background: linear-gradient(135deg, var(--sup-charcoal-dark) 0%, var(--sup-charcoal-deep) 55%, #3d4654 100%);
+    box-shadow: 0 8px 28px var(--sup-shadow);
+    border: 1px solid var(--sup-border);
+    border-left: 4px solid var(--sup-blue);
+}
+
+body.supervisor-portal .acceptance-hero::after {
+    background: radial-gradient(circle, var(--sup-glow) 0%, transparent 70%);
+}
+
+body.supervisor-portal .btn-hero-solid {
+    color: #ffffff;
+    background: linear-gradient(180deg, var(--sup-blue-light) 0%, var(--sup-blue) 100%);
+    border: 1px solid var(--sup-blue-deep);
+}
+
+body.supervisor-portal .btn-hero-solid:hover {
+    background: linear-gradient(180deg, var(--sup-blue) 0%, var(--sup-blue-deep) 100%);
+    box-shadow: 0 4px 14px rgba(61, 107, 158, 0.3);
+}
+
+body.supervisor-portal .btn-hero-outline {
+    border-color: rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+}
+
+body.supervisor-portal .btn-hero-outline:hover {
+    border-color: var(--sup-blue-light);
+    background: rgba(61, 107, 158, 0.15);
+}
+
+/* Tabs */
+body.supervisor-portal .tab-btn {
+    color: var(--sup-text-muted);
+    border-color: var(--sup-border);
+    background: var(--sup-card);
+}
+
+body.supervisor-portal .tab-btn:hover {
+    background: var(--sup-blue-soft);
+    border-color: #b8cfe6;
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .tab-btn.active {
+    background: var(--sup-card);
+    border-color: var(--sup-blue);
+    color: var(--sup-charcoal-deep);
+    box-shadow: 0 0 0 1px var(--sup-blue), 0 4px 12px rgba(61, 107, 158, 0.12);
+}
+
+body.supervisor-portal .tab-btn.active i {
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .dash-nav {
+    background: var(--sup-card);
+    border-color: var(--sup-border);
+    box-shadow: 0 4px 16px var(--sup-shadow);
+}
+
+body.supervisor-portal .dash-nav .tab-btn.active {
+    background: var(--sup-blue-soft);
+    border-color: var(--sup-blue);
+    box-shadow: none;
+}
+
+/* KPI */
+body.supervisor-portal .kpi-card {
+    border-color: var(--sup-border);
+    box-shadow: 0 2px 12px var(--sup-shadow);
+    background: var(--sup-card);
+}
+
+body.supervisor-portal .kpi-card:hover {
+    box-shadow: 0 6px 20px rgba(30, 36, 44, 0.1);
+}
+
+body.supervisor-portal .kpi-value,
+body.supervisor-portal .toolbar-title,
+body.supervisor-portal .request-item-top h3,
+body.supervisor-portal .tab-panel-header h2,
+body.supervisor-portal .empty-state h3,
+body.supervisor-portal .insight-card h3,
+body.supervisor-portal .quick-action-card strong,
+body.supervisor-portal .section-label,
+body.supervisor-portal .form-field label,
+body.supervisor-portal .setting-info,
+body.supervisor-portal .meta-block span {
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .empty-state-icon i {
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .kpi-card.total .kpi-icon {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .kpi-card.pending .kpi-icon {
+    background: #eef4fa;
+    color: var(--sup-blue-deep);
+}
+
+body.supervisor-portal .kpi-bar-fill {
+    background: linear-gradient(90deg, var(--sup-blue-deep), var(--sup-blue-light));
+}
+
+body.supervisor-portal .kpi-card.pending .kpi-bar-fill {
+    background: linear-gradient(90deg, var(--sup-blue-deep), var(--sup-blue-light));
+}
+
+/* Panels */
+body.supervisor-portal .quick-action-card {
+    border-color: var(--sup-border);
+    background: var(--sup-card);
+}
+
+body.supervisor-portal .quick-action-card:hover {
+    border-color: var(--sup-blue);
+    box-shadow: 0 6px 18px var(--sup-shadow);
+}
+
+body.supervisor-portal .quick-action-icon {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .insight-card,
+body.supervisor-portal .activity-card,
+body.supervisor-portal .request-item,
+body.supervisor-portal .project-item,
+body.supervisor-portal .setting-card,
+body.supervisor-portal .form-pro-card {
+    border-color: var(--sup-border);
+    background: var(--sup-card);
+}
+
+body.supervisor-portal .distribution-fill.available {
+    background: linear-gradient(90deg, #0a7a0a, #52c41a);
+}
+
+body.supervisor-portal .distribution-fill.taken {
+    background: linear-gradient(90deg, var(--sup-blue-deep), var(--sup-blue-light));
+}
+
+/* Buttons */
+body.supervisor-portal .btn-primary {
+    background: linear-gradient(180deg, var(--sup-blue-light) 0%, var(--sup-blue) 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(61, 107, 158, 0.25);
+    border: 1px solid var(--sup-blue-deep);
+}
+
+body.supervisor-portal .btn-primary:hover {
+    background: linear-gradient(180deg, var(--sup-blue) 0%, var(--sup-blue-deep) 100%);
+}
+
+body.supervisor-portal .btn-secondary {
+    background: var(--sup-card);
+    border: 1px solid var(--sup-border);
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .btn-secondary:hover {
+    border-color: var(--sup-blue);
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .form-pro-card-header {
+    background: linear-gradient(180deg, var(--sup-surface) 0%, var(--sup-card) 100%);
+}
+
+body.supervisor-portal .form-step-badge {
+    background: var(--sup-blue);
+    color: #ffffff;
+}
+
+body.supervisor-portal .form-step-badge.muted {
+    background: #dde2e8;
+    color: var(--sup-text-muted);
+}
+
+body.supervisor-portal .form-field input:focus,
+body.supervisor-portal .form-field select:focus,
+body.supervisor-portal .form-field textarea:focus,
+body.supervisor-portal .form-field-pro input:focus,
+body.supervisor-portal .form-field-pro select:focus,
+body.supervisor-portal .form-field-pro textarea:focus {
+    border-color: var(--sup-blue);
+    box-shadow: 0 0 0 3px rgba(61, 107, 158, 0.15);
+}
+
+body.supervisor-portal .form-badge.required-badge {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue-deep);
+}
+
+body.supervisor-portal .toggle-switch {
+    background: var(--sup-blue);
+}
+
+body.supervisor-portal .color-badge {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue-deep);
+    border: 1px solid #b8cfe6;
+}
+
+body.supervisor-portal .status-pill.pending {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue-deep);
+    border-color: #b8cfe6;
+}
+
+body.supervisor-portal .request-ref {
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .avatar-initial {
+    background: var(--sup-charcoal);
+    color: #ffffff;
+}
+
+body.supervisor-portal .acceptance-note {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue-deep);
+    border-color: #b8cfe6;
+}
+
+body.supervisor-portal .filter-btn.active,
+body.supervisor-portal .history-subtab.active {
+    background: var(--sup-blue-soft);
+    border-color: var(--sup-blue);
+    color: var(--sup-charcoal-deep);
+}
+
+body.supervisor-portal .section-title i,
+body.supervisor-portal .tab-panel-header h2 i {
+    color: var(--sup-blue);
+}
+
+/* Dark mode: supervisor-dark-mode.css */

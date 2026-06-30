@@ -1,0 +1,139 @@
+﻿/* Stat cards, project cards, charts */
+
+/* DASHBOARD */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #dce6f3;
+    border-radius: 14px;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    transition: 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    background: #eaf3ff;
+    color: #0a2942;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-size: 1.4rem;
+}
+
+.stat-info h3 {
+    font-size: 1rem;
+    color: #0a2942;
+    margin-bottom: 0.3rem;
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0a2942;
+}
+
+.chart-box {
+    background: #f8fbff;
+    border: 1px solid #dce6f3;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    color: #2b4f73;
+    margin-bottom: 2rem;
+}
+
+.chart-box i {
+    font-size: 2rem;
+    color: #0a2942;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-footnote {
+    color: #0a1c2f;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.dashboard-footnote i {
+    color: #0a2942;
+}
+
+/* PROJECTS */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card-modern {
+    background: #ffffff;
+    border: 1px solid #dce6f3;
+    border-radius: 14px;
+    padding: 1.2rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    transition: 0.25s ease;
+}
+
+.project-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.project-header-modern {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a2942;
+    margin-bottom: 1rem;
+}
+
+.project-header-modern i {
+    color: #0a2942;
+}
+
+.project-body-modern .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #eef3f8;
+    font-size: 0.95rem;
+}
+
+.project-body-modern .row span:first-child {
+    font-weight: 600;
+    color: #0a2942;
+}
+
+.status {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.status.available {
+    background: #d4f8d4;
+    color: #0a7a0a;
+}
+
+.status.taken {
+    background: #ffd4d4;
+    color: #b30000;
+}
+
+

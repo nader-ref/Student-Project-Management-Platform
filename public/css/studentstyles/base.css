@@ -1,0 +1,44 @@
+﻿/* Base reset, body, and dashboard shell */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+}
+
+body {
+    background-color: #f4f7fb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.dashboard {
+    width: 100%;
+    max-width: 1300px;
+    background-color: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: visible;
+    border: 1px solid #e9eef3;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.dashboard-footer-accent {
+    height: 4px;
+    background: #0a0a0a;
+}
