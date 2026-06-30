@@ -168,23 +168,6 @@
 
             {{-- OVERVIEW --}}
             <div id="dashboard" class="tab-content {{ $activeTab === 'dashboard' ? 'active-content' : '' }}">
-                @if ($upcomingDeadlines->isNotEmpty())
-                    <div class="deadline-alerts">
-                        @foreach ($upcomingDeadlines as $alert)
-                            <div class="deadline-alert">
-                                <i class="fas fa-calendar-exclamation"></i>
-                                <span>
-                                    <strong>{{ $alert['project'] }}</strong> — {{ $alert['label'] }}
-                                    on {{ $alert['date']->format('M d, Y') }}
-                                </span>
-                                <span class="days-badge">
-                                    {{ $alert['days_left'] }} day{{ $alert['days_left'] === 1 ? '' : 's' }} left
-                                </span>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-
                 <div class="dash-kpi-grid">
                     <div class="kpi-card total">
                         <div class="kpi-card-top">

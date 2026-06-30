@@ -1,9 +1,25 @@
 ﻿/* Mobile and tablet breakpoints */
 
 /* RESPONSIVE */
+@media (max-width: 960px) {
+    .dash-kpi-grid,
+    .acceptance-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .overview-split,
+    .form-pro-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-pro-sidebar {
+        position: static;
+    }
+}
+
 @media (max-width: 700px) {
     body {
-        padding: 0.75rem;
+        padding: 0;
     }
 
     .navbar {
@@ -50,15 +66,17 @@
 
     .tabs-container {
         padding: 0.5rem 1rem;
+        max-width: 100%;
     }
 
     .tab-btn {
         padding: 0.7rem 1rem;
         font-size: 0.9rem;
+        min-width: 0;
     }
 
     .content-panel {
-        padding: 1.5rem;
+        padding: 1rem 0.9rem 2rem;
     }
 
     .acceptance-kpi-grid {
@@ -67,6 +85,8 @@
 
     .acceptance-hero {
         padding: 1.35rem 1.25rem;
+        border-radius: 18px;
+        margin-bottom: 1.25rem;
     }
 
     .acceptance-hero h1 {
@@ -74,17 +94,30 @@
     }
 
     .dash-kpi-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
     }
 
     .overview-split {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .quick-actions-grid {
+        gap: 0.85rem;
+    }
+
+    .dash-nav {
+        margin-bottom: 1.25rem;
+        overflow-x: auto;
     }
 
     .dash-nav .tab-btn {
         flex: 1 1 calc(50% - 0.35rem);
         font-size: 0.82rem;
         padding: 0.65rem 0.75rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .form-pro-layout {
@@ -96,6 +129,13 @@
     }
 
     .member-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .dash-kpi-grid,
+    .acceptance-kpi-grid {
         grid-template-columns: 1fr;
     }
 }

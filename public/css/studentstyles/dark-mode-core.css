@@ -2,14 +2,16 @@
 
 /* DARK MODE */
 body.dark-mode {
-    background-color: #0d1117;
+    background:
+        radial-gradient(circle at top left, rgba(79, 195, 247, 0.08), transparent 28rem),
+        linear-gradient(180deg, #0d1117 0%, #101722 52%, #0d1117 100%);
     color: #e6edf3;
 }
 
 body.dark-mode .dashboard {
-    background-color: #161b22;
-    border-color: #30363d;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
 }
 
 body.dark-mode .dashboard-footer-accent {
@@ -17,7 +19,7 @@ body.dark-mode .dashboard-footer-accent {
 }
 
 body.dark-mode .content-panel {
-    background-color: #161b22;
+    background-color: transparent;
     color: #e6edf3;
 }
 
@@ -38,7 +40,7 @@ body.dark-mode .section-title i {
 }
 
 body.dark-mode .tabs-container {
-    background: #21262d;
+    background: rgba(33, 38, 45, 0.86);
     border-bottom-color: #30363d;
 }
 

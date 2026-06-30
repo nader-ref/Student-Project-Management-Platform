@@ -60,7 +60,7 @@
     </div>
 </section>
 
-@if ($isEnrolled)
+@if ($isEnrolled && ($showEnrolledBanner ?? false))
     <div class="enrollment-banner enrolled">
         <i class="fas fa-check-circle"></i>
         <span>You are registered in <strong>{{ $enrolledProject->name }}</strong>. Discovery tabs are hidden — use your project workspace below.</span>

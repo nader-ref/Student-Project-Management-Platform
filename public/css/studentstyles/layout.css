@@ -2,8 +2,12 @@
 
 /* CONTENT */
 .content-panel {
-    background-color: #ffffff;
-    padding: 2rem;
+    width: min(100%, 1440px);
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+    background-color: transparent;
+    padding: 2rem clamp(1.25rem, 3vw, 3rem) 3rem;
     color: #1e1e1e;
     position: relative;
     z-index: 1;
@@ -12,9 +16,15 @@
         color 0.2s ease;
 }
 
+.content-panel > * {
+    min-width: 0;
+}
+
 .tab-content {
     display: none;
     animation: fade 0.25s ease;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .tab-content.active-content {

@@ -251,6 +251,20 @@ class UserController extends Controller
             );
         }
 
+        $previousEnrollmentMode = Session::get('student_dashboard_enrollment_mode');
+        $previousEnrolledProjectId = Session::get('student_dashboard_enrolled_project_id');
+        $currentEnrolledProjectId = $enrollment['project']?->id;
+        $showEnrolledBanner = $enrollment['mode'] === StudentEnrollmentService::MODE_ENROLLED
+            && $currentEnrolledProjectId
+            && $previousEnrollmentMode !== null
+            && (
+                $previousEnrollmentMode !== StudentEnrollmentService::MODE_ENROLLED
+                || $previousEnrolledProjectId !== $currentEnrolledProjectId
+            );
+
+        Session::put('student_dashboard_enrollment_mode', $enrollment['mode']);
+        Session::put('student_dashboard_enrolled_project_id', $currentEnrolledProjectId);
+
         return view('student.dashboard', [
             'projects' => $projects,
             'supervisors' => Supervisor::orderBy('name')->get(),
@@ -271,6 +285,7 @@ class UserController extends Controller
             'progress' => $progress,
             'nextSteps' => $nextSteps,
             'recentActivity' => $recentActivity,
+            'showEnrolledBanner' => $showEnrolledBanner,
             'milestoneLabels' => StudentEnrollmentService::milestoneLabels(),
         ]);
     }

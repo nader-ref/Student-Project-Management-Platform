@@ -3,15 +3,18 @@
 /* PROFESSIONAL FORM */
 .form-pro-layout {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
     gap: 1.5rem;
     align-items: start;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .form-pro-main {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    min-width: 0;
 }
 
 .form-pro-steps {
@@ -67,6 +70,7 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 18px rgba(10, 41, 66, 0.06);
+    min-width: 0;
 }
 
 .form-pro-card-header {
@@ -189,7 +193,7 @@
 
 .member-cards-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
 }
 

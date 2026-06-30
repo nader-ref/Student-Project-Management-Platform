@@ -13,13 +13,18 @@
         sans-serif;
 }
 
+html,
 body {
-    background-color: #f4f7fb;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(79, 195, 247, 0.16), transparent 28rem),
+        linear-gradient(180deg, #f4f7fb 0%, #eef4fa 46%, #f8fbff 100%);
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    color: #0a2942;
     transition:
         background-color 0.2s ease,
         color 0.2s ease;
@@ -27,15 +32,28 @@ body {
 
 .dashboard {
     width: 100%;
-    max-width: 1300px;
-    background-color: #ffffff;
-    border-radius: 28px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    max-width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
     overflow: visible;
-    border: 1px solid #e9eef3;
+    border: 0;
     transition:
         background-color 0.2s ease,
         border-color 0.2s ease;
+}
+
+.dashboard .navbar-pro {
+    border-radius: 0;
+}
+
+.dashboard .navbar-pro-inner {
+    width: 100%;
+    max-width: 1440px;
+    min-width: 0;
+    margin: 0 auto;
 }
 
 .dashboard-footer-accent {

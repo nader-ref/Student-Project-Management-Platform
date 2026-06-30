@@ -183,8 +183,7 @@ body.supervisor-portal.dark-mode .profile-row span,
 body.supervisor-portal.dark-mode .report-stat-row span:last-child,
 body.supervisor-portal.dark-mode .form-pro-card-header h3,
 body.supervisor-portal.dark-mode .project-edit-panel summary,
-body.supervisor-portal.dark-mode .section-title,
-body.supervisor-portal.dark-mode .deadline-alert strong {
+body.supervisor-portal.dark-mode .section-title {
     color: var(--sup-dm-text);
 }
 
@@ -197,15 +196,13 @@ body.supervisor-portal.dark-mode .empty-state p,
 body.supervisor-portal.dark-mode .report-stat-row,
 body.supervisor-portal.dark-mode .report-bar-row label,
 body.supervisor-portal.dark-mode .profile-row label,
-body.supervisor-portal.dark-mode .activity-item,
-body.supervisor-portal.dark-mode .deadline-alert {
+body.supervisor-portal.dark-mode .activity-item {
     color: var(--sup-dm-text-muted);
 }
 
 body.supervisor-portal.dark-mode .request-ref,
 body.supervisor-portal.dark-mode .section-title i,
-body.supervisor-portal.dark-mode .tab-panel-header h2 i,
-body.supervisor-portal.dark-mode .deadline-alert i {
+body.supervisor-portal.dark-mode .tab-panel-header h2 i {
     color: var(--sup-dm-blue);
 }
 
@@ -355,16 +352,6 @@ body.supervisor-portal.dark-mode .reply-bubble {
 
 body.supervisor-portal.dark-mode .reply-bubble label {
     color: var(--sup-dm-blue);
-}
-
-body.supervisor-portal.dark-mode .deadline-alert {
-    background: linear-gradient(90deg, var(--sup-dm-blue-soft) 0%, var(--sup-dm-card) 100%);
-    border-color: var(--sup-dm-border-soft);
-}
-
-body.supervisor-portal.dark-mode .deadline-alert .days-badge {
-    background: var(--sup-dm-blue-dim);
-    color: #ffffff;
 }
 
 body.supervisor-portal.dark-mode .avatar-initial {

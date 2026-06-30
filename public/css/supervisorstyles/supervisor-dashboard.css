@@ -1,42 +1,5 @@
 /* Supervisor dashboard extras – charcoal + steel blue */
 
-body.supervisor-portal .deadline-alerts {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    margin-bottom: 1.75rem;
-}
-
-body.supervisor-portal .deadline-alert {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 0.85rem 1.1rem;
-    border-radius: 12px;
-    border: 1px solid #b8cfe6;
-    border-left: 3px solid var(--sup-blue, var(--sup-gold));
-    background: linear-gradient(90deg, var(--sup-blue-soft, var(--sup-gold-soft)) 0%, var(--sup-card) 100%);
-    font-size: 0.9rem;
-}
-
-body.supervisor-portal .deadline-alert i {
-    color: var(--sup-blue, var(--sup-gold));
-}
-
-body.supervisor-portal .deadline-alert strong {
-    color: var(--sup-text);
-}
-
-body.supervisor-portal .deadline-alert .days-badge {
-    margin-left: auto;
-    background: var(--sup-blue, var(--sup-gold));
-    color: #ffffff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-}
-
 body.supervisor-portal .project-toolbar {
     display: flex;
     flex-wrap: wrap;

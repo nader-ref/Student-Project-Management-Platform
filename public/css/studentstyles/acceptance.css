@@ -3,7 +3,7 @@
 /* ACCEPTANCE / REQUEST STATUS */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: 1.5rem;
 }
 
@@ -127,7 +127,7 @@ button.btn-hero-solid {
 
 .acceptance-kpi-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
     margin-bottom: 1.75rem;
 }
@@ -288,6 +288,8 @@ button.btn-hero-solid {
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(10, 41, 66, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .request-item:hover {
@@ -305,6 +307,7 @@ button.btn-hero-solid {
 
 .request-item-body {
     padding: 1.35rem 1.5rem;
+    min-width: 0;
 }
 
 .request-item-top {
@@ -396,7 +399,7 @@ button.btn-hero-solid {
 
 .request-meta-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
     gap: 1rem;
     margin-bottom: 1.15rem;
 }
@@ -579,7 +582,7 @@ button.btn-hero-solid {
 
 .acceptance-summary {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
 }

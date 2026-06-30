@@ -2,13 +2,16 @@
 
 /* STUDENT DASHBOARD */
 .dash-nav {
-    background: #ffffff;
-    border: 1px solid #dce6f3;
-    border-radius: 14px;
-    padding: 0.45rem;
-    margin-bottom: 1.75rem;
-    box-shadow: 0 4px 16px rgba(10, 41, 66, 0.05);
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(220, 230, 243, 0.95);
+    border-radius: 18px;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 14px 36px rgba(10, 41, 66, 0.08);
+    backdrop-filter: blur(14px);
     gap: 0.35rem;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .dash-nav .tab-btn {
@@ -17,7 +20,8 @@
     background: transparent;
     flex: 1;
     justify-content: center;
-    min-width: fit-content;
+    min-width: 0;
+    white-space: nowrap;
 }
 
 .dash-nav .tab-btn:hover {
@@ -30,9 +34,9 @@
 
 .dash-kpi-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.75rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
 }
 
 .kpi-card.supervisors .kpi-icon {
@@ -64,16 +68,16 @@
 
 .quick-actions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
 }
 
 .quick-action-card {
-    background: #ffffff;
-    border: 1px solid #dce6f3;
-    border-radius: 14px;
-    padding: 1.15rem 1.25rem;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(220, 230, 243, 0.95);
+    border-radius: 18px;
+    padding: 1.25rem 1.35rem;
     display: flex;
     align-items: center;
     gap: 0.85rem;
@@ -87,7 +91,7 @@
 
 .quick-action-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(10, 41, 66, 0.1);
+    box-shadow: 0 16px 34px rgba(10, 41, 66, 0.12);
     border-color: #b5cff5;
 }
 
@@ -118,17 +122,17 @@
 
 .overview-split {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .insight-card {
-    background: #ffffff;
-    border: 1px solid #dce6f3;
-    border-radius: 16px;
-    padding: 1.35rem 1.5rem;
-    box-shadow: 0 4px 16px rgba(10, 41, 66, 0.05);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(220, 230, 243, 0.95);
+    border-radius: 20px;
+    padding: 1.5rem 1.65rem;
+    box-shadow: 0 14px 34px rgba(10, 41, 66, 0.07);
 }
 
 .insight-card h3 {
@@ -143,7 +147,7 @@
 
 .distribution-row {
     display: grid;
-    grid-template-columns: 90px 1fr 36px;
+    grid-template-columns: minmax(0, 90px) minmax(0, 1fr) 36px;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 0.85rem;
@@ -179,9 +183,10 @@
 
 .activity-card {
     background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
-    border: 1px solid #dce6f3;
-    border-radius: 16px;
-    padding: 1.35rem 1.5rem;
+    border: 1px solid rgba(220, 230, 243, 0.95);
+    border-radius: 20px;
+    padding: 1.5rem 1.65rem;
+    box-shadow: 0 14px 34px rgba(10, 41, 66, 0.06);
 }
 
 .activity-card h3 {
@@ -216,7 +221,7 @@
 }
 
 .tab-panel-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
 
 .tab-panel-header h2 {
@@ -235,11 +240,11 @@
 }
 
 .project-item {
-    background: #ffffff;
-    border: 1px solid #dce6f3;
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(220, 230, 243, 0.95);
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(10, 41, 66, 0.05);
+    box-shadow: 0 14px 34px rgba(10, 41, 66, 0.07);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -282,7 +287,7 @@
 
 .settings-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: 1rem;
     margin-bottom: 1.25rem;
 }
@@ -299,7 +304,7 @@
 }
 
 body.dark-mode .dash-nav {
-    background: #21262d;
+    background: rgba(33, 38, 45, 0.88);
     border-color: #30363d;
 }
 
@@ -596,7 +601,7 @@ body.dark-mode .milestone-body span {
 
 .progress-steps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
     gap: 1rem;
 }
 
@@ -703,7 +708,7 @@ body.dark-mode .reply-bubble {
 /* Enrolled overview workspace */
 .overview-workspace {
     display: grid;
-    grid-template-columns: 1.35fr 1fr;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     gap: 1.25rem;
     margin-bottom: 1.5rem;
 }
@@ -713,6 +718,7 @@ body.dark-mode .reply-bubble {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    min-width: 0;
 }
 
 .overview-section-card {
@@ -721,6 +727,7 @@ body.dark-mode .reply-bubble {
     border-radius: 16px;
     padding: 1.35rem 1.5rem;
     box-shadow: 0 4px 16px rgba(10, 41, 66, 0.05);
+    min-width: 0;
 }
 
 .overview-section-header {
@@ -773,13 +780,27 @@ body.dark-mode .reply-bubble {
 
 .next-step-item {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.85rem;
     padding: 0.95rem 1rem;
     border-radius: 12px;
     border: 1px solid #dce6f3;
     background: #f8fbff;
+}
+
+.next-step-body,
+.feed-body,
+.project-mini-meta,
+.overview-section-header {
+    min-width: 0;
+}
+
+.next-step-body p,
+.feed-body,
+.project-mini-meta,
+.overview-section-header h3 {
+    overflow-wrap: anywhere;
 }
 
 .next-step-item.priority-urgent {
@@ -921,7 +942,7 @@ body.dark-mode .reply-bubble {
 
 .feed-item {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 0.75rem;
     align-items: start;
     padding: 0.75rem 0;
@@ -1115,7 +1136,7 @@ body.dark-mode .feed-link:hover {
     }
 
     .next-step-item {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto minmax(0, 1fr);
     }
 
     .btn-next-step {
