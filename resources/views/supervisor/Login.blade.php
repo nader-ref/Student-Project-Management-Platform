@@ -16,7 +16,6 @@
 
     <form action="{{ url('/supervisorSignup') }}" method="POST" class="auth-form">
         @csrf
-        <input type="hidden" name="role" value="supervisor">
 
         <div class="auth-field">
             <label for="name"><i class="fas fa-id-badge" aria-hidden="true"></i> Supervisor name</label>

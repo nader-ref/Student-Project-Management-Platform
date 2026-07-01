@@ -56,7 +56,7 @@ class SupervisorController extends Controller
             ]);
         }
 
-        if (! $user->hasRole($request->role)) {
+        if (! $user->hasRole('supervisor')) {
             Auth::logout();
 
             throw ValidationException::withMessages([

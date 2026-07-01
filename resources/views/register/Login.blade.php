@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('portal', 'student')
-@section('title', 'Projects Hub · Student Login')
+@section('title', 'Projects Hub · Login')
 
 @section('brand')
     @include('auth.partials.brand-student')
@@ -9,14 +9,13 @@
 
 @section('content')
     <header class="auth-card-header">
-        <span class="auth-portal-badge"><i class="fas fa-user-graduate" aria-hidden="true"></i> Student</span>
+        <span class="auth-portal-badge"><i class="fas fa-right-to-bracket" aria-hidden="true"></i> Shared Access</span>
         <h1>Welcome back</h1>
-        <p>Sign in to access your dashboard, requests, and messages.</p>
+        <p>Sign in once and we will open the right portal for your role.</p>
     </header>
 
     <form action="{{ url('/Login') }}" method="POST" class="auth-form">
         @csrf
-        <input type="hidden" name="role" value="student">
 
         <div class="auth-field">
             <label for="university_number"><i class="fas fa-id-card" aria-hidden="true"></i> University number</label>
@@ -69,12 +68,11 @@
     </footer>
 
     <div class="auth-switch-portal">
-        Supervisor?
-        <a href="{{ route('supervisor.login') }}">Sign in to supervisor portal</a>
+        Students, supervisors, and admins use this same sign-in page.
     </div>
 
     <p class="auth-secure-note">
         <i class="fas fa-shield-alt" aria-hidden="true"></i>
-        Secure student access
+        Secure role-based access
     </p>
 @endsection

@@ -66,8 +66,6 @@
                     password and password confirmation does not match
                 @endif
 
-                <input type="hidden" name="role" value="student" />
-
                 <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-blue-500/25">
                     Change Password
                 </button>
