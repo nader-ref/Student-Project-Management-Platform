@@ -60,18 +60,17 @@ class DevelopmentTestSeeder extends Seeder
                     'department' => 'software',
                     'taken' => true,
                     'student_count' => 1,
-                    'student_one_name' => $student->name,
-                    'student_one_id' => $studentLegacyNumber,
-                    'student_two_name' => null,
-                    'student_two_id' => null,
-                    'student_three_name' => null,
-                    'student_three_id' => null,
                     'seminar_1' => now()->addWeeks(2)->format('Ymd'),
                     'seminar_2' => now()->addWeeks(6)->format('Ymd'),
                     'seminar_3' => now()->addWeeks(10)->format('Ymd'),
                     'final' => now()->addWeeks(14)->format('Ymd'),
                     'status' => 'active',
                 ],
+            );
+
+            $project->members()->updateOrCreate(
+                ['user_id' => $student->id],
+                ['position' => 1],
             );
 
             projectrequest::updateOrCreate(

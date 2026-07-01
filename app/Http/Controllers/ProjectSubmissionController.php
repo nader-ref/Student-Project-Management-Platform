@@ -14,7 +14,7 @@ class ProjectSubmissionController extends Controller
 {
     public function store(Request $request)
     {
-        $enrollment = StudentEnrollmentService::resolve(Session::get('name'));
+        $enrollment = StudentEnrollmentService::resolve(Session::get('name'), Auth::user());
 
         if ($enrollment['mode'] !== StudentEnrollmentService::MODE_ENROLLED || ! $enrollment['project']) {
             return back()->with('error', 'You must be enrolled in a project to submit files.');
@@ -82,7 +82,7 @@ class ProjectSubmissionController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole('student')) {
-            $enrollment = StudentEnrollmentService::resolve(Session::get('name'));
+            $enrollment = StudentEnrollmentService::resolve(Session::get('name'), $user);
             if ($enrollment['project']?->id !== $submission->project_id) {
                 abort(403);
             }

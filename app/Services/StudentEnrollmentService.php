@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Models\Idea;
 use App\Models\Projectrequest;
 use App\Models\UniProject;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class StudentEnrollmentService
 {
@@ -27,20 +29,21 @@ class StudentEnrollmentService
      *     nextMilestone: ?array
      * }
      */
-    public static function resolve(?string $studentName): array
+    public static function resolve(?string $studentName = null, ?User $student = null): array
     {
-        if (! $studentName) {
+        $student ??= Auth::user() instanceof User ? Auth::user() : null;
+        $studentName ??= $student?->name;
+
+        if (! $studentName && ! $student) {
             return self::emptyResult();
         }
 
-        $project = UniProject::with('supervisor')
+        $project = $student
+            ? UniProject::with(['supervisor', 'members.user'])
             ->where('taken', 1)
-            ->where(function ($query) use ($studentName) {
-                $query->where('student_one_name', $studentName)
-                    ->orWhere('student_two_name', $studentName)
-                    ->orWhere('student_three_name', $studentName);
-            })
-            ->first();
+                ->whereHas('members', fn ($query) => $query->where('user_id', $student->id))
+                ->first()
+            : null;
 
         if ($project) {
             $milestones = self::buildMilestones($project);
@@ -51,7 +54,7 @@ class StudentEnrollmentService
                 'project' => $project,
                 'pendingRequest' => null,
                 'pendingIdea' => null,
-                'teamMembers' => self::teamFromProject($project, $studentName),
+                'teamMembers' => self::teamFromProject($project, $student),
                 'milestones' => $milestones,
                 'nextMilestone' => $nextMilestone,
             ];
@@ -107,27 +110,18 @@ class StudentEnrollmentService
         ];
     }
 
-    public static function teamFromProject(UniProject $project, ?string $currentStudent = null): Collection
+    public static function teamFromProject(UniProject $project, ?User $currentStudent = null): Collection
     {
-        $members = collect();
+        $project->loadMissing('members.user');
 
-        $slots = [
-            ['name' => $project->student_one_name, 'id' => $project->student_one_id],
-            ['name' => $project->student_two_name, 'id' => $project->student_two_id],
-            ['name' => $project->student_three_name, 'id' => $project->student_three_id],
-        ];
-
-        foreach ($slots as $slot) {
-            if (! empty($slot['name'])) {
-                $members->push([
-                    'name' => $slot['name'],
-                    'id' => $slot['id'],
-                    'is_you' => $currentStudent && $slot['name'] === $currentStudent,
-                ]);
-            }
-        }
-
-        return $members;
+        return $project->members
+            ->sortBy('position')
+            ->map(fn ($member) => [
+                'name' => $member->user->name,
+                'id' => $member->user->university_number,
+                'is_you' => $currentStudent && $member->user_id === $currentStudent->id,
+            ])
+            ->values();
     }
 
     public static function buildMilestones(UniProject $project): Collection

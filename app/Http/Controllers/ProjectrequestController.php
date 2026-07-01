@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Idea;
 use App\Models\Projectrequest;
 use App\Models\UniProject;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -147,14 +148,10 @@ class ProjectrequestController extends Controller
                 return true;
             }
 
-            $enrolledOnProject = UniProject::query()
-                ->where('taken', 1)
-                ->where(function ($query) use ($studentId) {
-                    $query->where('student_one_id', $studentId)
-                        ->orWhere('student_two_id', $studentId)
-                        ->orWhere('student_three_id', $studentId);
-                })
-                ->exists();
+            $student = User::where('university_number', (string) $studentId)->first();
+            $enrolledOnProject = $student
+                ? $student->projectMemberships()->exists()
+                : false;
 
             if ($enrolledOnProject) {
                 return true;

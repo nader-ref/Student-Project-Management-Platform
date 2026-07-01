@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +53,19 @@ class User extends Authenticatable implements LaratrustUser
     public function supervisor(): HasOne
     {
         return $this->hasOne(Supervisor::class);
+    }
+
+    public function projectMemberships(): HasMany
+    {
+        return $this->hasMany(ProjectMember::class, 'user_id');
+    }
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(UniProject::class, 'project_members', 'user_id', 'project_id')
+            ->withPivot('position')
+            ->withTimestamps()
+            ->orderBy('project_members.position');
     }
 
     public function resolveDashboardRoute(): ?string

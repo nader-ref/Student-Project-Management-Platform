@@ -214,7 +214,7 @@ class UserController extends Controller
     {
         $projects = UniProject::with('supervisor')->get();
         $studentName = Session::get('name');
-        $enrollment = StudentEnrollmentService::resolve($studentName);
+        $enrollment = StudentEnrollmentService::resolve($studentName, Auth::user());
         $submissions = collect();
         $progress = null;
         $nextSteps = collect();
