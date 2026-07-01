@@ -46,7 +46,7 @@ class SupervisorController extends Controller
             ]);
         }
 
-        $user = User::where('email', request('email'))->first();
+        $user = Auth::user();
 
         if ($user->name !== $request->name) {
             Auth::logout();
@@ -56,21 +56,21 @@ class SupervisorController extends Controller
             ]);
         }
 
-        $sup = Supervisor::where('email', request('email'))->first();
+        if (! $user->hasRole($request->role)) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'This account does not have supervisor access.',
+            ]);
+        }
+
+        $sup = $user->supervisor;
 
         if (! $sup) {
             Auth::logout();
 
             throw ValidationException::withMessages([
                 'email' => 'Supervisor profile not found.',
-            ]);
-        }
-
-        if (! $user->hasRole($request->role)) {
-            Auth::logout();
-
-            throw ValidationException::withMessages([
-                'email' => 'This account does not have supervisor access.',
             ]);
         }
 
@@ -147,7 +147,7 @@ class SupervisorController extends Controller
                 ->withInput();
         }
 
-        $sup = Supervisor::where('email', Session('email'))->first();
+        $sup = Auth::user()->supervisor;
         $tak = $request->taken == 'Yes' ? 1 : 0;
 
         UniProject::create([
