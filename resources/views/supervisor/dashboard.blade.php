@@ -543,6 +543,7 @@
                 @else
                     <div class="request-list">
                         @foreach ($pendingIdeas as $idea)
+                            @php $ideaMembers = $idea->members->sortBy('position'); @endphp
                             <article class="request-item is-pending">
                                 <div class="request-item-body">
                                     <div class="request-item-top">
@@ -554,14 +555,7 @@
                                     </div>
                                     <div class="meta-block team-block">
                                         <label>Team</label>
-                                        <span>{{ $idea->nameone }}
-                                          @if($idea->nametwo)
-                                           {{ $idea->nametwo }}
-                                          @endif
-                                           @if($idea->namethree)
-                                           {{ $idea->namethree }}
-                                           @endif
-                                          </span>
+                                        <span>{{ $ideaMembers->pluck('user.name')->implode(', ') }}</span>
                                     </div>
                                     <div class="form-pro-actions" style="margin-top: 1rem; padding: 1rem; flex-wrap: wrap; gap: 0.75rem;">
                                         <form action="{{ url('/acceptidea') }}" method="POST">

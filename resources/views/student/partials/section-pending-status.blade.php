@@ -47,7 +47,7 @@
                 <div class="request-meta-grid">
                     <div class="meta-block">
                         <label>Supervisor</label>
-                        <span>{{ $pendingIdea->supname }}</span>
+                        <span>{{ $pendingIdea->supervisor->name ?? 'Supervisor unavailable' }}</span>
                     </div>
                     <div class="meta-block">
                         <label>Submitted</label>

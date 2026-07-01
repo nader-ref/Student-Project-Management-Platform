@@ -68,6 +68,7 @@
     @else
         <div class="request-list">
             @foreach ($processedIdeas->sortByDesc('updated_at') as $idea)
+                @php $ideaMembers = $idea->members->sortBy('position'); @endphp
                 <article class="request-item {{ $idea->accepted ? 'is-accepted' : 'is-rejected' }}">
                     <div class="request-item-body">
                         <div class="request-item-top">
@@ -83,7 +84,7 @@
                         <div class="request-meta-grid">
                             <div class="meta-block">
                                 <label>Team</label>
-                                <span>{{ $idea->nameone }}@if($idea->nametwo), {{ $idea->nametwo }}@endif</span>
+                                <span>{{ $ideaMembers->pluck('user.name')->implode(', ') }}</span>
                             </div>
                             <div class="meta-block">
                                 <label>Processed</label>
