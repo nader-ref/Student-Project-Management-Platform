@@ -83,7 +83,7 @@ class UserController extends Controller
                         'password' => 'required|string',
                     ]);
                    
-                    if(!Auth::attempt($log)){
+                    if(!Auth::attempt($log, $request->boolean('remember'))){
                     //    $admin = Admin::where('email',request('email'))->first();
                     //    if($admin){
                     //      if(Hash::check(request('password'), $admin->password)&& $admin->name == request('name')){
@@ -98,15 +98,14 @@ class UserController extends Controller
                         
                         ]);
                     };
-                    if (request()->has('remember')) {
-                        cookie()->queue('remember_user', User::where('university_number', request('university_number'))->first()->id, 60 * 24 * 7); // 7 days
-                    }
-                    $user = User::where('university_number', request('university_number'))->first();
-                    if (! $user->hasRole($request->role)) {
+                    $user = Auth::user();
+                    $dashboardRoute = $user->resolveDashboardRoute();
+
+                    if (! $dashboardRoute) {
                         Auth::logout();
 
                         throw ValidationException::withMessages([
-                            'university_number' => 'This account does not have student access.',
+                            'university_number' => 'This account does not have access to a portal.',
                         ]);
                     }
 
@@ -121,9 +120,20 @@ class UserController extends Controller
                     request()->session()->regenerate();
                     Session::put('email',$user->email);
                     Session::put('name',$user->name);
-                    return redirect('/StudentDashboard')->with('success', 'User registered successfully!');
+                    return redirect($dashboardRoute)->with('success', 'Signed in successfully!');
       
 
+    }
+
+    public function adminPlaceholder()
+    {
+        $user = Auth::user();
+
+        if (! $user->hasRole('admin')) {
+            return redirect($user->resolveDashboardRoute() ?? '/');
+        }
+
+        return response('Admin dashboard placeholder. Full admin dashboard will be implemented in Phase 4.');
     }
 
     public function Change()

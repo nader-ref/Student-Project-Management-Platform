@@ -52,4 +52,21 @@ class User extends Authenticatable implements LaratrustUser
     {
         return $this->hasOne(Supervisor::class);
     }
+
+    public function resolveDashboardRoute(): ?string
+    {
+        if ($this->hasRole('admin')) {
+            return '/admin';
+        }
+
+        if ($this->hasRole('supervisor')) {
+            return '/supervisorDashboard';
+        }
+
+        if ($this->hasRole('student')) {
+            return '/StudentDashboard';
+        }
+
+        return null;
+    }
 }

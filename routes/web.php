@@ -23,9 +23,12 @@ Route::middleware('guest')->group(function () {
     Route::post('signup', [UserController::class, 'Create']);
     Route::get('Login', [UserController::class, 'Show2'])->name('login');
     Route::post('Login', [UserController::class, 'Enter']);
-    Route::get('supervisorSignup', [SupervisorController::class, 'show'])->name('supervisor.login');
-    Route::post('supervisorSignup', [SupervisorController::class, 'login']);
+    Route::get('supervisorSignup', fn () => redirect()->route('login'))->name('supervisor.login');
+    Route::post('supervisorSignup', fn () => redirect()->route('login'));
 });
+
+Route::middleware('auth')->get('/admin', [UserController::class, 'adminPlaceholder'])
+    ->name('admin.dashboard');
 
 Route::get('/ForgetPassword', [UserController::class, 'showForm'])->name('password.request');
 Route::post('/ForgetPassword', [UserController::class, 'sendResetLink'])->name('password.email');
