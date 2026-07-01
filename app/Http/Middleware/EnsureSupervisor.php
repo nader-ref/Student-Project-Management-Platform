@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Supervisor;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +28,7 @@ class EnsureSupervisor
             ]);
         }
 
-        $supervisor = Supervisor::where('email', $user->email)->first();
+        $supervisor = $user->supervisor;
 
         if (! $supervisor) {
             Auth::logout();
@@ -43,6 +42,7 @@ class EnsureSupervisor
 
         Session::put('email', $user->email);
         Session::put('name', $user->name);
+        // Temporary compatibility for existing supervisor queries; remove in session cleanup phase.
         Session::put('id', $supervisor->id);
 
         return $next($request);
