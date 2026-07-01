@@ -352,10 +352,10 @@
                                             <span>{{ $project->final ? Carbon::parse($project->final)->format('M d, Y') : '—' }}</span>
                                         </div>
                                     </div>
-                                    @if ($project->student_one_name)
+                                    @if ($project->members->isNotEmpty())
                                         <div class="meta-block team-block">
                                             <label>Team</label>
-                                            <span>{{ $project->student_one_name }}@if($project->student_two_name), {{ $project->student_two_name }}@endif</span>
+                                            <span>{{ $project->members->sortBy('position')->pluck('user.name')->implode(', ') }}</span>
                                         </div>
                                     @endif
                                     <div class="meta-block team-block">

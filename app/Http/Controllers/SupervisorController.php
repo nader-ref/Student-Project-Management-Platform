@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -87,7 +88,7 @@ class SupervisorController extends Controller
         $supervisorId = Session::get('id');
         $supervisorName = Session::get('name');
 
-        $projects = UniProject::where('supervisor_id', $supervisorId)->get();
+        $projects = UniProject::with('members.user')->where('supervisor_id', $supervisorId)->get();
         $myProjectIds = $projects->pluck('id');
 
         $requests = Projectrequest::whereIn('projectid', $myProjectIds)->get();
@@ -150,24 +151,27 @@ class SupervisorController extends Controller
         $sup = Auth::user()->supervisor;
         $tak = $request->taken == 'Yes' ? 1 : 0;
 
-        UniProject::create([
-            'name' => $request->project_name,
-            'description' => $request->description,
-            'supervisor_id' => $sup->id,
-            'department' => $request->department,
-            'taken' => $tak,
-            'student_count' => $request->students_number ?? null,
-            'student_one_name' => $request->student_one_name ?? null,
-            'student_one_id' => $request->student_one_id ?? null,
-            'student_two_name' => $request->student_two_name ?? null,
-            'student_two_id' => $request->student_two_id ?? null,
-            'student_three_name' => $request->student_three_name ?? null,
-            'student_three_id' => $request->student_three_id ?? null,
-            'seminar_1' => $request->seminar1_date,
-            'seminar_2' => $request->seminar2_date,
-            'seminar_3' => $request->seminar3_date,
-            'final' => $request->final_date,
-        ]);
+        $memberResult = $this->membersFromRequest($request);
+        if (isset($memberResult['error'])) {
+            return back()->with('error', $memberResult['error'])->withInput();
+        }
+
+        DB::transaction(function () use ($request, $sup, $tak, $memberResult) {
+            $project = UniProject::create([
+                'name' => $request->project_name,
+                'description' => $request->description,
+                'supervisor_id' => $sup->id,
+                'department' => $request->department,
+                'taken' => $tak,
+                'student_count' => count($memberResult['members']) ?: ($request->students_number ?? null),
+                'seminar_1' => $request->seminar1_date,
+                'seminar_2' => $request->seminar2_date,
+                'seminar_3' => $request->seminar3_date,
+                'final' => $request->final_date,
+            ]);
+
+            $this->syncProjectMembers($project, $memberResult['members']);
+        });
 
         return redirect()->back()->with('success', 'Project registered successfully!');
     }
@@ -208,23 +212,26 @@ class SupervisorController extends Controller
             return back()->with('error', 'Project not found or access denied.');
         }
 
-        $project->update([
-            'name' => $request->project_name,
-            'description' => $request->description,
-            'department' => $request->department,
-            'taken' => $request->taken == 'Yes' ? 1 : 0,
-            'student_count' => $request->students_number ?? null,
-            'student_one_name' => $request->student_one_name ?? null,
-            'student_one_id' => $request->student_one_id ?? null,
-            'student_two_name' => $request->student_two_name ?? null,
-            'student_two_id' => $request->student_two_id ?? null,
-            'student_three_name' => $request->student_three_name ?? null,
-            'student_three_id' => $request->student_three_id ?? null,
-            'seminar_1' => $request->seminar1_date,
-            'seminar_2' => $request->seminar2_date,
-            'seminar_3' => $request->seminar3_date,
-            'final' => $request->final_date,
-        ]);
+        $memberResult = $this->membersFromRequest($request);
+        if (isset($memberResult['error'])) {
+            return back()->with('error', $memberResult['error'])->withInput()->with('active_tab', 'show_pro');
+        }
+
+        DB::transaction(function () use ($request, $project, $memberResult) {
+            $project->update([
+                'name' => $request->project_name,
+                'description' => $request->description,
+                'department' => $request->department,
+                'taken' => $request->taken == 'Yes' ? 1 : 0,
+                'student_count' => count($memberResult['members']) ?: ($request->students_number ?? null),
+                'seminar_1' => $request->seminar1_date,
+                'seminar_2' => $request->seminar2_date,
+                'seminar_3' => $request->seminar3_date,
+                'final' => $request->final_date,
+            ]);
+
+            $this->syncProjectMembers($project, $memberResult['members']);
+        });
 
         return redirect()->back()->with('success', 'Project updated successfully!')->with('active_tab', 'show_pro');
     }
@@ -247,19 +254,27 @@ class SupervisorController extends Controller
             return back()->with('error', 'Project request not found.');
         }
 
-        $project->taken = 1;
-        $project->student_count = $projectRequest->count;
-        $project->student_one_name = $projectRequest->nameone;
-        $project->student_one_id = $projectRequest->oneid;
-        $project->student_two_name = $projectRequest->nametwo;
-        $project->student_two_id = $projectRequest->twoid;
-        $project->student_three_name = $projectRequest->namethree;
-        $project->student_three_id = $projectRequest->threeid;
-        $project->save();
+        $memberResult = $this->membersFromLegacySlots([
+            1 => $projectRequest->oneid,
+            2 => $projectRequest->twoid,
+            3 => $projectRequest->threeid,
+        ]);
 
-        $projectRequest->accepted = 1;
-        $projectRequest->rejected = 0;
-        $projectRequest->save();
+        if (isset($memberResult['error'])) {
+            return back()->with('error', $memberResult['error']);
+        }
+
+        DB::transaction(function () use ($project, $projectRequest, $memberResult) {
+            $project->taken = 1;
+            $project->student_count = count($memberResult['members']);
+            $project->save();
+
+            $this->syncProjectMembers($project, $memberResult['members']);
+
+            $projectRequest->accepted = 1;
+            $projectRequest->rejected = 0;
+            $projectRequest->save();
+        });
 
         return redirect()->back()->with('success', 'Request accepted successfully!');
     }
@@ -307,28 +322,36 @@ class SupervisorController extends Controller
             return back()->with('error', 'Idea not found.');
         }
 
-        UniProject::create([
-            'name' => $idea->projectname,
-            'description' => null,
-            'supervisor_id' => Session::get('id'),
-            'department' => 'software',
-            'taken' => 1,
-            'student_count' => $idea->count,
-            'student_one_name' => $idea->nameone ?? null,
-            'student_one_id' => $idea->oneid ?? null,
-            'student_two_name' => $idea->nametwo ?? null,
-            'student_two_id' => $idea->twoid ?? null,
-            'student_three_name' => $idea->namethree ?? null,
-            'student_three_id' => $idea->threeid ?? null,
-            'seminar_1' => null,
-            'seminar_2' => null,
-            'seminar_3' => null,
-            'final' => null,
+        $memberResult = $this->membersFromLegacySlots([
+            1 => $idea->oneid,
+            2 => $idea->twoid,
+            3 => $idea->threeid,
         ]);
 
-        $idea->accepted = 1;
-        $idea->rejected = 0;
-        $idea->save();
+        if (isset($memberResult['error'])) {
+            return back()->with('error', $memberResult['error']);
+        }
+
+        DB::transaction(function () use ($idea, $memberResult) {
+            $project = UniProject::create([
+                'name' => $idea->projectname,
+                'description' => null,
+                'supervisor_id' => Session::get('id'),
+                'department' => 'software',
+                'taken' => 1,
+                'student_count' => count($memberResult['members']),
+                'seminar_1' => null,
+                'seminar_2' => null,
+                'seminar_3' => null,
+                'final' => null,
+            ]);
+
+            $this->syncProjectMembers($project, $memberResult['members']);
+
+            $idea->accepted = 1;
+            $idea->rejected = 0;
+            $idea->save();
+        });
 
         return redirect()->back()->with('success', 'Idea accepted and project created!');
     }
@@ -425,5 +448,56 @@ class SupervisorController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'Password updated successfully!')->with('active_tab', 'settings');
+    }
+
+    private function membersFromRequest(Request $request): array
+    {
+        return $this->membersFromLegacySlots([
+            1 => $request->student_one_id,
+            2 => $request->student_two_id,
+            3 => $request->student_three_id,
+        ]);
+    }
+
+    private function membersFromLegacySlots(array $slots): array
+    {
+        $members = [];
+        $seenUserIds = [];
+
+        foreach ($slots as $position => $universityNumber) {
+            if (blank($universityNumber)) {
+                continue;
+            }
+
+            $user = User::where('university_number', (string) $universityNumber)->first();
+
+            if (! $user) {
+                return ['error' => "No student account found for university number {$universityNumber}."];
+            }
+
+            if (in_array($user->id, $seenUserIds, true)) {
+                return ['error' => "Student {$universityNumber} was selected more than once."];
+            }
+
+            $seenUserIds[] = $user->id;
+            $members[] = [
+                'user' => $user,
+                'position' => $position,
+            ];
+        }
+
+        return ['members' => $members];
+    }
+
+    private function syncProjectMembers(UniProject $project, array $members): void
+    {
+        $project->members()->delete();
+
+        foreach ($members as $member) {
+            $project->members()->create([
+                'user_id' => $member['user']->id,
+                'position' => $member['position'],
+            ]);
+        }
     }
 }

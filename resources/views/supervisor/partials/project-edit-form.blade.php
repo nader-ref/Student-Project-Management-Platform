@@ -1,5 +1,6 @@
 @php
     $fmtDate = fn ($v) => $v ? \Carbon\Carbon::parse($v)->format('Y-m-d') : '';
+    $membersByPosition = $project->members->keyBy('position');
 @endphp
 
 <details class="project-edit-panel">
@@ -35,27 +36,27 @@
         <div class="form-grid" style="margin-top: 0.75rem;">
             <div class="form-field form-field-pro">
                 <label>Student 1 Name</label>
-                <input type="text" name="student_one_name" value="{{ $project->student_one_name }}">
+                <input type="text" name="student_one_name" value="{{ $membersByPosition->get(1)?->user?->name }}" readonly>
             </div>
             <div class="form-field form-field-pro">
-                <label>Student 1 ID</label>
-                <input type="text" name="student_one_id" value="{{ $project->student_one_id }}">
+                <label>Student 1 University Number</label>
+                <input type="text" name="student_one_id" value="{{ $membersByPosition->get(1)?->user?->university_number }}">
             </div>
             <div class="form-field form-field-pro">
                 <label>Student 2 Name</label>
-                <input type="text" name="student_two_name" value="{{ $project->student_two_name }}">
+                <input type="text" name="student_two_name" value="{{ $membersByPosition->get(2)?->user?->name }}" readonly>
             </div>
             <div class="form-field form-field-pro">
-                <label>Student 2 ID</label>
-                <input type="text" name="student_two_id" value="{{ $project->student_two_id }}">
+                <label>Student 2 University Number</label>
+                <input type="text" name="student_two_id" value="{{ $membersByPosition->get(2)?->user?->university_number }}">
             </div>
             <div class="form-field form-field-pro">
                 <label>Student 3 Name</label>
-                <input type="text" name="student_three_name" value="{{ $project->student_three_name }}">
+                <input type="text" name="student_three_name" value="{{ $membersByPosition->get(3)?->user?->name }}" readonly>
             </div>
             <div class="form-field form-field-pro">
-                <label>Student 3 ID</label>
-                <input type="text" name="student_three_id" value="{{ $project->student_three_id }}">
+                <label>Student 3 University Number</label>
+                <input type="text" name="student_three_id" value="{{ $membersByPosition->get(3)?->user?->university_number }}">
             </div>
         </div>
         <div class="form-field form-field-pro" style="margin-top: 0.75rem; max-width: 200px;">

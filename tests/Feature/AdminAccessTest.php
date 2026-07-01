@@ -112,8 +112,11 @@ function createAdminFixture(): array
         'department' => 'software',
         'taken' => true,
         'student_count' => 1,
-        'student_one_name' => $student->name,
-        'student_one_id' => 2026001,
+    ]);
+
+    $project->members()->create([
+        'user_id' => $student->id,
+        'position' => 1,
     ]);
 
     ProjectSubmission::create([
