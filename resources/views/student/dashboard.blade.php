@@ -20,6 +20,7 @@ $supervisorCount = $stats['supervisors'];
 $availabilityRate = $totalProjects > 0 ? round(($availableProjects / $totalProjects) * 100) : 0;
 $takenRate = $totalProjects > 0 ? round(($takenProjects / $totalProjects) * 100) : 0;
 $enrolledSupervisorName = $enrolledProject?->supervisor?->name;
+$enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 @endphp
 
 <div class="dashboard" data-enrollment-mode="{{ $enrollmentMode }}" data-active-tab="{{ Session::get('active_tab', '') }}">
@@ -575,15 +576,18 @@ $enrolledSupervisorName = $enrolledProject?->supervisor?->name;
                             <div class="form-pro-card-body">
                                 <div class="form-field form-field-pro">
                                     <label><i class="fas fa-user-tie"></i> Supervisor Name</label>
-                                    <select name="supname" required>
-                                        @if ($isEnrolled && $enrolledSupervisorName)
-                                        <option value="{{ $enrolledSupervisorName }}" selected>{{ $enrolledSupervisorName }}</option>
+                                    <select name="supervisor_id" required>
+                                        @if ($isEnrolled && $enrolledSupervisorId)
+                                        <option value="{{ $enrolledSupervisorId }}" selected>{{ $enrolledSupervisorName }}</option>
                                         @else
-                                        @include('student.partials.supervisor-options')
+                                            <option value="" disabled {{ old('supervisor_id') ? '' : 'selected' }}>Select a supervisor</option>
+                                            @foreach($supervisors as $supervisor)
+                                                <option value="{{ $supervisor->id }}" {{ (string) old('supervisor_id') === (string) $supervisor->id ? 'selected' : '' }}>{{ $supervisor->name }}</option>
+                                            @endforeach
                                         @endif
                                     </select>
                                 </div>
-                                @error('supname')
+                                @error('supervisor_id')
                                 <span class="error-text">{{ $message }}</span>
                                 @enderror
                             </div>

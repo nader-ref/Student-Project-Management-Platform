@@ -382,12 +382,14 @@ class StudentEnrollmentService
         }
 
         foreach ($contacts as $contact) {
+            $supervisorName = $contact->supervisor?->name ?? $contact->supname;
+
             $events->push([
                 'type' => 'message_sent',
                 'icon' => 'fas fa-paper-plane',
                 'tone' => 'info',
                 'title' => 'Message sent: '.$contact->subject,
-                'meta' => 'To '.$contact->supname,
+                'meta' => 'To '.$supervisorName,
                 'tab' => 'message',
                 'timestamp' => $contact->created_at,
             ]);

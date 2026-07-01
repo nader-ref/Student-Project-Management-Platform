@@ -4,9 +4,9 @@
 
 @section('content')
     @php
-        $studentEmail = Session::get('email');
-        $studentName = Session::get('name') ?? $studentEmail;
-        $myMessages = $Messages->where('email', $studentEmail);
+        $student = auth()->user();
+        $studentName = $student?->name ?? 'Student';
+        $myMessages = $Messages;
         $repliedCount = $myMessages->filter(fn ($m) => !empty($m->Replay))->count();
         $pendingReplyCount = $myMessages->count() - $repliedCount;
         $totalSent = $myMessages->count();
@@ -134,11 +134,11 @@
                                     <div class="request-meta-grid">
                                         <div class="meta-block">
                                             <label>To</label>
-                                            <span>{{ $message->supname }}</span>
+                                            <span>{{ $message->supervisor?->name ?? $message->supname }}</span>
                                         </div>
                                         <div class="meta-block">
                                             <label>From</label>
-                                            <span>{{ $studentName }}</span>
+                                            <span>{{ $message->student?->name ?? $studentName }}</span>
                                         </div>
                                         <div class="meta-block">
                                             <label>Sent On</label>
@@ -208,14 +208,14 @@
                                             <h3>{{ $message->subject }}</h3>
                                         </div>
                                         <span class="status-pill accepted">
-                                            <i class="fas fa-user-tie"></i> {{ $message->supname }}
+                                            <i class="fas fa-user-tie"></i> {{ $message->supervisor?->name ?? $message->supname }}
                                         </span>
                                     </div>
 
                                     <div class="request-meta-grid">
                                         <div class="meta-block">
                                             <label>Project</label>
-                                            <span>{{ $message->projectname ?? '—' }}</span>
+                                            <span>{{ $message->project?->name ?? $message->projectname ?? '—' }}</span>
                                         </div>
                                         <div class="meta-block">
                                             <label>Posted On</label>

@@ -85,8 +85,15 @@ class SupervisorController extends Controller
 
     public function showdash()
     {
-        $supervisorId = Session::get('id');
-        $supervisorName = Session::get('name');
+        $supervisor = Auth::user()->supervisor;
+
+        if (! $supervisor) {
+            abort(403);
+        }
+
+        $supervisorId = $supervisor->id;
+        Session::put('id', $supervisorId);
+        Session::put('name', Auth::user()->name);
 
         $projects = UniProject::with('members.user')->where('supervisor_id', $supervisorId)->get();
         $myProjectIds = $projects->pluck('id');
@@ -97,8 +104,14 @@ class SupervisorController extends Controller
         $ideas = Idea::with(['supervisor', 'members.user'])
             ->where('supervisor_id', $supervisorId)
             ->get();
-        $inboxMessages = Contact::where('supname', $supervisorName)->orderByDesc('created_at')->get();
-        $announcements = Supcontact::where('supname', $supervisorName)->orderByDesc('created_at')->get();
+        $inboxMessages = Contact::with(['student', 'supervisor'])
+            ->where('supervisor_id', $supervisorId)
+            ->orderByDesc('created_at')
+            ->get();
+        $announcements = Supcontact::with(['supervisor', 'project'])
+            ->where('supervisor_id', $supervisorId)
+            ->orderByDesc('created_at')
+            ->get();
         $submissions = ProjectSubmission::with('project')
             ->whereIn('project_id', $myProjectIds)
             ->orderByDesc('created_at')
@@ -112,7 +125,7 @@ class SupervisorController extends Controller
             'announcements' => $announcements,
             'submissions' => $submissions,
             'milestoneLabels' => \App\Services\StudentEnrollmentService::milestoneLabels(),
-            'supervisor' => Supervisor::find($supervisorId),
+            'supervisor' => $supervisor,
         ]);
     }
 
@@ -375,9 +388,12 @@ class SupervisorController extends Controller
             return back()->withErrors($validator)->with('active_tab', 'Message');
         }
 
-        $contact = Contact::where('id', $request->contact_id)
-            ->where('supname', Session::get('name'))
-            ->first();
+        $supervisor = Auth::user()->supervisor;
+        $contact = $supervisor
+            ? Contact::where('id', $request->contact_id)
+                ->where('supervisor_id', $supervisor->id)
+                ->first()
+            : null;
 
         if (! $contact) {
             return back()->with('error', 'Message not found.');
@@ -392,7 +408,7 @@ class SupervisorController extends Controller
     public function sendannouncement(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'projectname' => 'required|string|max:255',
+            'project_id' => 'required|integer|exists:uni_projects,id',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:1000',
         ]);
@@ -401,9 +417,22 @@ class SupervisorController extends Controller
             return back()->withErrors($validator)->withInput()->with('active_tab', 'Message');
         }
 
+        $supervisor = Auth::user()->supervisor;
+        $project = $supervisor
+            ? UniProject::where('id', $request->project_id)
+                ->where('supervisor_id', $supervisor->id)
+                ->first()
+            : null;
+
+        if (! $project) {
+            return back()->with('error', 'Project not found or access denied.')->with('active_tab', 'Message');
+        }
+
         Supcontact::create([
-            'supname' => Session::get('name'),
-            'projectname' => $request->projectname,
+            'supervisor_id' => $supervisor->id,
+            'project_id' => $project->id,
+            'supname' => $supervisor->name,
+            'projectname' => $project->name,
             'subject' => $request->subject,
             'Message' => $request->message,
         ]);

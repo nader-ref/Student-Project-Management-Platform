@@ -27,4 +27,14 @@ class Supervisor extends Model
     {
         return $this->hasMany(idea::class, 'supervisor_id');
     }
+
+    public function studentMessages(): HasMany
+    {
+        return $this->hasMany(contact::class, 'supervisor_id');
+    }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(supcontact::class, 'supervisor_id');
+    }
 }
