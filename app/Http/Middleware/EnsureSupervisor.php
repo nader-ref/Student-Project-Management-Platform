@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureSupervisor
@@ -28,9 +27,7 @@ class EnsureSupervisor
             ]);
         }
 
-        $supervisor = $user->supervisor;
-
-        if (! $supervisor) {
+        if (! $user->supervisor) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -39,11 +36,6 @@ class EnsureSupervisor
                 'email' => 'Supervisor profile not found. Contact the administrator.',
             ]);
         }
-
-        Session::put('email', $user->email);
-        Session::put('name', $user->name);
-        // Temporary compatibility for existing supervisor queries; remove in session cleanup phase.
-        Session::put('id', $supervisor->id);
 
         return $next($request);
     }

@@ -11,10 +11,10 @@
                     <a href="#about" class="hover:text-red-400 transition-colors">About</a>
                     <a href="#courses" class="hover:text-red-400 transition-colors">Courses</a>
                     <a href="#projects" class="hover:text-red-400 transition-colors">Projects</a>
-                    @if(Session::has('email'))
+                    @auth
                     <a href="/list" class="text-red-400 hover:text-red-800 transition-colors">My List</a>
                     <a href="/notifications" class="text-red-400 hover:text-red-800 transition-colors">Notifications</a>
-                    @endif
+                    @endauth
                     <a href="#contact" class="hover:text-red-400 transition-colors">Contact</a>
                 </div>
                 <button class="md:hidden text-xl" onclick="toggleMobileMenu()">

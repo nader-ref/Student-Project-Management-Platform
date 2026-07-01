@@ -4,7 +4,6 @@
 
 @section('content')
 @php
-$studentName = Session::get('name') ?? Session::get('email');
 $isEnrolled = $enrollmentMode === 'enrolled';
 $isPending = $enrollmentMode === 'pending';
 $isDiscovery = $enrollmentMode === 'discovery';
@@ -662,7 +661,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                         </div>
                         <div class="sidebar-stat">
                             <span>Logged in as</span>
-                            <strong>{{ Session::get('name') ?? 'Student' }}</strong>
+                            <strong>{{ auth()->user()?->name ?? 'Student' }}</strong>
                         </div>
                     </div>
 

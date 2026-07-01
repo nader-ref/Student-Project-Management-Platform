@@ -56,8 +56,6 @@ class UserController extends Controller
             //Go to Storage → Cookies → your site
             //Look for a cookie named remember_user
              Auth::login($user);
-            Session::put('email',request('email'));
-            Session::put('name',request('name'));
             return redirect('/StudentDashboard')->with('success', 'User registered successfully!');
     }
 
@@ -118,8 +116,6 @@ class UserController extends Controller
          
                     
                     request()->session()->regenerate();
-                    Session::put('email',$user->email);
-                    Session::put('name',$user->name);
                     return redirect($dashboardRoute)->with('success', 'Signed in successfully!');
       
 
