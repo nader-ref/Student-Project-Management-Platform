@@ -87,9 +87,15 @@ it('creates project members when a supervisor accepts a project request', functi
 
     $projectRequest = Projectrequest::create([
         'projectid' => $project->id,
-        'count' => 1,
         'nameone' => $student->name,
         'oneid' => 2026001,
+        'project_id' => $project->id,
+        'requested_by_user_id' => $student->id,
+        'count' => 1,
+    ]);
+    $projectRequest->members()->create([
+        'user_id' => $student->id,
+        'position' => 1,
     ]);
 
     $this->actingAs($supervisorUser)

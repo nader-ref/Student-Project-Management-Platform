@@ -470,13 +470,16 @@
                 @else
                     <div class="request-list">
                         @foreach ($pendingRequests as $req)
-                            @php $proj = $projectNames->get($req->projectid); @endphp
+                            @php
+                                $proj = $req->project;
+                                $requestMembers = $req->members->sortBy('position');
+                            @endphp
                             <article class="request-item is-pending">
                                 <div class="request-item-body">
                                     <div class="request-item-top">
                                         <div>
                                             <div class="request-ref">REQ-{{ str_pad($req->id, 4, '0', STR_PAD_LEFT) }}</div>
-                                            <h3>{{ $proj->name ?? 'Project #'.$req->projectid }}</h3>
+                                            <h3>{{ $proj->name ?? 'Project request' }}</h3>
                                         </div>
                                         <span class="status-pill pending"><i class="fas fa-hourglass-half"></i> Pending</span>
                                     </div>
@@ -493,23 +496,18 @@
                                     <div class="meta-block team-block">
                                         <label>Team Members</label>
                                         <div class="avatar-stack">
-                                            <span class="avatar-chip">
-                                                <span class="avatar-initial">{{ strtoupper(substr($req->nameone, 0, 1)) }}</span>
-                                                {{ $req->nameone }} ({{ $req->oneid }})
-                                            </span>
-                                            @if ($req->nametwo)
-                                                <span class="avatar-chip">{{ $req->nametwo }} ({{ $req->twoid }})</span>
-                                            @endif
-                                            @if ($req->namethree)
-                                                <span class="avatar-chip">{{ $req->namethree }} ({{ $req->threeid }})</span>
-                                            @endif
+                                            @foreach ($requestMembers as $member)
+                                                <span class="avatar-chip">
+                                                    <span class="avatar-initial">{{ strtoupper(substr($member->user->name, 0, 1)) }}</span>
+                                                    {{ $member->user->name }} ({{ $member->user->university_number }})
+                                                </span>
+                                            @endforeach
                                         </div>
                                     </div>
                                     <div class="form-pro-actions" style="margin-top: 1rem; padding: 1rem; flex-wrap: wrap; gap: 0.75rem;">
                                         <form action="{{ url('/acceptrequest') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="request" value="{{ $req->id }}">
-                                            <input type="hidden" name="project" value="{{ $req->projectid }}">
                                             <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Accept</button>
                                         </form>
                                         <form action="{{ url('/rejectrequest') }}" method="POST" class="form-field-pro" style="display: flex; gap: 0.5rem; align-items: flex-end; flex: 1; min-width: 240px;">

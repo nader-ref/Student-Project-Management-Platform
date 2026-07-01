@@ -18,7 +18,7 @@
         <div class="navbar-actions">
             @include('partials.navbar-user-menu', [
                 'menuOnDashboard' => $onDashboard,
-                'menuLogoutUrl' => url('/supervisorDashboard/logout'),
+                'menuLogoutUrl' => route('logout'),
                 'menuDashboardUrl' => url('/supervisorDashboard'),
             ])
         </div>

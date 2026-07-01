@@ -1,6 +1,6 @@
 @php
     $menuOnDashboard = $menuOnDashboard ?? false;
-    $menuLogoutUrl = $menuLogoutUrl ?? url('/Logout');
+    $menuLogoutUrl = $menuLogoutUrl ?? route('logout');
     $menuDashboardUrl = $menuDashboardUrl ?? url('/StudentDashboard');
 @endphp
 
@@ -32,10 +32,13 @@
                 <span>Settings</span>
             </a>
         @endif
-        <a href="{{ $menuLogoutUrl }}" class="navbar-dropdown-item is-danger" role="menuitem">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
-        </a>
+        <form method="POST" action="{{ $menuLogoutUrl }}">
+            @csrf
+            <button type="submit" class="navbar-dropdown-item is-danger" role="menuitem">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </form>
     </div>
 </div>
 

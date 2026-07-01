@@ -33,6 +33,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 });
 
+Route::middleware('auth')->post('/logout', [UserController::class, 'Out'])->name('logout');
+
 Route::get('/ForgetPassword', [UserController::class, 'showForm'])->name('password.request');
 Route::post('/ForgetPassword', [UserController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [UserController::class, 'showForms'])->name('password.reset');
@@ -40,7 +42,6 @@ Route::post('/reset-password', [UserController::class, 'reset'])->name('password
 
 // Student portal
 Route::middleware('student')->group(function () {
-    Route::get('/Logout', [UserController::class, 'Out'])->name('logout');
     Route::get('/StudentDashboard', [UserController::class, 'showDash'])->name('student.dashboard');
     Route::post('/RequstAdd', [ProjectrequestController::class, 'request']);
     Route::get('/StudentDashboard/acceptance', [ProjectrequestController::class, 'accept']);
@@ -58,7 +59,6 @@ Route::middleware('student')->group(function () {
 // Supervisor portal
 Route::middleware('supervisor')->group(function () {
     Route::get('supervisorDashboard', [SupervisorController::class, 'showdash'])->name('supervisor.dashboard');
-    Route::get('supervisorDashboard/logout', [SupervisorController::class, 'logout'])->name('supervisor.logout');
     Route::post('/addproject', [SupervisorController::class, 'addproject']);
     Route::post('/updateproject', [SupervisorController::class, 'updateproject']);
     Route::post('/acceptrequest', [SupervisorController::class, 'acceptrequest']);

@@ -444,6 +444,11 @@ $enrolledSupervisorName = $enrolledProject?->supervisor?->name;
                         'member1Step' => '03',
                         'member2Step' => '04',
                         'leaderNote' => 'Primary proposer — required for every idea submission',
+                        'memberIdLabel' => 'Student ID',
+                        'memberIdType' => 'number',
+                        'memberOnePlaceholder' => 'e.g. 2200123',
+                        'memberTwoPlaceholder' => 'e.g. 2200456',
+                        'memberThreePlaceholder' => 'e.g. 2200789',
                         ])
 
                         <div class="form-pro-actions">

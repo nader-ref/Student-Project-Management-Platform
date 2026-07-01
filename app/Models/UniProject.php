@@ -30,4 +30,9 @@ class UniProject extends Model
             ->withTimestamps()
             ->orderBy('project_members.position');
     }
+
+    public function projectRequests(): HasMany
+    {
+        return $this->hasMany(projectrequest::class, 'project_id');
+    }
 }

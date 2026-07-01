@@ -68,6 +68,24 @@ class User extends Authenticatable implements LaratrustUser
             ->orderBy('project_members.position');
     }
 
+    public function submittedProjectRequests(): HasMany
+    {
+        return $this->hasMany(projectrequest::class, 'requested_by_user_id');
+    }
+
+    public function projectRequestMemberships(): HasMany
+    {
+        return $this->hasMany(ProjectRequestMember::class, 'user_id');
+    }
+
+    public function projectRequests(): BelongsToMany
+    {
+        return $this->belongsToMany(projectrequest::class, 'project_request_members', 'user_id', 'project_request_id')
+            ->withPivot('position')
+            ->withTimestamps()
+            ->orderBy('project_request_members.position');
+    }
+
     public function resolveDashboardRoute(): ?string
     {
         if ($this->hasRole('admin')) {

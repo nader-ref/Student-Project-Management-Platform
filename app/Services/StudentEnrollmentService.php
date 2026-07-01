@@ -60,11 +60,11 @@ class StudentEnrollmentService
             ];
         }
 
-        $pendingRequest = Projectrequest::where(function ($query) use ($studentName) {
-            $query->where('nameone', $studentName)
-                ->orWhere('nametwo', $studentName)
-                ->orWhere('namethree', $studentName);
-        })
+        $pendingRequest = Projectrequest::with(['project', 'members.user'])
+            ->when($student, fn ($query) => $query->whereHas(
+                'members',
+                fn ($memberQuery) => $memberQuery->where('user_id', $student->id),
+            ), fn ($query) => $query->whereRaw('1 = 0'))
             ->where('accepted', 0)
             ->where(function ($query) {
                 $query->where('rejected', 0)->orWhereNull('rejected');
