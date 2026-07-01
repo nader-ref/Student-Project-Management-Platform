@@ -25,7 +25,7 @@ it('creates ideas with relational supervisor, requester, and members', function 
         ->post('/RequstIdea', [
             'projectname' => 'Smart Campus Navigator',
             'count' => 1,
-            'supname' => $supervisor->name,
+            'supervisor_id' => $supervisor->id,
             'oneid' => $student->university_number,
         ])
         ->assertSessionHas('success');
@@ -134,16 +134,11 @@ function createIdeaFixture(): array
 
 function createIdeaForStudent(User $student, Supervisor $supervisor, string $projectName): Idea
 {
-    $legacyLeaderId = (int) preg_replace('/\D/', '', $student->university_number) ?: $student->id;
-
     $idea = Idea::create([
         'supervisor_id' => $supervisor->id,
         'requested_by_user_id' => $student->id,
         'projectname' => $projectName,
         'count' => 1,
-        'supname' => $supervisor->name,
-        'nameone' => $student->name,
-        'oneid' => $legacyLeaderId,
     ]);
 
     $idea->members()->create([

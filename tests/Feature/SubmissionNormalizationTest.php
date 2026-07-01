@@ -38,8 +38,6 @@ it('creates submissions with relational submitter references', function () {
     $this->assertDatabaseHas('project_submissions', [
         'project_id' => $project->id,
         'submitted_by_user_id' => $student->id,
-        'student_email' => $student->email,
-        'student_name' => $student->name,
         'title' => 'Seminar One Report',
         'status' => 'submitted',
     ]);
@@ -94,8 +92,6 @@ it('allows project members to download team submissions', function () {
     $submission = ProjectSubmission::create([
         'project_id' => $project->id,
         'submitted_by_user_id' => $student->id,
-        'student_email' => $student->email,
-        'student_name' => $student->name,
         'milestone' => 'seminar_1',
         'title' => 'Shared Report',
         'file_path' => 'submissions/'.$project->id.'/shared-report.pdf',
@@ -123,8 +119,6 @@ it('prevents submission downloads without project membership', function () {
     $submission = ProjectSubmission::create([
         'project_id' => $project->id,
         'submitted_by_user_id' => User::factory()->create()->id,
-        'student_email' => 'member@test.local',
-        'student_name' => 'Member Student',
         'milestone' => 'seminar_1',
         'title' => 'Protected Report',
         'file_path' => 'submissions/'.$project->id.'/protected-report.pdf',
@@ -151,8 +145,6 @@ it('allows supervisors to review submissions for their own projects only', funct
     $submission = ProjectSubmission::create([
         'project_id' => $project->id,
         'submitted_by_user_id' => $student->id,
-        'student_email' => $student->email,
-        'student_name' => $student->name,
         'milestone' => 'seminar_1',
         'title' => 'Review Target',
         'file_path' => 'submissions/'.$project->id.'/review-target.pdf',

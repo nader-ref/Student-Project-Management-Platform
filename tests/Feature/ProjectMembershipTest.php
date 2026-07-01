@@ -24,7 +24,7 @@ beforeEach(function () {
 it('resolves student enrollment from project members', function () {
     [$student, $project] = createMembershipFixture();
 
-    $enrollment = StudentEnrollmentService::resolve(null, $student);
+    $enrollment = StudentEnrollmentService::resolve($student);
 
     expect($enrollment['mode'])->toBe(StudentEnrollmentService::MODE_ENROLLED);
     expect($enrollment['project']->id)->toBe($project->id);
@@ -49,8 +49,6 @@ it('prevents student submission downloads without project membership', function 
     $submission = ProjectSubmission::create([
         'project_id' => $project->id,
         'submitted_by_user_id' => User::factory()->create()->id,
-        'student_email' => 'member@test.local',
-        'student_name' => 'Member Student',
         'milestone' => 'seminar_1',
         'title' => 'Initial Proposal',
         'file_path' => 'submissions/test-file.txt',
@@ -87,9 +85,6 @@ it('creates project members when a supervisor accepts a project request', functi
     ]);
 
     $projectRequest = Projectrequest::create([
-        'projectid' => $project->id,
-        'nameone' => $student->name,
-        'oneid' => 2026001,
         'project_id' => $project->id,
         'requested_by_user_id' => $student->id,
         'count' => 1,

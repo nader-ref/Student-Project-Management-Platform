@@ -61,7 +61,7 @@
                         <div class="request-item-top">
                             <div>
                                 <div class="request-ref">
-                                    <i class="fas fa-user-graduate"></i> {{ $msg->student?->email ?? $msg->email }}
+                                    <i class="fas fa-user-graduate"></i> {{ $msg->student?->email ?? '—' }}
                                 </div>
                                 <h3>{{ $msg->subject }}</h3>
                             </div>
@@ -167,7 +167,7 @@
                         <div class="request-item-top">
                             <div>
                                 <div class="request-ref">
-                                    <i class="fas fa-folder"></i> {{ $ann->project?->name ?? $ann->projectname }}
+                                    <i class="fas fa-folder"></i> {{ $ann->project?->name ?? '—' }}
                                 </div>
                                 <h3>{{ $ann->subject }}</h3>
                             </div>

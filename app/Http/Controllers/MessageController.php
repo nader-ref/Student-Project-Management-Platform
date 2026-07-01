@@ -25,8 +25,6 @@ class MessageController extends Controller
         contact::create([
             'student_user_id' => $student->id,
             'supervisor_id' => $supervisor->id,
-            'email' => $student->email,
-            'supname' => $supervisor->name,
             'subject' => $validated['subject'],
             'Message' => $validated['Message'] ?? null,
         ]);
@@ -37,7 +35,7 @@ class MessageController extends Controller
     public function replay()
     {
         $student = Auth::user();
-        $enrollment = StudentEnrollmentService::resolve(null, $student);
+        $enrollment = StudentEnrollmentService::resolve($student);
         $project = $enrollment['project'];
 
         $messages = contact::with(['student', 'supervisor'])

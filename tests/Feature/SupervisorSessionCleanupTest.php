@@ -73,11 +73,8 @@ it('accepts ideas using authenticated supervisor identity without session keys',
     $idea = Idea::create([
         'projectname' => 'Auth-Only Idea Project',
         'count' => 1,
-        'supname' => $supervisor->name,
         'supervisor_id' => $supervisor->id,
         'requested_by_user_id' => $student->id,
-        'nameone' => $student->name,
-        'oneid' => (int) preg_replace('/\D/', '', $student->university_number) ?: $student->id,
         'accepted' => 0,
         'rejected' => 0,
     ]);
@@ -103,9 +100,6 @@ it('rejects project requests using authenticated supervisor identity without ses
     $student->addRole('student');
 
     $projectRequest = Projectrequest::create([
-        'projectid' => $project->id,
-        'nameone' => $student->name,
-        'oneid' => 2026201,
         'project_id' => $project->id,
         'requested_by_user_id' => $student->id,
         'count' => 1,

@@ -162,18 +162,12 @@ class DevelopmentTestSeeder extends Seeder
         if (Schema::hasTable('projectrequests')) {
             DB::table('projectrequests')
                 ->whereIn('requested_by_user_id', $studentIds)
-                ->orWhereIn('nameone', $studentNames)
-                ->orWhereIn('nametwo', $studentNames)
-                ->orWhereIn('namethree', $studentNames)
                 ->delete();
         }
 
         if (Schema::hasTable('ideas')) {
             DB::table('ideas')
                 ->whereIn('requested_by_user_id', $studentIds)
-                ->orWhereIn('nameone', $studentNames)
-                ->orWhereIn('nametwo', $studentNames)
-                ->orWhereIn('namethree', $studentNames)
                 ->delete();
         }
 

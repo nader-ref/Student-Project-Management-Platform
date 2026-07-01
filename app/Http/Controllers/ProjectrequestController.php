@@ -17,19 +17,16 @@ class ProjectrequestController extends Controller
     public function request(Request $request)
     {
         $validated = $request->validate([
-            'projectid' => 'required|integer|exists:uni_projects,id',
+            'project_id' => 'required|integer|exists:uni_projects,id',
             'count' => 'required|integer|min:1|max:3',
-            'nameone' => 'nullable|string|max:255',
             'oneid' => 'required|string',
-            'nametwo' => 'nullable|string|max:255',
             'twoid' => 'nullable|string',
-            'namethree' => 'nullable|string|max:255',
             'threeid' => 'nullable|string',
         ], [
-            'projectid.exists' => 'The selected project ID does not exist in our records.',
+            'project_id.exists' => 'The selected project does not exist in our records.',
         ]);
 
-        $project = UniProject::findOrFail($validated['projectid']);
+        $project = UniProject::findOrFail($validated['project_id']);
 
         if ($project->taken == 1) {
             return redirect()->back()->with('faild', ' project already taken');
@@ -50,14 +47,8 @@ class ProjectrequestController extends Controller
         }
 
         DB::transaction(function () use ($validated, $memberResult) {
-            $leader = $memberResult['members'][0]['user'];
-            $legacyLeaderId = (int) preg_replace('/\D/', '', $leader->university_number) ?: $leader->id;
             $projectRequest = Projectrequest::create([
-                // Temporary compatibility for non-null legacy columns; relational columns are the source of truth.
-                'projectid' => $validated['projectid'],
-                'nameone' => $leader->name,
-                'oneid' => $legacyLeaderId,
-                'project_id' => $validated['projectid'],
+                'project_id' => $validated['project_id'],
                 'requested_by_user_id' => Auth::id(),
                 'count' => count($memberResult['members']),
             ]);
@@ -92,20 +83,13 @@ class ProjectrequestController extends Controller
         $validated = $request->validate([
             'projectname' => 'required|string',
             'count' => 'required|integer|min:1|max:3',
-            'supname' => 'required|string',
-            'nameone' => 'nullable|string|max:255',
+            'supervisor_id' => 'required|integer|exists:supervisors,id',
             'oneid' => 'required|string',
-            'nametwo' => 'nullable|string|max:255',
             'twoid' => 'nullable|string',
-            'namethree' => 'nullable|string|max:255',
             'threeid' => 'nullable|string',
         ]);
 
-        $supervisor = Supervisor::where('name', $validated['supname'])->first();
-
-        if (! $supervisor) {
-            return redirect()->back()->with('faild', 'Selected supervisor was not found.')->withInput();
-        }
+        $supervisor = Supervisor::findOrFail($validated['supervisor_id']);
 
         $memberResult = $this->membersFromUniversityNumbers([
             1 => $validated['oneid'],
@@ -122,13 +106,7 @@ class ProjectrequestController extends Controller
         }
 
         DB::transaction(function () use ($validated, $supervisor, $memberResult) {
-            $leader = $memberResult['members'][0]['user'];
-            $legacyLeaderId = (int) preg_replace('/\D/', '', $leader->university_number) ?: $leader->id;
             $idea = Idea::create([
-                // Temporary compatibility for non-null legacy columns; relational columns are the source of truth.
-                'supname' => $supervisor->name,
-                'nameone' => $leader->name,
-                'oneid' => $legacyLeaderId,
                 'projectname' => $validated['projectname'],
                 'supervisor_id' => $supervisor->id,
                 'requested_by_user_id' => Auth::id(),
@@ -180,37 +158,6 @@ class ProjectrequestController extends Controller
                 : false;
 
             if ($enrolledOnProject) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Temporary compatibility for idea requests until idea membership is normalized.
-     *
-     * @param  array<int, int|string|null>  $studentIds
-     */
-    private function legacyTeamAlreadyHasAcceptedProject(array $studentIds): bool
-    {
-        foreach (array_filter($studentIds) as $studentId) {
-            $hasAcceptedLegacyRequest = Projectrequest::query()
-                ->where('accepted', 1)
-                ->where(function ($query) use ($studentId) {
-                    $query->where('oneid', $studentId)
-                        ->orWhere('twoid', $studentId)
-                        ->orWhere('threeid', $studentId);
-                })
-                ->exists();
-
-            if ($hasAcceptedLegacyRequest) {
-                return true;
-            }
-
-            $student = User::where('university_number', (string) $studentId)->first();
-
-            if ($student && $student->projectMemberships()->exists()) {
                 return true;
             }
         }

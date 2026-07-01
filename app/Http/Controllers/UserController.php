@@ -209,7 +209,7 @@ class UserController extends Controller
     public function showDash()
     {
         $projects = UniProject::with('supervisor')->get();
-        $enrollment = StudentEnrollmentService::resolve(null, Auth::user());
+        $enrollment = StudentEnrollmentService::resolve(Auth::user());
         $submissions = collect();
         $progress = null;
         $nextSteps = collect();

@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         View::composer('student.partials.navbar', function ($view) {
-            $enrollment = StudentEnrollmentService::resolve(null, Auth::user());
+            $enrollment = StudentEnrollmentService::resolve(Auth::user());
 
             $view->with('enrollmentMode', $enrollment['mode']);
             $view->with('enrolledProject', $enrollment['project']);

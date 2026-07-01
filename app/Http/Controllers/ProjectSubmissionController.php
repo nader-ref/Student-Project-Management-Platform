@@ -15,7 +15,7 @@ class ProjectSubmissionController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $enrollment = StudentEnrollmentService::resolve(null, $user);
+        $enrollment = StudentEnrollmentService::resolve($user);
 
         if ($enrollment['mode'] !== StudentEnrollmentService::MODE_ENROLLED || ! $enrollment['project']) {
             return back()
@@ -53,8 +53,6 @@ class ProjectSubmissionController extends Controller
         ProjectSubmission::create([
             'project_id' => $project->id,
             'submitted_by_user_id' => $user->id,
-            'student_email' => $user->email,
-            'student_name' => $user->name,
             'milestone' => $validated['milestone'],
             'title' => $validated['title'],
             'file_path' => $path,

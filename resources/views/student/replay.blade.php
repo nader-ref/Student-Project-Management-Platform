@@ -134,7 +134,7 @@
                                     <div class="request-meta-grid">
                                         <div class="meta-block">
                                             <label>To</label>
-                                            <span>{{ $message->supervisor?->name ?? $message->supname }}</span>
+                                            <span>{{ $message->supervisor?->name ?? '—' }}</span>
                                         </div>
                                         <div class="meta-block">
                                             <label>From</label>
@@ -208,14 +208,14 @@
                                             <h3>{{ $message->subject }}</h3>
                                         </div>
                                         <span class="status-pill accepted">
-                                            <i class="fas fa-user-tie"></i> {{ $message->supervisor?->name ?? $message->supname }}
+                                            <i class="fas fa-user-tie"></i> {{ $message->supervisor?->name ?? '—' }}
                                         </span>
                                     </div>
 
                                     <div class="request-meta-grid">
                                         <div class="meta-block">
                                             <label>Project</label>
-                                            <span>{{ $message->project?->name ?? $message->projectname ?? '—' }}</span>
+                                            <span>{{ $message->project?->name ?? '—' }}</span>
                                         </div>
                                         <div class="meta-block">
                                             <label>Posted On</label>

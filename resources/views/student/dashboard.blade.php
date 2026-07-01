@@ -305,15 +305,22 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                             <div class="form-pro-card-body">
                                 <div class="form-grid">
                                     <div class="form-field form-field-pro">
-                                        <label><i class="fas fa-hashtag"></i> Project ID</label>
-                                        <input type="number" name="projectid" required placeholder="e.g. 5" value="{{ old('projectid') }}">
+                                        <label><i class="fas fa-hashtag"></i> Project</label>
+                                        <select name="project_id" required>
+                                            <option value="" disabled {{ old('project_id') ? '' : 'selected' }}>Select an available project</option>
+                                            @foreach ($projects->where('taken', 0) as $projectOption)
+                                                <option value="{{ $projectOption->id }}" {{ (string) old('project_id') === (string) $projectOption->id ? 'selected' : '' }}>
+                                                    #{{ $projectOption->id }} — {{ $projectOption->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="form-field form-field-pro">
                                         <label><i class="fas fa-users"></i> Team Size</label>
                                         <input type="number" name="count" required min="1" max="3" placeholder="1 – 3 members" value="{{ old('count') }}">
                                     </div>
                                 </div>
-                                @error('projectid')
+                                @error('project_id')
                                 <span class="error-text">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -428,12 +435,12 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                                     </div>
                                     <div class="form-field form-field-pro">
                                         <label><i class="fas fa-user-tie"></i> Preferred Supervisor</label>
-                                        <select name="supname" required>
+                                        <select name="supervisor_id" required>
                                             @include('student.partials.supervisor-options')
                                         </select>
                                     </div>
                                 </div>
-                                @error('supname')
+                                @error('supervisor_id')
                                 <span class="error-text">{{ $message }}</span>
                                 @enderror
                             </div>
