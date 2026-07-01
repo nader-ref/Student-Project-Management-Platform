@@ -35,4 +35,9 @@ class UniProject extends Model
     {
         return $this->hasMany(projectrequest::class, 'project_id');
     }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(supcontact::class, 'project_id');
+    }
 }

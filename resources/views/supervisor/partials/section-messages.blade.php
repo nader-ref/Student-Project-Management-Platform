@@ -61,7 +61,7 @@
                         <div class="request-item-top">
                             <div>
                                 <div class="request-ref">
-                                    <i class="fas fa-user-graduate"></i> {{ $msg->email }}
+                                    <i class="fas fa-user-graduate"></i> {{ $msg->student?->email ?? $msg->email }}
                                 </div>
                                 <h3>{{ $msg->subject }}</h3>
                             </div>
@@ -75,6 +75,10 @@
                             <span>{{ $msg->Message }}</span>
                         </div>
                         <div class="request-meta-grid">
+                            <div class="meta-block">
+                                <label>Student</label>
+                                <span>{{ $msg->student?->name ?? 'Unknown student' }}</span>
+                            </div>
                             <div class="meta-block">
                                 <label>Received</label>
                                 <span>{{ $msg->created_at?->format('M d, Y H:i') ?? '—' }}</span>
@@ -122,12 +126,11 @@
                 <div class="form-grid">
                     <div class="form-field form-field-pro">
                         <label><i class="fas fa-folder"></i> Related Project</label>
-                        <select name="projectname" required>
+                        <select name="project_id" required>
                             <option value="" disabled selected>Select project</option>
                             @foreach ($projects as $proj)
-                                <option value="{{ $proj->name }}">{{ $proj->name }}</option>
+                                <option value="{{ $proj->id }}">{{ $proj->name }}</option>
                             @endforeach
-                            <option value="General">General — All Students</option>
                         </select>
                     </div>
                     <div class="form-field form-field-pro">
@@ -164,7 +167,7 @@
                         <div class="request-item-top">
                             <div>
                                 <div class="request-ref">
-                                    <i class="fas fa-folder"></i> {{ $ann->projectname }}
+                                    <i class="fas fa-folder"></i> {{ $ann->project?->name ?? $ann->projectname }}
                                 </div>
                                 <h3>{{ $ann->subject }}</h3>
                             </div>

@@ -104,6 +104,11 @@ class User extends Authenticatable implements LaratrustUser
             ->orderBy('idea_members.position');
     }
 
+    public function studentMessages(): HasMany
+    {
+        return $this->hasMany(contact::class, 'student_user_id');
+    }
+
     public function resolveDashboardRoute(): ?string
     {
         if ($this->hasRole('admin')) {

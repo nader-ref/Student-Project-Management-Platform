@@ -3,26 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\contact;
+use App\Models\Supervisor;
 use App\Models\supcontact;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
     public function message(Request $request)
     {
         $validated = $request->validate([
-            'supname' => 'required|string',
+            'supervisor_id' => 'required|integer|exists:supervisors,id',
             'subject' => 'required|string|max:255',
             'Message' => 'nullable|string|max:255',
         ]);
 
+        $student = Auth::user();
+        $supervisor = Supervisor::findOrFail($validated['supervisor_id']);
+
         contact::create([
-            'email' => Session::get('email'),
-            'supname' => $validated['supname'],
+            'student_user_id' => $student->id,
+            'supervisor_id' => $supervisor->id,
+            'email' => $student->email,
+            'supname' => $supervisor->name,
             'subject' => $validated['subject'],
-            'Message' => $validated['Message'],
+            'Message' => $validated['Message'] ?? null,
         ]);
 
         return redirect()->back()->with('success', 'Your request has been submitted successfully.');
@@ -30,17 +36,20 @@ class MessageController extends Controller
 
     public function replay()
     {
-        $studentEmail = Session::get('email');
-        $studentName = Session::get('name');
-        $enrollment = StudentEnrollmentService::resolve($studentName);
-        $projectName = $enrollment['project']?->name;
+        $student = Auth::user();
+        $enrollment = StudentEnrollmentService::resolve(null, $student);
+        $project = $enrollment['project'];
 
-        $messages = $studentEmail
-            ? contact::where('email', $studentEmail)->orderByDesc('updated_at')->get()
-            : collect();
+        $messages = contact::with(['student', 'supervisor'])
+            ->where('student_user_id', $student->id)
+            ->orderByDesc('updated_at')
+            ->get();
 
-        $supmessages = $projectName
-            ? supcontact::where('projectname', $projectName)->orderByDesc('created_at')->get()
+        $supmessages = $project
+            ? supcontact::with(['supervisor', 'project'])
+                ->where('project_id', $project->id)
+                ->orderByDesc('created_at')
+                ->get()
             : collect();
 
         return view('student.replay', [

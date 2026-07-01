@@ -6,8 +6,8 @@
     @php
         use Carbon\Carbon;
 
-        $supervisorName = Session::get('name');
-        $supervisorEmail = Session::get('email');
+        $supervisorName = $supervisor?->user?->name ?? $supervisor?->name ?? auth()->user()?->name;
+        $supervisorEmail = $supervisor?->user?->email ?? $supervisor?->email ?? auth()->user()?->email;
         $myProjects = $projects;
         $myProjectIds = $myProjects->pluck('id');
         $supervisorRequests = $requests;

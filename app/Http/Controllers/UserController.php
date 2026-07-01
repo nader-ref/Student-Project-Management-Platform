@@ -230,11 +230,15 @@ class UserController extends Controller
                 $submissions,
             );
 
-            $studentEmail = Session::get('email');
-            $contacts = $studentEmail
-                ? contact::where('email', $studentEmail)->orderByDesc('updated_at')->get()
+            $student = Auth::user();
+            $contacts = $student
+                ? contact::with(['student', 'supervisor'])
+                    ->where('student_user_id', $student->id)
+                    ->orderByDesc('updated_at')
+                    ->get()
                 : collect();
-            $announcements = supcontact::where('projectname', $enrollment['project']->name)
+            $announcements = supcontact::with(['supervisor', 'project'])
+                ->where('project_id', $enrollment['project']->id)
                 ->orderByDesc('created_at')
                 ->get();
 
