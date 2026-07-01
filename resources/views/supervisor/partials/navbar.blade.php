@@ -1,6 +1,6 @@
 @php
-    $navName = Session::get('name') ?? 'Supervisor';
-    $navEmail = Session::get('email') ?? '';
+    $navName = auth()->user()?->name ?? 'Supervisor';
+    $navEmail = auth()->user()?->email ?? '';
     $navInitial = strtoupper(substr($navName, 0, 1));
     $onDashboard = request()->is('supervisorDashboard');
 @endphp

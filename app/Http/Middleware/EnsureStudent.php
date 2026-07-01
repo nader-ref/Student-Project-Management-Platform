@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureStudent
@@ -27,9 +26,6 @@ class EnsureStudent
                 'email' => 'You do not have access to the student portal.',
             ]);
         }
-
-        Session::put('email', $user->email);
-        Session::put('name', $user->name);
 
         return $next($request);
     }

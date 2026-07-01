@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -76,9 +75,6 @@ class SupervisorController extends Controller
         }
 
         request()->session()->regenerate();
-        Session::put('email', request('email'));
-        Session::put('id', $sup->id);
-        Session::put('name', $user->name);
 
         return redirect('/supervisorDashboard')->with('success', 'User registered successfully!');
     }
@@ -92,8 +88,6 @@ class SupervisorController extends Controller
         }
 
         $supervisorId = $supervisor->id;
-        Session::put('id', $supervisorId);
-        Session::put('name', Auth::user()->name);
 
         $projects = UniProject::with('members.user')->where('supervisor_id', $supervisorId)->get();
         $myProjectIds = $projects->pluck('id');
@@ -156,6 +150,11 @@ class SupervisorController extends Controller
         }
 
         $sup = Auth::user()->supervisor;
+
+        if (! $sup) {
+            return back()->with('error', 'Supervisor profile not found.');
+        }
+
         $tak = $request->taken == 'Yes' ? 1 : 0;
 
         $memberResult = $this->membersFromRequest($request);
@@ -211,8 +210,14 @@ class SupervisorController extends Controller
                 ->with('active_tab', 'show_pro');
         }
 
+        $supervisor = Auth::user()->supervisor;
+
+        if (! $supervisor) {
+            return back()->with('error', 'Supervisor profile not found.')->with('active_tab', 'show_pro');
+        }
+
         $project = UniProject::where('id', $request->project_id)
-            ->where('supervisor_id', Session::get('id'))
+            ->where('supervisor_id', $supervisor->id)
             ->first();
 
         if (! $project) {
@@ -245,6 +250,12 @@ class SupervisorController extends Controller
 
     public function acceptrequest(Request $request)
     {
+        $supervisor = Auth::user()->supervisor;
+
+        if (! $supervisor) {
+            return back()->with('error', 'Supervisor profile not found.');
+        }
+
         $requestId = $request->input('request');
 
         $projectRequest = Projectrequest::with(['project', 'members.user'])->find($requestId);
@@ -254,7 +265,7 @@ class SupervisorController extends Controller
             return back()->with('error', 'Project not found.');
         }
 
-        if ((int) $project->supervisor_id !== (int) Session::get('id')) {
+        if ((int) $project->supervisor_id !== (int) $supervisor->id) {
             return back()->with('error', 'Project request not found.');
         }
 
@@ -281,6 +292,12 @@ class SupervisorController extends Controller
 
     public function rejectrequest(Request $request)
     {
+        $supervisor = Auth::user()->supervisor;
+
+        if (! $supervisor) {
+            return back()->with('error', 'Supervisor profile not found.')->with('active_tab', 'Request');
+        }
+
         $validator = Validator::make($request->all(), [
             'request' => 'required|integer',
             'reason' => 'required|string|max:500',
@@ -296,7 +313,7 @@ class SupervisorController extends Controller
             return back()->with('error', 'Request not found.');
         }
 
-        $ownsProject = (int) $projectRequest->project?->supervisor_id === (int) Session::get('id');
+        $ownsProject = (int) $projectRequest->project?->supervisor_id === (int) $supervisor->id;
 
         if (! $ownsProject) {
             return back()->with('error', 'You cannot reject this request.');
@@ -314,9 +331,15 @@ class SupervisorController extends Controller
 
     public function acceptidea(Request $request)
     {
+        $supervisor = Auth::user()->supervisor;
+
+        if (! $supervisor) {
+            return back()->with('error', 'Supervisor profile not found.');
+        }
+
         $idea = Idea::with(['members.user'])->find($request->idea);
 
-        if (! $idea || (int) $idea->supervisor_id !== (int) Session::get('id')) {
+        if (! $idea || (int) $idea->supervisor_id !== (int) $supervisor->id) {
             return back()->with('error', 'Idea not found.');
         }
 
@@ -326,11 +349,11 @@ class SupervisorController extends Controller
             return back()->with('error', $memberResult['error']);
         }
 
-        DB::transaction(function () use ($idea, $memberResult) {
+        DB::transaction(function () use ($idea, $memberResult, $supervisor) {
             $project = UniProject::create([
                 'name' => $idea->projectname,
                 'description' => null,
-                'supervisor_id' => Session::get('id'),
+                'supervisor_id' => $supervisor->id,
                 'department' => 'software',
                 'taken' => 1,
                 'student_count' => count($memberResult['members']),
@@ -352,6 +375,12 @@ class SupervisorController extends Controller
 
     public function rejectidea(Request $request)
     {
+        $supervisor = Auth::user()->supervisor;
+
+        if (! $supervisor) {
+            return back()->with('error', 'Supervisor profile not found.')->with('active_tab', 'Idea');
+        }
+
         $validator = Validator::make($request->all(), [
             'idea' => 'required|integer',
             'reason' => 'required|string|max:500',
@@ -363,7 +392,7 @@ class SupervisorController extends Controller
 
         $idea = Idea::find($request->idea);
 
-        if (! $idea || (int) $idea->supervisor_id !== (int) Session::get('id')) {
+        if (! $idea || (int) $idea->supervisor_id !== (int) $supervisor->id) {
             return back()->with('error', 'Idea not found.');
         }
 
@@ -447,9 +476,9 @@ class SupervisorController extends Controller
             'new_password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::where('email', Session::get('email'))->first();
+        $user = Auth::user();
 
-        if (! $user || ! Hash::check($request->old_password, $user->password)) {
+        if (! Hash::check($request->old_password, $user->password)) {
             return back()->withErrors(['old_password' => 'Current password is incorrect.'])
                 ->with('active_tab', 'settings');
         }

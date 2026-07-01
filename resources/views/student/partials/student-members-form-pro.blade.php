@@ -23,7 +23,7 @@
         <div class="form-grid">
             <div class="form-field form-field-pro">
                 <label><i class="fas fa-user"></i> Full Name</label>
-                <input type="text" name="nameone" required placeholder="e.g. Maria Santos" value="{{ old('nameone', Session::get('name')) }}">
+                <input type="text" name="nameone" required placeholder="e.g. Maria Santos" value="{{ old('nameone', auth()->user()?->name) }}">
             </div>
             <div class="form-field form-field-pro">
                 <label><i class="fas fa-id-card"></i> {{ $memberIdLabel }}</label>

@@ -1,4 +1,5 @@
 @php
+    $studentName = auth()->user()?->name ?? 'Student';
     $isEnrolled = $enrollmentMode === 'enrolled';
     $isPending = $enrollmentMode === 'pending';
     $isDiscovery = $enrollmentMode === 'discovery';
