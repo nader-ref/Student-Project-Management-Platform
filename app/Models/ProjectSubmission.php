@@ -9,6 +9,7 @@ class ProjectSubmission extends Model
 {
     protected $fillable = [
         'project_id',
+        'submitted_by_user_id',
         'student_email',
         'student_name',
         'milestone',
@@ -23,5 +24,10 @@ class ProjectSubmission extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(UniProject::class, 'project_id');
+    }
+
+    public function submittedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'submitted_by_user_id');
     }
 }

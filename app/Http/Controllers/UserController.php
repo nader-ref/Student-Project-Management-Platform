@@ -213,15 +213,15 @@ class UserController extends Controller
     public function showDash()
     {
         $projects = UniProject::with('supervisor')->get();
-        $studentName = Session::get('name');
-        $enrollment = StudentEnrollmentService::resolve($studentName, Auth::user());
+        $enrollment = StudentEnrollmentService::resolve(null, Auth::user());
         $submissions = collect();
         $progress = null;
         $nextSteps = collect();
         $recentActivity = collect();
 
         if ($enrollment['project']) {
-            $submissions = ProjectSubmission::where('project_id', $enrollment['project']->id)
+            $submissions = ProjectSubmission::with('submittedBy')
+                ->where('project_id', $enrollment['project']->id)
                 ->orderByDesc('created_at')
                 ->get();
             $progress = StudentEnrollmentService::computeProgress(

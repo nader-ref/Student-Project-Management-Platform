@@ -2,39 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProjectMember;
 use App\Models\ProjectSubmission;
-use App\Models\UniProject;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProjectSubmissionController extends Controller
 {
     public function store(Request $request)
     {
-        $enrollment = StudentEnrollmentService::resolve(Session::get('name'), Auth::user());
+        $user = Auth::user();
+        $enrollment = StudentEnrollmentService::resolve(null, $user);
 
         if ($enrollment['mode'] !== StudentEnrollmentService::MODE_ENROLLED || ! $enrollment['project']) {
-            return back()->with('error', 'You must be enrolled in a project to submit files.');
+            return back()
+                ->with('error', 'You must be enrolled in a project to submit files.')
+                ->with('active_tab', 'submissions');
         }
 
-        $validated = $request->validate([
+        $project = $enrollment['project'];
+
+        if (! ProjectMember::where('project_id', $project->id)->where('user_id', $user->id)->exists()) {
+            return back()
+                ->with('error', 'You must be a project member to submit files.')
+                ->with('active_tab', 'submissions');
+        }
+
+        $validator = Validator::make($request->all(), [
             'milestone' => 'required|in:seminar_1,seminar_2,seminar_3,final,other',
             'title' => 'required|string|max:255',
             'file' => 'required|file|max:10240|mimes:pdf,doc,docx,ppt,pptx,zip,rar',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        $project = $enrollment['project'];
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput($request->except('file'))
+                ->with('active_tab', 'submissions');
+        }
+
+        $validated = $validator->validated();
+
         $file = $request->file('file');
         $path = $file->store('submissions/'.$project->id, 'public');
 
         ProjectSubmission::create([
             'project_id' => $project->id,
-            'student_email' => Session::get('email'),
-            'student_name' => Session::get('name'),
+            'submitted_by_user_id' => $user->id,
+            'student_email' => $user->email,
+            'student_name' => $user->name,
             'milestone' => $validated['milestone'],
             'title' => $validated['title'],
             'file_path' => $path,
@@ -57,12 +77,9 @@ class ProjectSubmissionController extends Controller
         ]);
 
         $submission = ProjectSubmission::with('project')->findOrFail($validated['submission_id']);
+        $supervisor = Auth::user()?->supervisor;
 
-        $ownsProject = UniProject::where('id', $submission->project_id)
-            ->where('supervisor_id', Session::get('id'))
-            ->exists();
-
-        if (! $ownsProject) {
+        if (! $supervisor || $submission->project?->supervisor_id !== $supervisor->id) {
             return back()->with('error', 'You cannot review this submission.');
         }
 
@@ -82,16 +99,17 @@ class ProjectSubmissionController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole('student')) {
-            $enrollment = StudentEnrollmentService::resolve(Session::get('name'), $user);
-            if ($enrollment['project']?->id !== $submission->project_id) {
+            $isMember = ProjectMember::where('project_id', $submission->project_id)
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if (! $isMember) {
                 abort(403);
             }
         } elseif ($user->hasRole('supervisor')) {
-            $ownsProject = UniProject::where('id', $submission->project_id)
-                ->where('supervisor_id', Session::get('id'))
-                ->exists();
+            $supervisor = $user->supervisor;
 
-            if (! $ownsProject) {
+            if (! $supervisor || $submission->project?->supervisor_id !== $supervisor->id) {
                 abort(403);
             }
         } else {

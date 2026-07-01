@@ -112,7 +112,7 @@ class SupervisorController extends Controller
             ->where('supervisor_id', $supervisorId)
             ->orderByDesc('created_at')
             ->get();
-        $submissions = ProjectSubmission::with('project')
+        $submissions = ProjectSubmission::with(['project', 'submittedBy'])
             ->whereIn('project_id', $myProjectIds)
             ->orderByDesc('created_at')
             ->get();

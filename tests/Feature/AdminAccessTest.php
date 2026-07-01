@@ -121,6 +121,7 @@ function createAdminFixture(): array
 
     ProjectSubmission::create([
         'project_id' => $project->id,
+        'submitted_by_user_id' => $student->id,
         'student_email' => $student->email,
         'student_name' => $student->name,
         'milestone' => 'seminar_1',

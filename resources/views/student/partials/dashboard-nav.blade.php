@@ -21,7 +21,7 @@
         </button>
         <button class="tab-btn" data-tab="submissions">
             <i class="fas fa-file-upload"></i> Submissions
-            @if (isset($submissions) && $submissions->where('status', 'needs_revision')->where('student_email', Session::get('email'))->count() > 0)
+            @if (isset($submissions) && $submissions->where('status', 'needs_revision')->where('submitted_by_user_id', auth()->id())->count() > 0)
                 <span class="form-badge optional-badge badge-inline">!</span>
             @endif
         </button>
