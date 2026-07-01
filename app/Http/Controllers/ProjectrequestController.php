@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Idea;
 use App\Models\Projectrequest;
+use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -92,50 +93,67 @@ class ProjectrequestController extends Controller
             'projectname' => 'required|string',
             'count' => 'required|integer|min:1|max:3',
             'supname' => 'required|string',
-            'nameone' => 'required|string|max:255',
-            'oneid' => 'required|integer',
+            'nameone' => 'nullable|string|max:255',
+            'oneid' => 'required|string',
             'nametwo' => 'nullable|string|max:255',
-            'twoid' => 'nullable|integer',
+            'twoid' => 'nullable|string',
             'namethree' => 'nullable|string|max:255',
-            'threeid' => 'nullable|integer',
+            'threeid' => 'nullable|string',
         ]);
 
-        $studentIds = array_filter([
-            $validated['oneid'],
-            $validated['twoid'] ?? null,
-            $validated['threeid'] ?? null,
+        $supervisor = Supervisor::where('name', $validated['supname'])->first();
+
+        if (! $supervisor) {
+            return redirect()->back()->with('faild', 'Selected supervisor was not found.')->withInput();
+        }
+
+        $memberResult = $this->membersFromUniversityNumbers([
+            1 => $validated['oneid'],
+            2 => $validated['twoid'] ?? null,
+            3 => $validated['threeid'] ?? null,
         ]);
 
-        if ($this->legacyTeamAlreadyHasAcceptedProject($studentIds)) {
+        if (isset($memberResult['error'])) {
+            return redirect()->back()->with('faild', $memberResult['error'])->withInput();
+        }
+
+        if ($this->teamAlreadyHasAcceptedProject($memberResult['users'])) {
             return redirect()->back()->with('faild2', 'Your already have a project');
         }
 
-        Idea::create([
-            'projectname' => $validated['projectname'],
-            'count' => $validated['count'],
-            'supname' => $validated['supname'],
-            'nameone' => $validated['nameone'],
-            'oneid' => $validated['oneid'],
-            'nametwo' => $validated['nametwo'] ?? null,
-            'twoid' => $validated['twoid'] ?? null,
-            'namethree' => $validated['namethree'] ?? null,
-            'threeid' => $validated['threeid'] ?? null,
-        ]);
+        DB::transaction(function () use ($validated, $supervisor, $memberResult) {
+            $leader = $memberResult['members'][0]['user'];
+            $legacyLeaderId = (int) preg_replace('/\D/', '', $leader->university_number) ?: $leader->id;
+            $idea = Idea::create([
+                // Temporary compatibility for non-null legacy columns; relational columns are the source of truth.
+                'supname' => $supervisor->name,
+                'nameone' => $leader->name,
+                'oneid' => $legacyLeaderId,
+                'projectname' => $validated['projectname'],
+                'supervisor_id' => $supervisor->id,
+                'requested_by_user_id' => Auth::id(),
+                'count' => count($memberResult['members']),
+            ]);
+
+            foreach ($memberResult['members'] as $member) {
+                $idea->members()->create([
+                    'user_id' => $member['user']->id,
+                    'position' => $member['position'],
+                ]);
+            }
+        });
 
         return redirect()->back()->with('success', 'Your request has been submitted successfully.');
     }
 
     public function acceptidea()
     {
-        $studentName = Session::get('name');
-        $requests = Idea::query()
-            ->when($studentName, function ($query) use ($studentName) {
-                $query->where(function ($q) use ($studentName) {
-                    $q->where('nameone', $studentName)
-                        ->orWhere('nametwo', $studentName)
-                        ->orWhere('namethree', $studentName);
-                });
-            }, fn ($query) => $query->whereRaw('1 = 0'))
+        $student = Auth::user();
+        $requests = Idea::with(['supervisor', 'members.user'])
+            ->when($student, fn ($query) => $query->whereHas(
+                'members',
+                fn ($memberQuery) => $memberQuery->where('user_id', $student->id),
+            ), fn ($query) => $query->whereRaw('1 = 0'))
             ->orderByDesc('created_at')
             ->get();
 

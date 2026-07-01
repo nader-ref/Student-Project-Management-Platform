@@ -72,11 +72,11 @@ class StudentEnrollmentService
             ->latest()
             ->first();
 
-        $pendingIdea = Idea::where(function ($query) use ($studentName) {
-            $query->where('nameone', $studentName)
-                ->orWhere('nametwo', $studentName)
-                ->orWhere('namethree', $studentName);
-        })
+        $pendingIdea = Idea::with(['supervisor', 'members.user'])
+            ->when($student, fn ($query) => $query->whereHas(
+                'members',
+                fn ($memberQuery) => $memberQuery->where('user_id', $student->id),
+            ), fn ($query) => $query->whereRaw('1 = 0'))
             ->where('accepted', 0)
             ->where('rejected', 0)
             ->latest()

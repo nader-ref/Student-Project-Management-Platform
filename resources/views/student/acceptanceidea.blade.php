@@ -4,12 +4,8 @@
 
 @section('content')
     @php
-        $studentName = Session::get('name');
-        $myIdeas = $requests->filter(
-            fn ($request) => $request->nameone == $studentName
-                || $request->nametwo == $studentName
-                || $request->namethree == $studentName,
-        );
+        $currentUserId = auth()->id();
+        $myIdeas = $requests;
         $acceptedCount = $myIdeas->where('accepted', 1)->count();
         $rejectedCount = $myIdeas->where('rejected', 1)->count();
         $pendingCount = $myIdeas->where('accepted', '!=', 1)->where('rejected', '!=', 1)->count();
@@ -121,11 +117,7 @@
                             $isAccepted = $request->accepted == 1;
                             $isRejected = $request->rejected == 1;
                             $status = $isAccepted ? 'accepted' : ($isRejected ? 'rejected' : 'pending');
-                            $teamMembers = array_filter([
-                                $request->nameone,
-                                $request->nametwo,
-                                $request->namethree,
-                            ]);
+                            $teamMembers = $request->members->sortBy('position');
                         @endphp
                         <article
                             class="request-item {{ $isAccepted ? 'is-accepted' : ($isRejected ? 'is-rejected' : 'is-pending') }}"
@@ -147,7 +139,7 @@
                                 <div class="request-meta-grid">
                                     <div class="meta-block">
                                         <label>Supervisor</label>
-                                        <span>{{ $request->supname }}</span>
+                                        <span>{{ $request->supervisor->name ?? 'Supervisor unavailable' }}</span>
                                     </div>
                                     <div class="meta-block">
                                         <label>Team Size</label>
@@ -173,9 +165,9 @@
                                     <label>Team Members</label>
                                     <div class="avatar-stack">
                                         @foreach ($teamMembers as $member)
-                                            <span class="avatar-chip {{ $member == $studentName ? 'is-you' : '' }}">
-                                                <span class="avatar-initial">{{ strtoupper(substr($member, 0, 1)) }}</span>
-                                                {{ $member }}{{ $member == $studentName ? ' (You)' : '' }}
+                                            <span class="avatar-chip {{ $member->user_id === $currentUserId ? 'is-you' : '' }}">
+                                                <span class="avatar-initial">{{ strtoupper(substr($member->user->name, 0, 1)) }}</span>
+                                                {{ $member->user->name }}{{ $member->user_id === $currentUserId ? ' (You)' : '' }}
                                             </span>
                                         @endforeach
                                     </div>

@@ -2,28 +2,28 @@
 
 namespace Database\Seeders;
 
-use App\Models\contact;
-use App\Models\idea;
-use App\Models\ProjectSubmission;
-use App\Models\projectrequest;
 use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 use Laratrust\Models\Role;
 
 class DevelopmentTestSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::transaction(function () {
+        $accounts = [];
+        $availableProject = null;
+
+        DB::transaction(function () use (&$accounts, &$availableProject) {
             $this->ensureRoles();
 
             $admin = $this->user(
-                'System Administrator',
+                'System Admin',
                 'ADM-0001',
                 'admin@test.local',
                 'admin',
@@ -32,23 +32,30 @@ class DevelopmentTestSeeder extends Seeder
             $supervisorUser = $this->user(
                 'Dr. Lina Haddad',
                 'SUP-2026-001',
-                'lina.haddad@test.local',
+                'lina.haddad@university.test',
                 'supervisor',
             );
 
-            $student = $this->user(
-                'Ahmad Al Ali',
-                'STU-2026-001',
-                'ahmad@test.local',
-                'student',
-            );
-
-            $unenrolledStudent = $this->user(
-                'Omar Ahmad',
-                'STU-2026-002',
-                'omar@test.local',
-                'student',
-            );
+            $students = new Collection([
+                $this->user(
+                    'Omar Ahmad',
+                    'STU-2026-001',
+                    'omar@test.local',
+                    'student',
+                ),
+                $this->user(
+                    'Ali Hasan',
+                    'STU-2026-002',
+                    'ali@test.local',
+                    'student',
+                ),
+                $this->user(
+                    'Sara Khaled',
+                    'STU-2026-003',
+                    'sara@test.local',
+                    'student',
+                ),
+            ]);
 
             $supervisor = Supervisor::updateOrCreate(
                 ['user_id' => $supervisorUser->id],
@@ -58,30 +65,21 @@ class DevelopmentTestSeeder extends Seeder
                 ],
             );
 
-            $studentLegacyNumber = 2026001;
-
-            $project = $supervisor->UniProjects()->updateOrCreate(
-                ['name' => 'AI-Assisted Graduation Project Tracker'],
-                [
-                    'description' => 'A sample graduation project for tracking milestones, submissions, and supervisor feedback.',
-                    'department' => 'software',
-                    'taken' => true,
-                    'student_count' => 1,
-                    'seminar_1' => now()->addWeeks(2)->format('Ymd'),
-                    'seminar_2' => now()->addWeeks(6)->format('Ymd'),
-                    'seminar_3' => now()->addWeeks(10)->format('Ymd'),
-                    'final' => now()->addWeeks(14)->format('Ymd'),
-                    'status' => 'active',
-                ],
-            );
+            $this->resetStudentWorkflowState($students);
 
             $availableProject = $supervisor->UniProjects()->updateOrCreate(
-                ['name' => 'AI Attendance System'],
+                ['name' => 'Phase 7 Idea Normalization Starter Project'],
                 [
-                    'description' => 'An available sample project for testing student registration and project request workflows.',
+                    'description' => 'Available development project supervised by Dr. Lina Haddad for testing Phase 7 idea normalization workflows.',
                     'department' => 'software',
                     'taken' => false,
                     'student_count' => 0,
+                    'student_one_name' => null,
+                    'student_one_id' => null,
+                    'student_two_name' => null,
+                    'student_two_id' => null,
+                    'student_three_name' => null,
+                    'student_three_id' => null,
                     'seminar_1' => null,
                     'seminar_2' => null,
                     'seminar_3' => null,
@@ -91,88 +89,14 @@ class DevelopmentTestSeeder extends Seeder
             );
             $availableProject->members()->delete();
 
-            $unenrolledStudent->projectMemberships()->delete();
-            $unenrolledStudent->projectRequestMemberships()->delete();
-            $unenrolledStudent->submittedProjectRequests()->delete();
-
-            $project->members()->updateOrCreate(
-                ['user_id' => $student->id],
-                ['position' => 1],
-            );
-
-            projectrequest::updateOrCreate(
-                [
-                    'project_id' => $project->id,
-                    'requested_by_user_id' => $student->id,
-                ],
-                [
-                    'projectid' => $project->id,
-                    'nameone' => $student->name,
-                    'oneid' => $studentLegacyNumber,
-                    'count' => 1,
-                    'accepted' => true,
-                    'rejected' => false,
-                    'reason' => null,
-                ],
-            )->members()->updateOrCreate(
-                ['user_id' => $student->id],
-                ['position' => 1],
-            );
-
-            idea::updateOrCreate(
-                [
-                    'projectname' => 'Smart Research Progress Assistant',
-                    'oneid' => $studentLegacyNumber,
-                ],
-                [
-                    'count' => 1,
-                    'supname' => $supervisor->name,
-                    'nameone' => $student->name,
-                    'nametwo' => null,
-                    'twoid' => null,
-                    'namethree' => null,
-                    'threeid' => null,
-                    'accepted' => false,
-                    'rejected' => false,
-                    'reason' => null,
-                ],
-            );
-
-            contact::updateOrCreate(
-                [
-                    'email' => $student->email,
-                    'supname' => $supervisor->name,
-                    'subject' => 'Project kickoff question',
-                ],
-                [
-                    'Message' => 'Hello Dr. Lina, could we schedule a short kickoff meeting for the project?',
-                    'Replay' => 'Yes, please prepare your initial project outline before the meeting.',
-                ],
-            );
-
-            $submissionPath = 'submissions/development-test/initial-proposal.txt';
-            Storage::disk('public')->put(
-                $submissionPath,
-                "Development sample submission for {$project->name}.\n",
-            );
-
-            ProjectSubmission::updateOrCreate(
-                [
-                    'project_id' => $project->id,
-                    'student_email' => $student->email,
-                    'milestone' => 'seminar_1',
-                    'title' => 'Initial Project Proposal',
-                ],
-                [
-                    'student_name' => $student->name,
-                    'file_path' => $submissionPath,
-                    'original_filename' => 'initial-proposal.txt',
-                    'notes' => 'Sample development submission created by DevelopmentTestSeeder.',
-                    'status' => 'submitted',
-                    'supervisor_feedback' => null,
-                ],
-            );
+            $accounts = [
+                ['role' => 'admin', 'user' => $admin],
+                ['role' => 'supervisor', 'user' => $supervisorUser],
+                ...$students->map(fn (User $student) => ['role' => 'student', 'user' => $student])->all(),
+            ];
         });
+
+        $this->printDevelopmentSummary($accounts, $availableProject);
     }
 
     private function ensureRoles(): void
@@ -187,19 +111,127 @@ class DevelopmentTestSeeder extends Seeder
 
     private function user(string $name, string $universityNumber, string $email, string $role): User
     {
-        $user = User::updateOrCreate(
-            ['university_number' => $universityNumber],
-            [
-                'name' => $name,
-                'email' => $email,
-                'password' => Hash::make('password'),
-            ],
-        );
+        $this->releaseConflictingUser($email, $universityNumber);
 
-        if (! $user->hasRole($role)) {
-            $user->addRole($role);
-        }
+        $user = User::where('university_number', $universityNumber)
+            ->orWhere('email', $email)
+            ->first() ?? new User();
+
+        $user->fill([
+            'name' => $name,
+            'university_number' => $universityNumber,
+            'email' => $email,
+            'password' => Hash::make('password'),
+        ]);
+        $user->save();
+
+        DB::table('role_user')
+            ->where('user_id', $user->id)
+            ->where('user_type', User::class)
+            ->delete();
+
+        $user->addRole($role);
 
         return $user->fresh();
+    }
+
+    private function releaseConflictingUser(string $email, string $universityNumber): void
+    {
+        $emailOwner = User::where('email', $email)->first();
+        $numberOwner = User::where('university_number', $universityNumber)->first();
+
+        if ($emailOwner && $numberOwner && $emailOwner->id !== $numberOwner->id) {
+            $emailOwner->forceFill([
+                'email' => "archived-dev-user-{$emailOwner->id}@test.local",
+                'university_number' => null,
+            ])->save();
+        }
+    }
+
+    private function resetStudentWorkflowState(Collection $students): void
+    {
+        $studentIds = $students->pluck('id')->all();
+        $studentNames = $students->pluck('name')->all();
+
+        foreach (['project_members', 'project_request_members', 'idea_members'] as $table) {
+            if (Schema::hasTable($table)) {
+                DB::table($table)->whereIn('user_id', $studentIds)->delete();
+            }
+        }
+
+        if (Schema::hasTable('projectrequests')) {
+            DB::table('projectrequests')
+                ->whereIn('requested_by_user_id', $studentIds)
+                ->orWhereIn('nameone', $studentNames)
+                ->orWhereIn('nametwo', $studentNames)
+                ->orWhereIn('namethree', $studentNames)
+                ->delete();
+        }
+
+        if (Schema::hasTable('ideas')) {
+            DB::table('ideas')
+                ->whereIn('requested_by_user_id', $studentIds)
+                ->orWhereIn('nameone', $studentNames)
+                ->orWhereIn('nametwo', $studentNames)
+                ->orWhereIn('namethree', $studentNames)
+                ->delete();
+        }
+
+        foreach ([
+            ['student_one_name', 'student_one_id'],
+            ['student_two_name', 'student_two_id'],
+            ['student_three_name', 'student_three_id'],
+        ] as [$nameColumn, $idColumn]) {
+            DB::table('uni_projects')
+                ->whereIn($nameColumn, $studentNames)
+                ->update([
+                    $nameColumn => null,
+                    $idColumn => null,
+                    'updated_at' => now(),
+                ]);
+        }
+    }
+
+    private function printDevelopmentSummary(array $accounts, ?UniProject $availableProject): void
+    {
+        if (! $this->command) {
+            return;
+        }
+
+        $this->command->newLine();
+        $this->command->info('Development test accounts');
+
+        foreach ($accounts as $account) {
+            /** @var User $user */
+            $user = $account['user'];
+            $this->command->line(sprintf(
+                '- %s: %s | %s | %s | password',
+                ucfirst($account['role']),
+                $user->name,
+                $user->university_number,
+                $user->email,
+            ));
+        }
+
+        if ($availableProject) {
+            $this->command->newLine();
+            $this->command->info('Available seeded project');
+            $this->command->line(sprintf(
+                '- %s | Supervisor: Dr. Lina Haddad | taken=false | project_members=0',
+                $availableProject->name,
+            ));
+        }
+
+        $this->command->newLine();
+        $this->command->info('Expected Phase 7 manual workflow');
+        $this->command->line('1. Log in as a student, for example omar@test.local / password.');
+        $this->command->line('2. Submit a new project idea and add any desired team members.');
+        $this->command->line('3. Confirm the idea appears in the student idea history.');
+        $this->command->line('4. Log in as Dr. Lina Haddad: lina.haddad@university.test / password.');
+        $this->command->line('5. Confirm the supervisor can see the submitted idea.');
+        $this->command->line('6. Accept the idea from the supervisor dashboard.');
+        $this->command->line('7. Confirm a new graduation project is created.');
+        $this->command->line('8. Confirm project_members are created from idea_members.');
+        $this->command->line('9. Log in as the student again and confirm the new project appears on the dashboard.');
     }
 }

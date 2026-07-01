@@ -94,7 +94,9 @@ class SupervisorController extends Controller
         $requests = Projectrequest::with(['project', 'members.user'])
             ->whereIn('project_id', $myProjectIds)
             ->get();
-        $ideas = Idea::where('supname', $supervisorName)->get();
+        $ideas = Idea::with(['supervisor', 'members.user'])
+            ->where('supervisor_id', $supervisorId)
+            ->get();
         $inboxMessages = Contact::where('supname', $supervisorName)->orderByDesc('created_at')->get();
         $announcements = Supcontact::where('supname', $supervisorName)->orderByDesc('created_at')->get();
         $submissions = ProjectSubmission::with('project')
@@ -299,19 +301,13 @@ class SupervisorController extends Controller
 
     public function acceptidea(Request $request)
     {
-        $idea = Idea::where('id', $request->idea)
-            ->where('supname', Session::get('name'))
-            ->first();
+        $idea = Idea::with(['members.user'])->find($request->idea);
 
-        if (! $idea) {
+        if (! $idea || (int) $idea->supervisor_id !== (int) Session::get('id')) {
             return back()->with('error', 'Idea not found.');
         }
 
-        $memberResult = $this->membersFromLegacySlots([
-            1 => $idea->oneid,
-            2 => $idea->twoid,
-            3 => $idea->threeid,
-        ]);
+        $memberResult = $this->membersFromIdeaMembers($idea);
 
         if (isset($memberResult['error'])) {
             return back()->with('error', $memberResult['error']);
@@ -352,18 +348,18 @@ class SupervisorController extends Controller
             return back()->withErrors($validator)->with('active_tab', 'Idea');
         }
 
-        $idea = Idea::where('id', $request->idea)
-            ->where('supname', Session::get('name'))
-            ->first();
+        $idea = Idea::find($request->idea);
 
-        if (! $idea) {
+        if (! $idea || (int) $idea->supervisor_id !== (int) Session::get('id')) {
             return back()->with('error', 'Idea not found.');
         }
 
-        $idea->rejected = 1;
-        $idea->accepted = 0;
-        $idea->reason = $request->reason;
-        $idea->save();
+        DB::transaction(function () use ($idea, $request) {
+            $idea->rejected = 1;
+            $idea->accepted = 0;
+            $idea->reason = $request->reason;
+            $idea->save();
+        });
 
         return redirect()->back()->with('success', 'Idea rejected.')->with('active_tab', 'Idea');
     }
@@ -489,6 +485,26 @@ class SupervisorController extends Controller
 
         if ($members === []) {
             return ['error' => 'This request has no linked student members.'];
+        }
+
+        return ['members' => $members];
+    }
+
+    private function membersFromIdeaMembers(Idea $idea): array
+    {
+        $idea->loadMissing('members.user');
+
+        $members = $idea->members
+            ->sortBy('position')
+            ->map(fn ($member) => [
+                'user' => $member->user,
+                'position' => $member->position,
+            ])
+            ->values()
+            ->all();
+
+        if ($members === []) {
+            return ['error' => 'This idea has no linked student members.'];
         }
 
         return ['members' => $members];
