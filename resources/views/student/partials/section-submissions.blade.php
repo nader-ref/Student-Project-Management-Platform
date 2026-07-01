@@ -134,7 +134,7 @@
                 <div class="request-item-body">
                     <div class="request-item-top">
                         <div>
-                            <div class="request-ref">{{ $sub->submittedBy?->name ?? $sub->student_name }}</div>
+                            <div class="request-ref">{{ $sub->submittedBy?->name ?? '—' }}</div>
                             <h3>{{ $sub->title }}</h3>
                         </div>
                         <span class="status-pill pending">{{ $milestoneLabels[$sub->milestone] ?? $sub->milestone }}</span>

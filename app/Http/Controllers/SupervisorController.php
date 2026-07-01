@@ -460,8 +460,6 @@ class SupervisorController extends Controller
         Supcontact::create([
             'supervisor_id' => $supervisor->id,
             'project_id' => $project->id,
-            'supname' => $supervisor->name,
-            'projectname' => $project->name,
             'subject' => $request->subject,
             'Message' => $request->message,
         ]);

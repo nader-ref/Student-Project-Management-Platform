@@ -33,8 +33,6 @@ it('creates student messages with relational student and supervisor references',
     $this->assertDatabaseHas('contacts', [
         'student_user_id' => $student->id,
         'supervisor_id' => $supervisor->id,
-        'email' => $student->email,
-        'supname' => $supervisor->name,
         'subject' => 'Seminar question',
     ]);
 });
@@ -46,8 +44,6 @@ it('allows supervisors to reply only to their own relational messages', function
     $message = contact::create([
         'student_user_id' => $student->id,
         'supervisor_id' => $supervisor->id,
-        'email' => $student->email,
-        'supname' => $supervisor->name,
         'subject' => 'Project scope',
         'Message' => 'Can you review our scope?',
     ]);
@@ -85,8 +81,6 @@ it('creates supervisor announcements with relational supervisor and project refe
     $this->assertDatabaseHas('supcontacts', [
         'supervisor_id' => $supervisor->id,
         'project_id' => $project->id,
-        'supname' => $supervisor->name,
-        'projectname' => $project->name,
         'subject' => 'Seminar update',
     ]);
 });

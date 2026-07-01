@@ -8,6 +8,8 @@
     $memberOnePlaceholder = $memberOnePlaceholder ?? 'e.g. STU-2026-001';
     $memberTwoPlaceholder = $memberTwoPlaceholder ?? 'e.g. STU-2026-002';
     $memberThreePlaceholder = $memberThreePlaceholder ?? 'e.g. STU-2026-003';
+    $leaderName = auth()->user()?->name ?? 'Team Leader';
+    $leaderUniversityNumber = old('oneid', auth()->user()?->university_number);
 @endphp
 
 <div class="form-pro-card">
@@ -23,11 +25,11 @@
         <div class="form-grid">
             <div class="form-field form-field-pro">
                 <label><i class="fas fa-user"></i> Full Name</label>
-                <input type="text" name="nameone" required placeholder="e.g. Maria Santos" value="{{ old('nameone', auth()->user()?->name) }}">
+                <div class="form-readonly-value">{{ $leaderName }}</div>
             </div>
             <div class="form-field form-field-pro">
                 <label><i class="fas fa-id-card"></i> {{ $memberIdLabel }}</label>
-                <input type="{{ $memberIdType }}" name="oneid" required placeholder="{{ $memberOnePlaceholder }}" value="{{ old('oneid') }}">
+                <input type="{{ $memberIdType }}" name="oneid" required placeholder="{{ $memberOnePlaceholder }}" value="{{ $leaderUniversityNumber }}">
             </div>
         </div>
     </div>
@@ -44,10 +46,6 @@
             <span class="form-badge optional-badge">Optional</span>
         </div>
         <div class="form-pro-card-body">
-            <div class="form-field form-field-pro">
-                <label><i class="fas fa-user"></i> Full Name</label>
-                <input type="text" name="nametwo" placeholder="e.g. João Pereira" value="{{ old('nametwo') }}">
-            </div>
             <div class="form-field form-field-pro">
                 <label><i class="fas fa-id-card"></i> {{ $memberIdLabel }}</label>
                 <input type="{{ $memberIdType }}" name="twoid" placeholder="{{ $memberTwoPlaceholder }}" value="{{ old('twoid') }}">
@@ -68,10 +66,6 @@
             <span class="form-badge optional-badge">Optional</span>
         </div>
         <div class="form-pro-card-body">
-            <div class="form-field form-field-pro">
-                <label><i class="fas fa-user"></i> Full Name</label>
-                <input type="text" name="namethree" placeholder="e.g. Clara Lee" value="{{ old('namethree') }}">
-            </div>
             <div class="form-field form-field-pro">
                 <label><i class="fas fa-id-card"></i> {{ $memberIdLabel }}</label>
                 <input type="{{ $memberIdType }}" name="threeid" placeholder="{{ $memberThreePlaceholder }}" value="{{ old('threeid') }}">

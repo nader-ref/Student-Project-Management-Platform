@@ -201,6 +201,15 @@
     color: #9aabbc;
 }
 
+.form-field-pro .form-readonly-value {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #dce6f3;
+    border-radius: 10px;
+    background: #eef4fb;
+    color: #0a2942;
+}
+
 .form-field-pro textarea {
     min-height: 140px;
     resize: vertical;

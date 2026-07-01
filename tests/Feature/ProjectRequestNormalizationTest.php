@@ -24,7 +24,7 @@ it('creates project requests with relational members', function () {
 
     $this->actingAs($student)
         ->post('/RequstAdd', [
-            'projectid' => $project->id,
+            'project_id' => $project->id,
             'count' => 1,
             'oneid' => $student->university_number,
         ])
@@ -48,9 +48,6 @@ it('shows only requests where the student is a relational member', function () {
     $otherStudent->addRole('student');
 
     $visibleRequest = Projectrequest::create([
-        'projectid' => $project->id,
-        'nameone' => $student->name,
-        'oneid' => 2026001,
         'project_id' => $project->id,
         'requested_by_user_id' => $student->id,
         'count' => 1,
@@ -58,9 +55,6 @@ it('shows only requests where the student is a relational member', function () {
     $visibleRequest->members()->create(['user_id' => $student->id, 'position' => 1]);
 
     $hiddenRequest = Projectrequest::create([
-        'projectid' => $project->id,
-        'nameone' => $otherStudent->name,
-        'oneid' => 2026002,
         'project_id' => $project->id,
         'requested_by_user_id' => $otherStudent->id,
         'count' => 1,
@@ -78,9 +72,6 @@ it('prevents duplicate request members for the same request and user', function 
     [$student, $project] = createRequestFixture();
 
     $request = Projectrequest::create([
-        'projectid' => $project->id,
-        'nameone' => $student->name,
-        'oneid' => 2026001,
         'project_id' => $project->id,
         'requested_by_user_id' => $student->id,
         'count' => 1,
@@ -97,9 +88,6 @@ it('rejects project requests in a transaction', function () {
     [$student, $project, $supervisorUser] = createRequestFixture();
 
     $request = Projectrequest::create([
-        'projectid' => $project->id,
-        'nameone' => $student->name,
-        'oneid' => 2026001,
         'project_id' => $project->id,
         'requested_by_user_id' => $student->id,
         'count' => 1,

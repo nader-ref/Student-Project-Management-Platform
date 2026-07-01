@@ -26,7 +26,7 @@
                     <div class="request-meta-grid">
                         <div class="meta-block">
                             <label>Student</label>
-                            <span>{{ $sub->submittedBy?->name ?? $sub->student_name }}</span>
+                            <span>{{ $sub->submittedBy?->name ?? '—' }}</span>
                         </div>
                         <div class="meta-block">
                             <label>Milestone</label>

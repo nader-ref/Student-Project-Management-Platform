@@ -10,8 +10,6 @@ class ProjectSubmission extends Model
     protected $fillable = [
         'project_id',
         'submitted_by_user_id',
-        'student_email',
-        'student_name',
         'milestone',
         'title',
         'file_path',

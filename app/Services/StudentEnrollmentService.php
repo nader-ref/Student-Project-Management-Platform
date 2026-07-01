@@ -29,12 +29,11 @@ class StudentEnrollmentService
      *     nextMilestone: ?array
      * }
      */
-    public static function resolve(?string $studentName = null, ?User $student = null): array
+    public static function resolve(?User $student = null): array
     {
         $student ??= Auth::user() instanceof User ? Auth::user() : null;
-        $studentName ??= $student?->name;
 
-        if (! $studentName && ! $student) {
+        if (! $student) {
             return self::emptyResult();
         }
 
@@ -382,7 +381,7 @@ class StudentEnrollmentService
         }
 
         foreach ($contacts as $contact) {
-            $supervisorName = $contact->supervisor?->name ?? $contact->supname;
+            $supervisorName = $contact->supervisor?->name ?? 'Supervisor';
 
             $events->push([
                 'type' => 'message_sent',
