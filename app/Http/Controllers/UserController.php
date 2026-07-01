@@ -125,17 +125,6 @@ class UserController extends Controller
 
     }
 
-    public function adminPlaceholder()
-    {
-        $user = Auth::user();
-
-        if (! $user->hasRole('admin')) {
-            return redirect($user->resolveDashboardRoute() ?? '/');
-        }
-
-        return response('Admin dashboard placeholder. Full admin dashboard will be implemented in Phase 4.');
-    }
-
     public function Change()
     {
          return view('register.ChangePassword');

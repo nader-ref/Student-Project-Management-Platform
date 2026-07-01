@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectrequestController;
 use App\Http\Controllers\MessageController;
@@ -27,8 +28,10 @@ Route::middleware('guest')->group(function () {
     Route::post('supervisorSignup', fn () => redirect()->route('login'));
 });
 
-Route::middleware('auth')->get('/admin', [UserController::class, 'adminPlaceholder'])
-    ->name('admin.dashboard');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+});
 
 Route::get('/ForgetPassword', [UserController::class, 'showForm'])->name('password.request');
 Route::post('/ForgetPassword', [UserController::class, 'sendResetLink'])->name('password.email');
