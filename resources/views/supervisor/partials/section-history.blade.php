@@ -19,15 +19,16 @@
         <div class="request-list">
             @foreach ($processedRequests->sortByDesc('updated_at') as $req)
                 @php
-                    $proj = $projectNames->get($req->projectid);
+                    $proj = $req->project;
                     $isAccepted = $req->accepted == 1;
+                    $requestMembers = $req->members->sortBy('position');
                 @endphp
                 <article class="request-item {{ $isAccepted ? 'is-accepted' : 'is-rejected' }}">
                     <div class="request-item-body">
                         <div class="request-item-top">
                             <div>
                                 <div class="request-ref">REQ-{{ str_pad($req->id, 4, '0', STR_PAD_LEFT) }}</div>
-                                <h3>{{ $proj->name ?? 'Project #'.$req->projectid }}</h3>
+                                <h3>{{ $proj->name ?? 'Project request' }}</h3>
                             </div>
                             <span class="status-pill {{ $isAccepted ? 'accepted' : 'rejected' }}">
                                 <i class="fas fa-{{ $isAccepted ? 'check-circle' : 'times-circle' }}"></i>
@@ -37,14 +38,7 @@
                         <div class="request-meta-grid">
                             <div class="meta-block">
                                 <label>Team</label>
-                                <span>{{ $req->nameone }}
-                                    @if($req->nametwo)
-                                     {{ $req->nametwo }}
-                                    @endif
-                                    @if($req->namethree)
-                                     {{ $req->namethree }}
-                                    @endif
-                                    </span>
+                                <span>{{ $requestMembers->pluck('user.name')->implode(', ') }}</span>
                             </div>
                             <div class="meta-block">
                                 <label>Processed</label>

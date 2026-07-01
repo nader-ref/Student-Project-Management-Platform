@@ -63,7 +63,7 @@
         <div class="navbar-actions">
             @include('partials.navbar-user-menu', [
                 'menuOnDashboard' => $onDashboard,
-                'menuLogoutUrl' => url('/Logout'),
+                'menuLogoutUrl' => route('logout'),
                 'menuDashboardUrl' => url('/StudentDashboard'),
             ])
         </div>

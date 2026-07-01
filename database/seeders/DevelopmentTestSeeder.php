@@ -43,6 +43,13 @@ class DevelopmentTestSeeder extends Seeder
                 'student',
             );
 
+            $unenrolledStudent = $this->user(
+                'Omar Ahmad',
+                'STU-2026-002',
+                'omar@test.local',
+                'student',
+            );
+
             $supervisor = Supervisor::updateOrCreate(
                 ['user_id' => $supervisorUser->id],
                 [
@@ -68,6 +75,26 @@ class DevelopmentTestSeeder extends Seeder
                 ],
             );
 
+            $availableProject = $supervisor->UniProjects()->updateOrCreate(
+                ['name' => 'AI Attendance System'],
+                [
+                    'description' => 'An available sample project for testing student registration and project request workflows.',
+                    'department' => 'software',
+                    'taken' => false,
+                    'student_count' => 0,
+                    'seminar_1' => null,
+                    'seminar_2' => null,
+                    'seminar_3' => null,
+                    'final' => null,
+                    'status' => 'available',
+                ],
+            );
+            $availableProject->members()->delete();
+
+            $unenrolledStudent->projectMemberships()->delete();
+            $unenrolledStudent->projectRequestMemberships()->delete();
+            $unenrolledStudent->submittedProjectRequests()->delete();
+
             $project->members()->updateOrCreate(
                 ['user_id' => $student->id],
                 ['position' => 1],
@@ -75,20 +102,21 @@ class DevelopmentTestSeeder extends Seeder
 
             projectrequest::updateOrCreate(
                 [
-                    'projectid' => $project->id,
-                    'oneid' => $studentLegacyNumber,
+                    'project_id' => $project->id,
+                    'requested_by_user_id' => $student->id,
                 ],
                 [
-                    'count' => 1,
+                    'projectid' => $project->id,
                     'nameone' => $student->name,
-                    'nametwo' => null,
-                    'twoid' => null,
-                    'namethree' => null,
-                    'threeid' => null,
+                    'oneid' => $studentLegacyNumber,
+                    'count' => 1,
                     'accepted' => true,
                     'rejected' => false,
                     'reason' => null,
                 ],
+            )->members()->updateOrCreate(
+                ['user_id' => $student->id],
+                ['position' => 1],
             );
 
             idea::updateOrCreate(

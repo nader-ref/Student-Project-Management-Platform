@@ -91,7 +91,9 @@ class SupervisorController extends Controller
         $projects = UniProject::with('members.user')->where('supervisor_id', $supervisorId)->get();
         $myProjectIds = $projects->pluck('id');
 
-        $requests = Projectrequest::whereIn('projectid', $myProjectIds)->get();
+        $requests = Projectrequest::with(['project', 'members.user'])
+            ->whereIn('project_id', $myProjectIds)
+            ->get();
         $ideas = Idea::where('supname', $supervisorName)->get();
         $inboxMessages = Contact::where('supname', $supervisorName)->orderByDesc('created_at')->get();
         $announcements = Supcontact::where('supname', $supervisorName)->orderByDesc('created_at')->get();
@@ -110,16 +112,6 @@ class SupervisorController extends Controller
             'milestoneLabels' => \App\Services\StudentEnrollmentService::milestoneLabels(),
             'supervisor' => Supervisor::find($supervisorId),
         ]);
-    }
-
-    public function logout()
-    {
-        Auth::logout();
-        Session::flush();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-
-        return redirect('/')->with('success', 'Logged out successfully.');
     }
 
     public function addproject(Request $request)
@@ -238,27 +230,20 @@ class SupervisorController extends Controller
 
     public function acceptrequest(Request $request)
     {
-        $projectId = $request->input('project');
         $requestId = $request->input('request');
 
-        $project = UniProject::where('id', $projectId)
-            ->where('supervisor_id', Session::get('id'))
-            ->first();
-        $projectRequest = Projectrequest::where('id', $requestId)->first();
+        $projectRequest = Projectrequest::with(['project', 'members.user'])->find($requestId);
+        $project = $projectRequest?->project;
 
         if (! $project) {
             return back()->with('error', 'Project not found.');
         }
 
-        if (! $projectRequest || $projectRequest->projectid != $project->id) {
+        if ((int) $project->supervisor_id !== (int) Session::get('id')) {
             return back()->with('error', 'Project request not found.');
         }
 
-        $memberResult = $this->membersFromLegacySlots([
-            1 => $projectRequest->oneid,
-            2 => $projectRequest->twoid,
-            3 => $projectRequest->threeid,
-        ]);
+        $memberResult = $this->membersFromRequestMembers($projectRequest);
 
         if (isset($memberResult['error'])) {
             return back()->with('error', $memberResult['error']);
@@ -291,23 +276,23 @@ class SupervisorController extends Controller
         }
 
         $requestId = $request->input('request');
-        $projectRequest = Projectrequest::find($requestId);
+        $projectRequest = Projectrequest::with('project')->find($requestId);
         if (! $projectRequest) {
             return back()->with('error', 'Request not found.');
         }
 
-        $ownsProject = UniProject::where('id', $projectRequest->projectid)
-            ->where('supervisor_id', Session::get('id'))
-            ->exists();
+        $ownsProject = (int) $projectRequest->project?->supervisor_id === (int) Session::get('id');
 
         if (! $ownsProject) {
             return back()->with('error', 'You cannot reject this request.');
         }
 
-        $projectRequest->rejected = 1;
-        $projectRequest->accepted = 0;
-        $projectRequest->reason = $request->reason;
-        $projectRequest->save();
+        DB::transaction(function () use ($projectRequest, $request) {
+            $projectRequest->rejected = 1;
+            $projectRequest->accepted = 0;
+            $projectRequest->reason = $request->reason;
+            $projectRequest->save();
+        });
 
         return redirect()->back()->with('success', 'Request rejected.')->with('active_tab', 'Request');
     }
@@ -484,6 +469,26 @@ class SupervisorController extends Controller
                 'user' => $user,
                 'position' => $position,
             ];
+        }
+
+        return ['members' => $members];
+    }
+
+    private function membersFromRequestMembers(Projectrequest $projectRequest): array
+    {
+        $projectRequest->loadMissing('members.user');
+
+        $members = $projectRequest->members
+            ->sortBy('position')
+            ->map(fn ($member) => [
+                'user' => $member->user,
+                'position' => $member->position,
+            ])
+            ->values()
+            ->all();
+
+        if ($members === []) {
+            return ['error' => 'This request has no linked student members.'];
         }
 
         return ['members' => $members];

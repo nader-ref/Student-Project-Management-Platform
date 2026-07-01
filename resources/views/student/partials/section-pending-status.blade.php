@@ -5,13 +5,13 @@
 
 <div class="request-list">
     @if ($pendingRequest)
-        @php $reqProject = $projects->firstWhere('id', $pendingRequest->projectid); @endphp
+        @php $reqProject = $projects->firstWhere('id', $pendingRequest->project_id); @endphp
         <article class="request-item is-pending">
             <div class="request-item-body">
                 <div class="request-item-top">
                     <div>
                         <div class="request-ref">PROJECT REQUEST</div>
-                        <h3>{{ $reqProject->name ?? 'Project #'.$pendingRequest->projectid }}</h3>
+                        <h3>{{ $reqProject->name ?? 'Project #'.$pendingRequest->project_id }}</h3>
                     </div>
                     <span class="status-pill pending"><i class="fas fa-hourglass-half"></i> Under Review</span>
                 </div>

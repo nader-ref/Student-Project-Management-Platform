@@ -9,6 +9,8 @@
         header, main { max-width: 1100px; margin: 0 auto; padding: 24px; }
         header { display: flex; justify-content: space-between; align-items: center; }
         a { color: #1f6f9f; font-weight: 700; text-decoration: none; }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .logout-button { border: 0; border-radius: 999px; background: #c62828; color: #fff; cursor: pointer; font-weight: 700; padding: 10px 16px; }
         .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
         .card { background: #fff; border: 1px solid #dce6f3; border-radius: 18px; padding: 20px; box-shadow: 0 12px 30px rgba(10, 41, 66, 0.08); }
         .metric { font-size: 32px; font-weight: 800; margin: 8px 0 0; }
@@ -23,7 +25,13 @@
             <h1>Admin Dashboard</h1>
             <p>Signed in as {{ auth()->user()->name }}</p>
         </div>
-        <a href="{{ route('admin.users') }}">View users</a>
+        <div class="header-actions">
+            <a href="{{ route('admin.users') }}">View users</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
     </header>
 
     <main>
