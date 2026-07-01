@@ -109,6 +109,11 @@ class User extends Authenticatable implements LaratrustUser
         return $this->hasMany(contact::class, 'student_user_id');
     }
 
+    public function projectSubmissions(): HasMany
+    {
+        return $this->hasMany(ProjectSubmission::class, 'submitted_by_user_id');
+    }
+
     public function resolveDashboardRoute(): ?string
     {
         if ($this->hasRole('admin')) {

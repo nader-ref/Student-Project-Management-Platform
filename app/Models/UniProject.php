@@ -40,4 +40,9 @@ class UniProject extends Model
     {
         return $this->hasMany(supcontact::class, 'project_id');
     }
+
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(ProjectSubmission::class, 'project_id');
+    }
 }

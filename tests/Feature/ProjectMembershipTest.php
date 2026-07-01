@@ -48,6 +48,7 @@ it('prevents student submission downloads without project membership', function 
 
     $submission = ProjectSubmission::create([
         'project_id' => $project->id,
+        'submitted_by_user_id' => User::factory()->create()->id,
         'student_email' => 'member@test.local',
         'student_name' => 'Member Student',
         'milestone' => 'seminar_1',

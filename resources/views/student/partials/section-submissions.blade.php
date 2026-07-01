@@ -1,6 +1,7 @@
 @php
-    $mySubmissions = $submissions->where('student_email', Session::get('email'));
-    $teamSubmissions = $submissions->where('student_email', '!=', Session::get('email'));
+    $currentUserId = auth()->id();
+    $mySubmissions = $submissions->where('submitted_by_user_id', $currentUserId);
+    $teamSubmissions = $submissions->where('submitted_by_user_id', '!=', $currentUserId);
 @endphp
 
 <div class="tab-panel-header">
@@ -10,12 +11,20 @@
 
 <form method="POST" action="{{ url('/student/submission') }}" enctype="multipart/form-data" class="request-form-pro" style="margin-bottom: 1.5rem;">
     @csrf
+
+    @if ($errors->hasAny(['milestone', 'title', 'file', 'notes']))
+        <div class="form-pro-alert error" style="margin-bottom: 1rem;">
+            <i class="fas fa-exclamation-circle"></i>
+            Please fix the errors below and try uploading again.
+        </div>
+    @endif
+
     <div class="form-pro-card">
         <div class="form-pro-card-header">
             <span class="form-step-badge">01</span>
             <div>
                 <h3>New Submission</h3>
-                <p>PDF, Word, PowerPoint, or ZIP — max 10 MB</p>
+                <p>Upload one deliverable at a time for supervisor review.</p>
             </div>
         </div>
         <div class="form-pro-card-body">
@@ -24,22 +33,43 @@
                     <label><i class="fas fa-flag"></i> Milestone</label>
                     <select name="milestone" required>
                         @foreach ($milestoneLabels as $key => $label)
-                            <option value="{{ $key }}">{{ $label }}</option>
+                            <option value="{{ $key }}" {{ old('milestone') === $key ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
+                    @error('milestone')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-field form-field-pro">
-                    <label><i class="fas fa-heading"></i> Title</label>
-                    <input type="text" name="title" required placeholder="Seminar 1 Report">
+                    <label>
+                        <i class="fas fa-heading"></i> Title
+                        <span class="form-badge required-badge field-required-badge">Required</span>
+                    </label>
+                    <input type="text" name="title" required placeholder="Seminar 1 Report" value="{{ old('title') }}">
+                    @error('title')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
             <div class="form-field form-field-pro" style="margin-top: 1rem;">
-                <label><i class="fas fa-paperclip"></i> File</label>
+                <label>
+                    <i class="fas fa-paperclip"></i> File
+                    <span class="form-badge required-badge field-required-badge">Required</span>
+                </label>
                 <input type="file" name="file" required accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar">
+                <p class="form-field-hint">
+                    Allowed types: PDF, Word (.doc, .docx), PowerPoint (.ppt, .pptx), ZIP, or RAR. Maximum size: 10 MB.
+                </p>
+                @error('file')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
             </div>
             <div class="form-field form-field-pro" style="margin-top: 1rem;">
-                <label><i class="fas fa-comment"></i> Notes (optional)</label>
-                <textarea name="notes" rows="3" placeholder="Brief description for your supervisor..."></textarea>
+                <label><i class="fas fa-comment"></i> Notes <span class="form-badge optional-badge field-required-badge">Optional</span></label>
+                <textarea name="notes" rows="3" placeholder="Brief description for your supervisor...">{{ old('notes') }}</textarea>
+                @error('notes')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
             </div>
             <div class="form-pro-actions" style="padding: 0; margin-top: 1rem;">
                 <button type="submit" class="btn-primary"><i class="fas fa-upload"></i> Upload</button>
@@ -104,7 +134,7 @@
                 <div class="request-item-body">
                     <div class="request-item-top">
                         <div>
-                            <div class="request-ref">{{ $sub->student_name }}</div>
+                            <div class="request-ref">{{ $sub->submittedBy?->name ?? $sub->student_name }}</div>
                             <h3>{{ $sub->title }}</h3>
                         </div>
                         <span class="status-pill pending">{{ $milestoneLabels[$sub->milestone] ?? $sub->milestone }}</span>

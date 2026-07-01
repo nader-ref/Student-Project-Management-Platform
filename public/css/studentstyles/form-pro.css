@@ -159,6 +159,22 @@
     font-size: 0.78rem;
 }
 
+.form-field-hint {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #5a6b7d;
+}
+
+.field-required-badge {
+    margin-left: auto;
+}
+
+.form-field-pro .error-text {
+    display: block;
+    margin-top: 0.35rem;
+}
+
 .form-field-pro input,
 .form-field-pro select,
 .form-field-pro textarea {
@@ -403,6 +419,10 @@ body.dark-mode .form-field-pro label,
 body.dark-mode .sidebar-stat span:first-child,
 body.dark-mode .sidebar-checklist li,
 body.dark-mode .form-pro-notice span {
+    color: #8b949e;
+}
+
+body.dark-mode .form-field-hint {
     color: #8b949e;
 }
 
