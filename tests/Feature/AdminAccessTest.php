@@ -4,10 +4,7 @@ use App\Models\ProjectSubmission;
 use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laratrust\Models\Role;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     foreach (['admin', 'supervisor', 'student'] as $roleName) {
