@@ -7,6 +7,7 @@ use App\Models\Projectrequest;
 use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
+use App\Services\WorkflowGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +45,10 @@ class ProjectrequestController extends Controller
 
         if ($this->teamAlreadyHasAcceptedProject($memberResult['users'])) {
             return redirect()->back()->with('faild2', 'Your already have a project');
+        }
+
+        if (WorkflowGuard::anyUserHasPendingProjectRequest(WorkflowGuard::userIdsFromUsers($memberResult['users']))) {
+            return redirect()->back()->with('faild2', 'Your team already has a pending project request.');
         }
 
         DB::transaction(function () use ($validated, $memberResult) {
@@ -103,6 +108,10 @@ class ProjectrequestController extends Controller
 
         if ($this->teamAlreadyHasAcceptedProject($memberResult['users'])) {
             return redirect()->back()->with('faild2', 'Your already have a project');
+        }
+
+        if (WorkflowGuard::anyUserHasPendingIdea(WorkflowGuard::userIdsFromUsers($memberResult['users']))) {
+            return redirect()->back()->with('faild2', 'Your team already has a pending project idea.');
         }
 
         DB::transaction(function () use ($validated, $supervisor, $memberResult) {
