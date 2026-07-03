@@ -10,6 +10,7 @@ use App\Models\Supervisor;
 use App\Models\Supcontact;
 use App\Models\UniProject;
 use App\Models\User;
+use App\Services\WorkflowGuard;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -269,10 +270,32 @@ class SupervisorController extends Controller
             return back()->with('error', 'Project request not found.');
         }
 
+        if (WorkflowGuard::isProjectRequestProcessed($projectRequest)) {
+            return back()->with('error', 'This request has already been processed.');
+        }
+
+        if ($project->taken) {
+            return back()->with('error', 'This project is already taken.');
+        }
+
+        if ($project->members()->exists()) {
+            return back()->with('error', 'This project already has enrolled team members.');
+        }
+
         $memberResult = $this->membersFromRequestMembers($projectRequest);
 
         if (isset($memberResult['error'])) {
             return back()->with('error', $memberResult['error']);
+        }
+
+        $memberUserIds = WorkflowGuard::userIdsFromMembers($memberResult['members']);
+
+        if (WorkflowGuard::teamSizeExceedsMax(count($memberResult['members']))) {
+            return back()->with('error', 'A project team cannot exceed '.WorkflowGuard::MAX_TEAM_SIZE.' members.');
+        }
+
+        if (WorkflowGuard::anyUserEnrolledInProject($memberUserIds)) {
+            return back()->with('error', 'One or more students in this request are already enrolled in another project.');
         }
 
         DB::transaction(function () use ($project, $projectRequest, $memberResult) {
@@ -319,6 +342,10 @@ class SupervisorController extends Controller
             return back()->with('error', 'You cannot reject this request.');
         }
 
+        if (WorkflowGuard::isProjectRequestProcessed($projectRequest)) {
+            return back()->with('error', 'This request has already been processed.')->with('active_tab', 'Request');
+        }
+
         DB::transaction(function () use ($projectRequest, $request) {
             $projectRequest->rejected = 1;
             $projectRequest->accepted = 0;
@@ -343,10 +370,24 @@ class SupervisorController extends Controller
             return back()->with('error', 'Idea not found.');
         }
 
+        if (WorkflowGuard::isIdeaProcessed($idea)) {
+            return back()->with('error', 'This idea has already been processed.');
+        }
+
         $memberResult = $this->membersFromIdeaMembers($idea);
 
         if (isset($memberResult['error'])) {
             return back()->with('error', $memberResult['error']);
+        }
+
+        if (WorkflowGuard::teamSizeExceedsMax(count($memberResult['members']))) {
+            return back()->with('error', 'A project team cannot exceed '.WorkflowGuard::MAX_TEAM_SIZE.' members.');
+        }
+
+        $memberUserIds = WorkflowGuard::userIdsFromMembers($memberResult['members']);
+
+        if (WorkflowGuard::anyUserEnrolledInProject($memberUserIds)) {
+            return back()->with('error', 'One or more students in this idea are already enrolled in another project.');
         }
 
         DB::transaction(function () use ($idea, $memberResult, $supervisor) {
@@ -394,6 +435,10 @@ class SupervisorController extends Controller
 
         if (! $idea || (int) $idea->supervisor_id !== (int) $supervisor->id) {
             return back()->with('error', 'Idea not found.');
+        }
+
+        if (WorkflowGuard::isIdeaProcessed($idea)) {
+            return back()->with('error', 'This idea has already been processed.')->with('active_tab', 'Idea');
         }
 
         DB::transaction(function () use ($idea, $request) {
