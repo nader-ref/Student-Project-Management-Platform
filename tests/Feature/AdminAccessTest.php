@@ -19,7 +19,9 @@ it('redirects guests away from the admin dashboard', function () {
     $this->get('/admin')->assertRedirect(route('login'));
 });
 
+
 it('redirects students away from the admin dashboard', function () {
+    /** @var \App\Models\User $student */
     $student = User::factory()->create();
     $student->addRole('student');
 
@@ -29,6 +31,7 @@ it('redirects students away from the admin dashboard', function () {
 });
 
 it('redirects supervisors away from the admin dashboard', function () {
+    /** @var \App\Models\User $supervisorUser */
     $supervisorUser = User::factory()->create();
     $supervisorUser->addRole('supervisor');
 
