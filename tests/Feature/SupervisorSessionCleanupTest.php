@@ -25,6 +25,11 @@ beforeEach(function () {
 it('authorizes supervisor project updates from auth without session identity keys', function () {
     [$supervisorUser, $supervisor, $project] = createSupervisorSessionFixture();
 
+    $seminar1Date = now()->addWeeks(2)->toDateString();
+    $seminar2Date = now()->addWeeks(6)->toDateString();
+    $seminar3Date = now()->addWeeks(10)->toDateString();
+    $finalDate = now()->addWeeks(14)->toDateString();
+
     $this->actingAs($supervisorUser)
         ->post('/updateproject', [
             'project_id' => $project->id,
@@ -34,14 +39,20 @@ it('authorizes supervisor project updates from auth without session identity key
             'taken' => 'Yes',
             'students_number' => 1,
             'student_one_id' => "2026001-main",
-            'seminar1_date' => now()->addWeeks(2)->toDateString(),
-            'seminar2_date' => now()->addWeeks(6)->toDateString(),
-            'seminar3_date' => now()->addWeeks(10)->toDateString(),
-            'final_date' => now()->addWeeks(14)->toDateString(),
+            'seminar1_date' => $seminar1Date,
+            'seminar2_date' => $seminar2Date,
+            'seminar3_date' => $seminar3Date,
+            'final_date' => $finalDate,
         ])
         ->assertSessionHas('success');
 
-    expect($project->fresh()->name)->toBe('Updated Project Name');
+    $updatedProject = $project->fresh();
+
+    expect($updatedProject->name)->toBe('Updated Project Name')
+        ->and($updatedProject->seminar_1->toDateString())->toBe($seminar1Date)
+        ->and($updatedProject->seminar_2->toDateString())->toBe($seminar2Date)
+        ->and($updatedProject->seminar_3->toDateString())->toBe($seminar3Date)
+        ->and($updatedProject->final->toDateString())->toBe($finalDate);
 });
 
 it('prevents supervisors from updating another supervisors project without session identity keys', function () {

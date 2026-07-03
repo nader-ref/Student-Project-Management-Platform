@@ -11,7 +11,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class UniProject extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
+    protected $casts = [
+        'seminar_1' => 'date',
+        'seminar_2' => 'date',
+        'seminar_3' => 'date',
+        'final' => 'date',
+    ];
 
     public function supervisor(): BelongsTo
     {
