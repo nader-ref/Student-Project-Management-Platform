@@ -168,6 +168,120 @@ it('prevents supervisors from accepting another supervisors idea', function () {
     expect(UniProject::where('name', 'Foreign Supervisor Idea')->exists())->toBeFalse();
 });
 
+it('prevents supervisors from adding a project with a student already enrolled elsewhere', function () {
+    [$supervisorUser, $supervisor] = createWorkflowSupervisorFixture();
+    $enrolledStudent = User::factory()->create(['university_number' => 'WF-STU-ENROLLED']);
+    $enrolledStudent->addRole('student');
+
+    $otherSupervisor = Supervisor::create([
+        'name' => 'Other Supervisor',
+        'email' => 'other.assign.supervisor@test.local',
+        'user_id' => User::factory()->create()->id,
+    ]);
+
+    $existingProject = UniProject::create([
+        'name' => 'Existing Assignment Project',
+        'description' => 'Student is already enrolled here.',
+        'supervisor_id' => $otherSupervisor->id,
+        'department' => 'software',
+        'taken' => true,
+    ]);
+    $existingProject->members()->create(['user_id' => $enrolledStudent->id, 'position' => 1]);
+
+    $this->actingAs($supervisorUser)
+        ->post('/addproject', array_merge(validSupervisorProjectPayload('Blocked Manual Project'), [
+            'taken' => 'Yes',
+            'student_one_id' => $enrolledStudent->university_number,
+        ]))
+        ->assertSessionHas('error');
+
+    expect(UniProject::where('name', 'Blocked Manual Project')->exists())->toBeFalse();
+    expect($existingProject->members()->where('user_id', $enrolledStudent->id)->count())->toBe(1);
+});
+
+it('prevents supervisors from updating a project with a student enrolled elsewhere', function () {
+    [$supervisorUser, $supervisor] = createWorkflowSupervisorFixture();
+    $availableProject = createAvailableProject($supervisor, 'Manual Update Target Project');
+
+    $enrolledStudent = User::factory()->create(['university_number' => 'WF-STU-OTHER-TEAM']);
+    $enrolledStudent->addRole('student');
+
+    $otherSupervisor = Supervisor::create([
+        'name' => 'Other Supervisor',
+        'email' => 'other.update.supervisor@test.local',
+        'user_id' => User::factory()->create()->id,
+    ]);
+
+    $existingProject = UniProject::create([
+        'name' => 'Other Team Project',
+        'description' => 'Student belongs to another team.',
+        'supervisor_id' => $otherSupervisor->id,
+        'department' => 'software',
+        'taken' => true,
+    ]);
+    $existingProject->members()->create(['user_id' => $enrolledStudent->id, 'position' => 1]);
+
+    $this->actingAs($supervisorUser)
+        ->post('/updateproject', array_merge(validSupervisorProjectPayload('Manual Update Target Project'), [
+            'project_id' => $availableProject->id,
+            'taken' => 'Yes',
+            'student_one_id' => $enrolledStudent->university_number,
+        ]))
+        ->assertSessionHas('error');
+
+    expect($availableProject->fresh()->members()->count())->toBe(0);
+    expect($existingProject->members()->where('user_id', $enrolledStudent->id)->count())->toBe(1);
+});
+
+it('allows supervisors to update a project while keeping the same existing team members', function () {
+    [$supervisorUser, $supervisor, $student] = createWorkflowSupervisorFixture();
+    $project = UniProject::create(array_merge([
+        'name' => 'Same Team Update Project',
+        'description' => 'Project with an existing member.',
+        'supervisor_id' => $supervisor->id,
+        'department' => 'software',
+        'taken' => true,
+        'student_count' => 1,
+    ], validSupervisorProjectDates()));
+    $project->members()->create(['user_id' => $student->id, 'position' => 1]);
+
+    $this->actingAs($supervisorUser)
+        ->post('/updateproject', array_merge(validSupervisorProjectPayload('Updated Same Team Project'), [
+            'project_id' => $project->id,
+            'taken' => 'Yes',
+            'student_one_id' => $student->university_number,
+        ]))
+        ->assertSessionHas('success');
+
+    expect($project->fresh()->name)->toBe('Updated Same Team Project');
+    expect($project->members()->where('user_id', $student->id)->count())->toBe(1);
+});
+
+it('allows supervisors to add projects with no members or unenrolled students', function () {
+    [$supervisorUser, $supervisor, $student] = createWorkflowSupervisorFixture();
+
+    $this->actingAs($supervisorUser)
+        ->post('/addproject', array_merge(validSupervisorProjectPayload('Available Manual Project'), [
+            'taken' => 'No',
+        ]))
+        ->assertSessionHas('success');
+
+    $availableProject = UniProject::where('name', 'Available Manual Project')->first();
+    expect($availableProject)->not->toBeNull();
+    expect($availableProject->members()->count())->toBe(0);
+
+    $this->actingAs($supervisorUser)
+        ->post('/addproject', array_merge(validSupervisorProjectPayload('Taken Manual Project'), [
+            'taken' => 'Yes',
+            'student_one_id' => $student->university_number,
+        ]))
+        ->assertSessionHas('success');
+
+    $takenProject = UniProject::where('name', 'Taken Manual Project')->first();
+    expect($takenProject)->not->toBeNull();
+    expect($takenProject->members()->where('user_id', $student->id)->exists())->toBeTrue();
+});
+
 function createWorkflowSupervisorFixture(string $suffix = 'main'): array
 {
     $student = User::factory()->create([
@@ -239,4 +353,27 @@ function createIdea(Supervisor $supervisor, User $student, string $projectName):
     ]);
 
     return $idea;
+}
+
+function validSupervisorProjectDates(): array
+{
+    return [
+        'seminar_1' => now()->addWeeks(2)->toDateString(),
+        'seminar_2' => now()->addWeeks(6)->toDateString(),
+        'seminar_3' => now()->addWeeks(10)->toDateString(),
+        'final' => now()->addWeeks(14)->toDateString(),
+    ];
+}
+
+function validSupervisorProjectPayload(string $projectName): array
+{
+    return array_merge([
+        'project_name' => $projectName,
+        'description' => 'Project used for supervisor assignment guard tests.',
+        'department' => 'software',
+        'seminar1_date' => now()->addWeeks(2)->toDateString(),
+        'seminar2_date' => now()->addWeeks(6)->toDateString(),
+        'seminar3_date' => now()->addWeeks(10)->toDateString(),
+        'final_date' => now()->addWeeks(14)->toDateString(),
+    ], []);
 }

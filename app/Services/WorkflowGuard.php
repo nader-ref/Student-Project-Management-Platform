@@ -34,6 +34,21 @@ class WorkflowGuard
     }
 
     /**
+     * @param  array<int, int>  $userIds
+     */
+    public static function anyUserEnrolledInOtherProject(array $userIds, ?int $exceptProjectId = null): bool
+    {
+        if ($userIds === []) {
+            return false;
+        }
+
+        return ProjectMember::query()
+            ->whereIn('user_id', $userIds)
+            ->when($exceptProjectId !== null, fn ($query) => $query->where('project_id', '!=', $exceptProjectId))
+            ->exists();
+    }
+
+    /**
      * @param  array<int, array{user: User, position: int}>  $members
      * @return array<int, int>
      */
