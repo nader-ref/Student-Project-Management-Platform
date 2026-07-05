@@ -163,6 +163,12 @@ class SupervisorController extends Controller
             return back()->with('error', $memberResult['error'])->withInput();
         }
 
+        $memberUserIds = WorkflowGuard::userIdsFromMembers($memberResult['members']);
+
+        if (WorkflowGuard::anyUserEnrolledInOtherProject($memberUserIds)) {
+            return back()->with('error', 'One or more selected students are already enrolled in another project.')->withInput();
+        }
+
         DB::transaction(function () use ($request, $sup, $tak, $memberResult) {
             $project = UniProject::create([
                 'name' => $request->project_name,
@@ -228,6 +234,14 @@ class SupervisorController extends Controller
         $memberResult = $this->membersFromRequest($request);
         if (isset($memberResult['error'])) {
             return back()->with('error', $memberResult['error'])->withInput()->with('active_tab', 'show_pro');
+        }
+
+        $memberUserIds = WorkflowGuard::userIdsFromMembers($memberResult['members']);
+
+        if (WorkflowGuard::anyUserEnrolledInOtherProject($memberUserIds, $project->id)) {
+            return back()->with('error', 'One or more selected students are already enrolled in another project.')
+                ->withInput()
+                ->with('active_tab', 'show_pro');
         }
 
         DB::transaction(function () use ($request, $project, $memberResult) {
