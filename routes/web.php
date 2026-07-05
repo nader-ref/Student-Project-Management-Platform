@@ -31,6 +31,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/admin/projects', [AdminController::class, 'projects'])->name('admin.projects');
+    Route::get('/admin/requests', [AdminController::class, 'requests'])->name('admin.requests');
+    Route::get('/admin/ideas', [AdminController::class, 'ideas'])->name('admin.ideas');
+    Route::get('/admin/submissions', [AdminController::class, 'submissions'])->name('admin.submissions');
 });
 
 Route::middleware('auth')->post('/logout', [UserController::class, 'Out'])->name('logout');
