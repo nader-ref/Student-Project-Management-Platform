@@ -210,6 +210,7 @@
                 <a href="{{ route('admin.requests') }}" class="admin-nav-link">Requests</a>
                 <a href="{{ route('admin.ideas') }}" class="admin-nav-link">Ideas</a>
                 <a href="{{ route('admin.submissions') }}" class="admin-nav-link is-active">Submissions</a>
+                <a href="{{ route('admin.supervisors.create') }}" class="admin-nav-link">Create Supervisor</a>
             </div>
         </nav>
 

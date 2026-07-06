@@ -35,6 +35,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/requests', [AdminController::class, 'requests'])->name('admin.requests');
     Route::get('/admin/ideas', [AdminController::class, 'ideas'])->name('admin.ideas');
     Route::get('/admin/submissions', [AdminController::class, 'submissions'])->name('admin.submissions');
+    Route::get('/admin/supervisors/create', [AdminController::class, 'createSupervisor'])->name('admin.supervisors.create');
+    Route::post('/admin/supervisors', [AdminController::class, 'storeSupervisor'])->name('admin.supervisors.store');
 });
 
 Route::middleware('auth')->post('/logout', [UserController::class, 'Out'])->name('logout');

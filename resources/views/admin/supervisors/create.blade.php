@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ideas · Admin · Projects Hub</title>
+    <title>Create Supervisor · Admin · Projects Hub</title>
     <style>
         :root {
             --admin-navy: #0f172a;
             --admin-slate: #1e293b;
             --admin-accent: #6366f1;
+            --admin-accent-hover: #4f46e5;
             --admin-bg: #f1f5f9;
             --admin-card: #ffffff;
             --admin-border: #e2e8f0;
@@ -16,8 +17,6 @@
             --admin-text: #0f172a;
             --admin-success: #059669;
             --admin-success-bg: #ecfdf5;
-            --admin-warning: #d97706;
-            --admin-warning-bg: #fffbeb;
             --admin-danger: #dc2626;
             --admin-danger-bg: #fef2f2;
             --admin-radius: 14px;
@@ -125,59 +124,87 @@
             color: var(--admin-muted);
             font-size: 15px;
         }
-        .data-card {
+        .form-card {
             background: var(--admin-card);
             border: 1px solid var(--admin-border);
             border-radius: var(--admin-radius);
             box-shadow: var(--admin-shadow);
-            overflow: hidden;
+            padding: 28px;
+            max-width: 640px;
         }
-        .table-wrap { overflow-x: auto; }
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
+        .form-grid { display: grid; gap: 18px; }
+        .form-field label {
+            display: block;
+            margin-bottom: 6px;
             font-size: 14px;
-        }
-        .data-table th,
-        .data-table td {
-            padding: 14px 18px;
-            text-align: left;
-            border-bottom: 1px solid var(--admin-border);
-            vertical-align: middle;
-        }
-        .data-table th {
-            background: var(--admin-navy);
-            color: #fff;
-            font-size: 12px;
             font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            white-space: nowrap;
         }
-        .data-table tbody tr:hover { background: #f8fafc; }
-        .data-table tbody tr:last-child td { border-bottom: 0; }
-        .empty-state {
-            padding: 36px 18px;
-            text-align: center;
-            color: var(--admin-muted);
+        .form-field input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--admin-border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .form-field input:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .form-field.has-error input { border-color: var(--admin-danger); }
+        .field-error {
+            margin-top: 6px;
+            color: var(--admin-danger);
+            font-size: 13px;
             font-weight: 600;
         }
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            line-height: 1.2;
-            white-space: nowrap;
+        .alert {
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
         }
-        .badge-pending { background: var(--admin-warning-bg); color: var(--admin-warning); }
-        .badge-success { background: var(--admin-success-bg); color: var(--admin-success); }
-        .badge-danger { background: var(--admin-danger-bg); color: var(--admin-danger); }
+        .alert-success {
+            background: var(--admin-success-bg);
+            color: var(--admin-success);
+            border: 1px solid #a7f3d0;
+        }
+        .alert-error {
+            background: var(--admin-danger-bg);
+            color: var(--admin-danger);
+            border: 1px solid #fecaca;
+        }
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .btn-primary {
+            border: 0;
+            border-radius: 10px;
+            background: var(--admin-accent);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 12px 20px;
+            transition: background 0.15s ease;
+        }
+        .btn-primary:hover { background: var(--admin-accent-hover); }
+        .btn-link {
+            color: var(--admin-accent);
+            font-weight: 700;
+            font-size: 14px;
+        }
         @media (max-width: 720px) {
             .admin-main { padding: 20px 16px 32px; }
             .admin-nav { padding: 0 16px; }
+            .form-card { padding: 20px; }
         }
     </style>
 </head>
@@ -205,56 +232,68 @@
                 <a href="{{ route('admin.users') }}" class="admin-nav-link">Users</a>
                 <a href="{{ route('admin.projects') }}" class="admin-nav-link">Projects</a>
                 <a href="{{ route('admin.requests') }}" class="admin-nav-link">Requests</a>
-                <a href="{{ route('admin.ideas') }}" class="admin-nav-link is-active">Ideas</a>
+                <a href="{{ route('admin.ideas') }}" class="admin-nav-link">Ideas</a>
                 <a href="{{ route('admin.submissions') }}" class="admin-nav-link">Submissions</a>
-                <a href="{{ route('admin.supervisors.create') }}" class="admin-nav-link">Create Supervisor</a>
+                <a href="{{ route('admin.supervisors.create') }}" class="admin-nav-link is-active">Create Supervisor</a>
             </div>
         </nav>
 
         <main class="admin-main">
             <div class="admin-page-header">
-                <h1>Project Ideas</h1>
-                <p>Read-only idea overview.</p>
+                <h1>Create Supervisor</h1>
+                <p>Provision a new supervisor account with login access and a linked supervisor profile.</p>
             </div>
 
-            <section class="data-card">
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Idea</th>
-                                <th>Supervisor</th>
-                                <th>Requester</th>
-                                <th>Members</th>
-                                <th>Status</th>
-                                <th>Created</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($ideas as $idea)
-                                <tr>
-                                    <td><strong>{{ $idea['title'] }}</strong></td>
-                                    <td>{{ $idea['supervisor'] }}</td>
-                                    <td>{{ $idea['requester'] }}</td>
-                                    <td>{{ $idea['members'] }}</td>
-                                    <td>
-                                        <span @class([
-                                            'badge',
-                                            'badge-pending' => $idea['status'] === 'Pending',
-                                            'badge-success' => $idea['status'] === 'Accepted',
-                                            'badge-danger' => $idea['status'] === 'Rejected',
-                                        ])>{{ $idea['status'] }}</span>
-                                    </td>
-                                    <td>{{ $idea['created_at']?->format('M d, Y') ?? '—' }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="empty-state">No project ideas found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-error">
+                    Please correct the errors below and try again.
                 </div>
+            @endif
+
+            <section class="form-card">
+                <form method="POST" action="{{ route('admin.supervisors.store') }}" class="form-grid">
+                    @csrf
+
+                    <div @class(['form-field', 'has-error' => $errors->has('name')])>
+                        <label for="name">Full name</label>
+                        <input id="name" name="name" type="text" value="{{ old('name') }}" required autocomplete="name">
+                        @error('name')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div @class(['form-field', 'has-error' => $errors->has('university_number')])>
+                        <label for="university_number">University number</label>
+                        <input id="university_number" name="university_number" type="text" value="{{ old('university_number') }}" required autocomplete="off">
+                        @error('university_number')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div @class(['form-field', 'has-error' => $errors->has('email')])>
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email">
+                        @error('email')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div @class(['form-field', 'has-error' => $errors->has('password')])>
+                        <label for="password">Password</label>
+                        <input id="password" name="password" type="password" required autocomplete="new-password">
+                        @error('password')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div @class(['form-field', 'has-error' => $errors->has('password_confirmation')])>
+                        <label for="password_confirmation">Confirm password</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password">
+                        @error('password_confirmation')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Create supervisor account</button>
+                        <a href="{{ route('admin.users') }}" class="btn-link">Back to users</a>
+                        <a href="{{ route('admin.dashboard') }}" class="btn-link">Dashboard</a>
+                    </div>
+                </form>
             </section>
         </main>
     </div>
