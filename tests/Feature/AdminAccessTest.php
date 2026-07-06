@@ -106,6 +106,7 @@ it('shows the admin dashboard metrics to admins', function () {
     $response->assertSee('Total submissions');
     $response->assertSee('Pending requests');
     $response->assertSee('Pending ideas');
+    $response->assertSee('Pending email');
     $response->assertSee($student->name);
     $response->assertSee($supervisor->name);
 });
@@ -120,8 +121,12 @@ it('shows a read-only users page to admins', function () {
     $response->assertSee($admin->name);
     $response->assertSee($student->university_number);
     $response->assertSee($supervisor->university_number);
+    $response->assertSee('Email', false);
+    $response->assertSee('Email status', false);
     $response->assertSee('Account status');
     $response->assertSee('Active');
+    $response->assertSee($student->email);
+    $response->assertSee('Complete');
 });
 
 it('shows a read-only projects page to admins', function () {

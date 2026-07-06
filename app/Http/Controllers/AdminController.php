@@ -27,6 +27,7 @@ class AdminController extends Controller
                 'totalSubmissions' => ProjectSubmission::count(),
                 'pendingRequests' => $this->countPendingRequests(),
                 'pendingIdeas' => $this->countPendingIdeas(),
+                'pendingEmailUsers' => User::whereNull('email')->count(),
             ],
             'latestUsers' => $this->userSummaries(
                 User::query()->latest()->take(5)->get()
@@ -269,10 +270,16 @@ class AdminController extends Controller
             'name' => $user->name,
             'university_number' => $user->university_number,
             'email' => $user->email,
+            'email_status' => $this->emailStatus($user),
             'role' => $rolesByUserId->get($user->id) ?? 'No role',
             'status' => $this->accountStatus($user),
             'created_at' => $user->created_at,
         ]);
+    }
+
+    private function emailStatus(User $user): string
+    {
+        return $user->email ? 'Complete' : 'Pending';
     }
 
     private function accountStatus(User $user): string
