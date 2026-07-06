@@ -170,6 +170,18 @@
         }
         .badge-success { background: var(--admin-success-bg); color: var(--admin-success); }
         .badge-neutral { background: #f1f5f9; color: #475569; }
+        .alert {
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .alert-success {
+            background: var(--admin-success-bg);
+            color: var(--admin-success);
+            border: 1px solid #a7f3d0;
+        }
         @media (max-width: 720px) {
             .admin-main { padding: 20px 16px 32px; }
             .admin-nav { padding: 0 16px; }
@@ -202,6 +214,7 @@
                 <a href="{{ route('admin.requests') }}" class="admin-nav-link">Requests</a>
                 <a href="{{ route('admin.ideas') }}" class="admin-nav-link">Ideas</a>
                 <a href="{{ route('admin.submissions') }}" class="admin-nav-link">Submissions</a>
+                <a href="{{ route('admin.supervisors.create') }}" class="admin-nav-link">Create Supervisor</a>
             </div>
         </nav>
 
@@ -210,6 +223,10 @@
                 <h1>Users</h1>
                 <p>Read-only account overview.</p>
             </div>
+
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
             <section class="data-card">
                 <div class="table-wrap">
