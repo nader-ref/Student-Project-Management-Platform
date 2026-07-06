@@ -11,9 +11,11 @@ use App\Models\User;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laratrust\Models\Role;
 
@@ -116,9 +118,65 @@ class UserController extends Controller
          
                     
                     request()->session()->regenerate();
+
+                    if (blank($user->email)) {
+                        return redirect()->route('profile.complete-email')->with('success', 'Signed in successfully!');
+                    }
+
                     return redirect($dashboardRoute)->with('success', 'Signed in successfully!');
       
 
+    }
+
+    public function showCompleteEmail()
+    {
+        $user = Auth::user();
+
+        if (filled($user->email)) {
+            return redirect($user->resolveDashboardRoute() ?? '/');
+        }
+
+        return view('complete-email');
+    }
+
+    public function storeCompleteEmail(Request $request)
+    {
+        $user = Auth::user();
+
+        if (filled($user->email)) {
+            return redirect($user->resolveDashboardRoute() ?? '/');
+        }
+
+        $validated = $request->validate([
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+                Rule::unique('supervisors', 'email')->ignore($user->supervisor?->id),
+            ],
+        ]);
+
+        DB::transaction(function () use ($user, $validated) {
+            $user->update(['email' => $validated['email']]);
+
+            if ($user->supervisor) {
+                $user->supervisor->update(['email' => $validated['email']]);
+            }
+        });
+
+        $dashboardRoute = $user->resolveDashboardRoute();
+
+        if (! $dashboardRoute) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'This account does not have access to a portal.',
+            ]);
+        }
+
+        return redirect($dashboardRoute)->with('success', 'Email saved successfully.');
     }
 
     public function Change()
