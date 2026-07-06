@@ -9,8 +9,10 @@ use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
 use App\Services\StudentEnrollmentService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Laratrust\Models\Role;
 
 class AdminController extends Controller
 {
@@ -126,6 +128,47 @@ class AdminController extends Controller
         return view('admin.submissions', [
             'submissions' => $submissions,
         ]);
+    }
+
+    public function createSupervisor()
+    {
+        return view('admin.supervisors.create');
+    }
+
+    public function storeSupervisor(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'university_number' => 'required|string|max:255|unique:users,university_number',
+            'email' => 'required|string|email|max:255|unique:users,email|unique:supervisors,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'university_number' => $validated['university_number'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+            ]);
+
+            Role::firstOrCreate(
+                ['name' => 'supervisor'],
+                ['display_name' => 'Supervisor', 'description' => 'Supervisor role'],
+            );
+
+            $user->addRole('supervisor');
+
+            Supervisor::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'user_id' => $user->id,
+            ]);
+        });
+
+        return redirect()
+            ->route('admin.users')
+            ->with('success', 'Supervisor account created successfully.');
     }
 
     private function countUsersWithRole(string $role): int
