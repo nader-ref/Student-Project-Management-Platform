@@ -20,7 +20,13 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                $dashboardRoute = Auth::guard($guard)->user()->resolveDashboardRoute();
+                $user = Auth::guard($guard)->user();
+
+                if (blank($user->email)) {
+                    return redirect()->route('profile.complete-email');
+                }
+
+                $dashboardRoute = $user->resolveDashboardRoute();
 
                 return redirect($dashboardRoute ?? '/');
             }
