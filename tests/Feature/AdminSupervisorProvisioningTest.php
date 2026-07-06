@@ -113,6 +113,29 @@ it('shows the supervisor create form to admins with required fields', function (
     $response->assertSee('name="password_confirmation"', false);
 });
 
+it('allows admins to create a supervisor without email', function () {
+    $admin = createProvisioningAdmin();
+    $payload = validSupervisorPayload();
+    unset($payload['email']);
+
+    $response = $this->actingAs($admin)
+        ->post(route('admin.supervisors.store'), $payload);
+
+    $response->assertRedirect(route('admin.users'));
+    $response->assertSessionHas('success', 'Supervisor account created successfully.');
+
+    $user = User::query()->where('university_number', $payload['university_number'])->first();
+
+    expect($user)->not->toBeNull();
+    expect($user->email)->toBeNull();
+    expect($user->hasRole('supervisor'))->toBeTrue();
+
+    $supervisor = Supervisor::query()->where('user_id', $user->id)->first();
+
+    expect($supervisor)->not->toBeNull();
+    expect($supervisor->email)->toBeNull();
+});
+
 it('allows admins to create a supervisor with valid data', function () {
     $admin = createProvisioningAdmin();
     $payload = validSupervisorPayload();
@@ -134,6 +157,31 @@ it('allows admins to create a supervisor with valid data', function () {
     expect($supervisor)->not->toBeNull();
     expect($supervisor->email)->toBe($user->email);
     expect($supervisor->name)->toBe($user->name);
+});
+
+it('redirects a newly created no-email supervisor to complete-email on login', function () {
+    $admin = createProvisioningAdmin();
+    $payload = validSupervisorPayload([
+        'university_number' => 'SUP-NO-EMAIL-LOGIN',
+        'email' => null,
+    ]);
+    unset($payload['email']);
+
+    $this->actingAs($admin)
+        ->post(route('admin.supervisors.store'), $payload)
+        ->assertRedirect(route('admin.users'));
+
+    $user = User::query()->where('university_number', $payload['university_number'])->first();
+
+    Auth::logout();
+
+    $response = $this->post('/Login', [
+        'university_number' => $payload['university_number'],
+        'password' => $payload['password'],
+    ]);
+
+    $response->assertRedirect(route('profile.complete-email'));
+    $this->assertAuthenticatedAs($user);
 });
 
 it('allows a newly created supervisor to log in and reach the supervisor dashboard', function () {

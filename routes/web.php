@@ -28,7 +28,13 @@ Route::middleware('guest')->group(function () {
     Route::post('supervisorSignup', fn () => redirect()->route('login'));
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::get('/complete-email', [UserController::class, 'showCompleteEmail'])->name('profile.complete-email');
+    Route::post('/complete-email', [UserController::class, 'storeCompleteEmail'])->name('profile.complete-email.store');
+    Route::post('/logout', [UserController::class, 'Out'])->name('logout');
+});
+
+Route::middleware(['auth', 'email.complete', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/admin/projects', [AdminController::class, 'projects'])->name('admin.projects');
@@ -39,15 +45,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/supervisors', [AdminController::class, 'storeSupervisor'])->name('admin.supervisors.store');
 });
 
-Route::middleware('auth')->post('/logout', [UserController::class, 'Out'])->name('logout');
-
 Route::get('/ForgetPassword', [UserController::class, 'showForm'])->name('password.request');
 Route::post('/ForgetPassword', [UserController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [UserController::class, 'showForms'])->name('password.reset');
 Route::post('/reset-password', [UserController::class, 'reset'])->name('password.update');
 
 // Student portal
-Route::middleware('student')->group(function () {
+Route::middleware(['email.complete', 'student'])->group(function () {
     Route::get('/StudentDashboard', [UserController::class, 'showDash'])->name('student.dashboard');
     Route::post('/RequstAdd', [ProjectrequestController::class, 'request']);
     Route::get('/StudentDashboard/acceptance', [ProjectrequestController::class, 'accept']);
@@ -63,7 +67,7 @@ Route::middleware('student')->group(function () {
 });
 
 // Supervisor portal
-Route::middleware('supervisor')->group(function () {
+Route::middleware(['email.complete', 'supervisor'])->group(function () {
     Route::get('supervisorDashboard', [SupervisorController::class, 'showdash'])->name('supervisor.dashboard');
     Route::post('/addproject', [SupervisorController::class, 'addproject']);
     Route::post('/updateproject', [SupervisorController::class, 'updateproject']);

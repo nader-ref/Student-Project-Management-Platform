@@ -140,7 +140,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'university_number' => 'required|string|max:255|unique:users,university_number',
-            'email' => 'required|string|email|max:255|unique:users,email|unique:supervisors,email',
+            'email' => 'nullable|string|email|max:255|unique:users,email|unique:supervisors,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -148,7 +148,7 @@ class AdminController extends Controller
             $user = User::create([
                 'name' => $validated['name'],
                 'university_number' => $validated['university_number'],
-                'email' => $validated['email'],
+                'email' => $validated['email'] ?? null,
                 'password' => $validated['password'],
             ]);
 
@@ -161,7 +161,7 @@ class AdminController extends Controller
 
             Supervisor::create([
                 'name' => $user->name,
-                'email' => $user->email,
+                'email' => $user->email ?? null,
                 'user_id' => $user->id,
             ]);
         });

@@ -271,8 +271,8 @@
                     </div>
 
                     <div @class(['form-field', 'has-error' => $errors->has('email')])>
-                        <label for="email">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email">
+                        <label for="email">Email <span style="color:var(--admin-muted);font-weight:400;">(optional)</span></label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email">
                         @error('email')<div class="field-error">{{ $message }}</div>@enderror
                     </div>
 
