@@ -43,6 +43,8 @@ Route::middleware(['auth', 'email.complete', 'admin'])->group(function () {
     Route::get('/admin/submissions', [AdminController::class, 'submissions'])->name('admin.submissions');
     Route::get('/admin/supervisors/create', [AdminController::class, 'createSupervisor'])->name('admin.supervisors.create');
     Route::post('/admin/supervisors', [AdminController::class, 'storeSupervisor'])->name('admin.supervisors.store');
+    Route::get('/admin/students/create', [AdminController::class, 'createStudent'])->name('admin.students.create');
+    Route::post('/admin/students', [AdminController::class, 'storeStudent'])->name('admin.students.store');
 });
 
 Route::get('/ForgetPassword', [UserController::class, 'showForm'])->name('password.request');
