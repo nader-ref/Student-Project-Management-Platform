@@ -225,6 +225,7 @@
             white-space: nowrap;
         }
         .badge-success { background: var(--admin-success-bg); color: var(--admin-success); }
+        .badge-pending { background: var(--admin-warning-bg); color: var(--admin-warning); }
         .badge-neutral { background: #f1f5f9; color: #475569; }
         @media (max-width: 720px) {
             .admin-main { padding: 20px 16px 32px; }
@@ -299,6 +300,10 @@
                     <span class="metric-label">Pending ideas</span>
                     <p class="metric-value">{{ $stats['pendingIdeas'] }}</p>
                 </a>
+                <a href="{{ route('admin.users') }}" class="metric-card metric-card-link metric-card--highlight">
+                    <span class="metric-label">Pending email</span>
+                    <p class="metric-value">{{ $stats['pendingEmailUsers'] }}</p>
+                </a>
             </section>
 
             <section class="data-card">
@@ -311,6 +316,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>University number</th>
+                                <th>Email status</th>
                                 <th>Role</th>
                                 <th>Account status</th>
                             </tr>
@@ -320,12 +326,19 @@
                                 <tr>
                                     <td>{{ $user['name'] }}</td>
                                     <td>{{ $user['university_number'] }}</td>
+                                    <td>
+                                        <span @class([
+                                            'badge',
+                                            'badge-success' => $user['email_status'] === 'Complete',
+                                            'badge-pending' => $user['email_status'] === 'Pending',
+                                        ])>{{ $user['email_status'] }}</span>
+                                    </td>
                                     <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
                                     <td><span class="badge badge-success">{{ $user['status'] }}</span></td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="empty-state">No users found.</td>
+                                    <td colspan="5" class="empty-state">No users found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

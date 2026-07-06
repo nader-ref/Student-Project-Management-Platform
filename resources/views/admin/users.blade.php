@@ -16,6 +16,8 @@
             --admin-text: #0f172a;
             --admin-success: #059669;
             --admin-success-bg: #ecfdf5;
+            --admin-warning: #d97706;
+            --admin-warning-bg: #fffbeb;
             --admin-radius: 14px;
             --admin-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.06);
         }
@@ -169,7 +171,9 @@
             white-space: nowrap;
         }
         .badge-success { background: var(--admin-success-bg); color: var(--admin-success); }
+        .badge-pending { background: var(--admin-warning-bg); color: var(--admin-warning); }
         .badge-neutral { background: #f1f5f9; color: #475569; }
+        .text-muted { color: var(--admin-muted); font-style: italic; }
         .alert {
             padding: 14px 16px;
             border-radius: 10px;
@@ -236,6 +240,8 @@
                             <tr>
                                 <th>Name</th>
                                 <th>University number</th>
+                                <th>Email</th>
+                                <th>Email status</th>
                                 <th>Role</th>
                                 <th>Account status</th>
                             </tr>
@@ -245,12 +251,26 @@
                                 <tr>
                                     <td>{{ $user['name'] }}</td>
                                     <td>{{ $user['university_number'] }}</td>
+                                    <td>
+                                        @if ($user['email'])
+                                            {{ $user['email'] }}
+                                        @else
+                                            <span class="text-muted">Not set</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span @class([
+                                            'badge',
+                                            'badge-success' => $user['email_status'] === 'Complete',
+                                            'badge-pending' => $user['email_status'] === 'Pending',
+                                        ])>{{ $user['email_status'] }}</span>
+                                    </td>
                                     <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
                                     <td><span class="badge badge-success">{{ $user['status'] }}</span></td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="empty-state">No users found.</td>
+                                    <td colspan="6" class="empty-state">No users found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
