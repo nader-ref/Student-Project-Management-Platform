@@ -171,6 +171,41 @@ class AdminController extends Controller
             ->with('success', 'Supervisor account created successfully.');
     }
 
+    public function createStudent()
+    {
+        return view('admin.students.create');
+    }
+
+    public function storeStudent(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'university_number' => 'required|string|max:255|unique:users,university_number',
+            'email' => 'nullable|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'university_number' => $validated['university_number'],
+                'email' => $validated['email'] ?? null,
+                'password' => $validated['password'],
+            ]);
+
+            Role::firstOrCreate(
+                ['name' => 'student'],
+                ['display_name' => 'Student', 'description' => 'Student role'],
+            );
+
+            $user->addRole('student');
+        });
+
+        return redirect()
+            ->route('admin.users')
+            ->with('success', 'Student account created successfully.');
+    }
+
     private function countUsersWithRole(string $role): int
     {
         return DB::table('role_user')

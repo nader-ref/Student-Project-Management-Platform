@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Supervisor · Admin · Projects Hub</title>
+    <title>Create Student · Admin · Projects Hub</title>
     <style>
         :root {
             --admin-navy: #0f172a;
@@ -234,15 +234,15 @@
                 <a href="{{ route('admin.requests') }}" class="admin-nav-link">Requests</a>
                 <a href="{{ route('admin.ideas') }}" class="admin-nav-link">Ideas</a>
                 <a href="{{ route('admin.submissions') }}" class="admin-nav-link">Submissions</a>
-                <a href="{{ route('admin.supervisors.create') }}" class="admin-nav-link is-active">Create Supervisor</a>
-                <a href="{{ route('admin.students.create') }}" class="admin-nav-link">Create Student</a>
+                <a href="{{ route('admin.supervisors.create') }}" class="admin-nav-link">Create Supervisor</a>
+                <a href="{{ route('admin.students.create') }}" class="admin-nav-link is-active">Create Student</a>
             </div>
         </nav>
 
         <main class="admin-main">
             <div class="admin-page-header">
-                <h1>Create Supervisor</h1>
-                <p>Provision a new supervisor account with login access and a linked supervisor profile.</p>
+                <h1>Create Student</h1>
+                <p>Provision a new student account with university number login access.</p>
             </div>
 
             @if (session('success'))
@@ -256,7 +256,7 @@
             @endif
 
             <section class="form-card">
-                <form method="POST" action="{{ route('admin.supervisors.store') }}" class="form-grid">
+                <form method="POST" action="{{ route('admin.students.store') }}" class="form-grid">
                     @csrf
 
                     <div @class(['form-field', 'has-error' => $errors->has('name')])>
@@ -290,7 +290,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary">Create supervisor account</button>
+                        <button type="submit" class="btn-primary">Create student account</button>
                         <a href="{{ route('admin.users') }}" class="btn-link">Back to users</a>
                         <a href="{{ route('admin.dashboard') }}" class="btn-link">Dashboard</a>
                     </div>
