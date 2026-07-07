@@ -99,6 +99,17 @@ class UserController extends Controller
                         ]);
                     };
                     $user = Auth::user();
+
+                    if (! $user->isActive()) {
+                        Auth::logout();
+                        $request->session()->invalidate();
+                        $request->session()->regenerateToken();
+
+                        throw ValidationException::withMessages([
+                            'university_number' => 'This account has been deactivated.',
+                        ]);
+                    }
+
                     $dashboardRoute = $user->resolveDashboardRoute();
 
                     if (! $dashboardRoute) {
