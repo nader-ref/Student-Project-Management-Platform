@@ -10,6 +10,7 @@ use App\Models\Supervisor;
 use App\Models\Supcontact;
 use App\Models\UniProject;
 use App\Models\User;
+use App\Notifications\WorkflowNotification;
 use App\Services\WorkflowGuard;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -324,6 +325,21 @@ class SupervisorController extends Controller
             $projectRequest->save();
         });
 
+        $projectRequest->loadMissing('members.user');
+
+        foreach ($projectRequest->members as $member) {
+            if ($member->user) {
+                $member->user->notify(new WorkflowNotification(
+                    type: 'request_accepted',
+                    title: 'Project request accepted',
+                    body: 'Your project request has been accepted.',
+                    actionUrl: '/StudentDashboard/acceptance',
+                    relatedType: Projectrequest::class,
+                    relatedId: $projectRequest->id,
+                ));
+            }
+        }
+
         return redirect()->back()->with('success', 'Request accepted successfully!');
     }
 
@@ -366,6 +382,21 @@ class SupervisorController extends Controller
             $projectRequest->reason = $request->reason;
             $projectRequest->save();
         });
+
+        $projectRequest->loadMissing('members.user');
+
+        foreach ($projectRequest->members as $member) {
+            if ($member->user) {
+                $member->user->notify(new WorkflowNotification(
+                    type: 'request_rejected',
+                    title: 'Project request rejected',
+                    body: 'Your project request has been rejected.',
+                    actionUrl: '/StudentDashboard/acceptance',
+                    relatedType: Projectrequest::class,
+                    relatedId: $projectRequest->id,
+                ));
+            }
+        }
 
         return redirect()->back()->with('success', 'Request rejected.')->with('active_tab', 'Request');
     }
@@ -425,6 +456,21 @@ class SupervisorController extends Controller
             $idea->save();
         });
 
+        $idea->loadMissing('members.user');
+
+        foreach ($idea->members as $member) {
+            if ($member->user) {
+                $member->user->notify(new WorkflowNotification(
+                    type: 'idea_accepted',
+                    title: 'Project idea accepted',
+                    body: 'Your project idea has been accepted.',
+                    actionUrl: '/StudentDashboard/acceptanceidea',
+                    relatedType: Idea::class,
+                    relatedId: $idea->id,
+                ));
+            }
+        }
+
         return redirect()->back()->with('success', 'Idea accepted and project created!');
     }
 
@@ -462,6 +508,21 @@ class SupervisorController extends Controller
             $idea->save();
         });
 
+        $idea->loadMissing('members.user');
+
+        foreach ($idea->members as $member) {
+            if ($member->user) {
+                $member->user->notify(new WorkflowNotification(
+                    type: 'idea_rejected',
+                    title: 'Project idea rejected',
+                    body: 'Your project idea has been rejected.',
+                    actionUrl: '/StudentDashboard/acceptanceidea',
+                    relatedType: Idea::class,
+                    relatedId: $idea->id,
+                ));
+            }
+        }
+
         return redirect()->back()->with('success', 'Idea rejected.')->with('active_tab', 'Idea');
     }
 
@@ -489,6 +550,19 @@ class SupervisorController extends Controller
 
         $contact->Replay = $request->replay;
         $contact->save();
+
+        $contact->loadMissing('student');
+
+        if ($contact->student) {
+            $contact->student->notify(new WorkflowNotification(
+                type: 'message_reply',
+                title: 'Supervisor replied',
+                body: 'Your supervisor has replied to your message.',
+                actionUrl: '/StudentDashboard/replay',
+                relatedType: Contact::class,
+                relatedId: $contact->id,
+            ));
+        }
 
         return redirect()->back()->with('success', 'Reply sent successfully!')->with('active_tab', 'Message');
     }
