@@ -168,13 +168,56 @@
             color: var(--admin-navy);
         }
         .metric-card--highlight .metric-value { color: #b45309; }
+        .dashboard-section {
+            margin-top: 32px;
+        }
+        .dashboard-section:first-of-type {
+            margin-top: 0;
+        }
+        .dashboard-section-heading {
+            margin: 0 0 16px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--admin-muted);
+        }
+        .dashboard-section-heading a {
+            color: var(--admin-accent);
+            font-weight: 700;
+            letter-spacing: normal;
+            text-transform: none;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        .metric-grid--compact {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+        .metric-grid--compact .metric-value {
+            font-size: 28px;
+        }
+        .report-count {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--admin-navy);
+        }
+        .badge-danger { background: var(--admin-danger-bg); color: var(--admin-danger); }
+        .badge-info { background: var(--admin-info-bg); color: var(--admin-info); }
+        .badge-warning { background: var(--admin-warning-bg); color: var(--admin-warning); }
+        .data-card { margin-top: 0; }
+        .dashboard-section .data-card { margin-top: 0; }
+        .dashboard-section + .dashboard-section {
+            margin-top: 32px;
+        }
         .data-card {
             background: var(--admin-card);
             border: 1px solid var(--admin-border);
             border-radius: var(--admin-radius);
             box-shadow: var(--admin-shadow);
             overflow: hidden;
-            margin-top: 24px;
+        }
+        .data-card--spaced {
+            margin-top: 16px;
         }
         .data-card-header {
             padding: 20px 22px 0;
@@ -271,79 +314,203 @@
                 <p>Institutional overview of users, projects, and workflow activity.</p>
             </div>
 
-            <section class="metric-grid" aria-label="Admin statistics">
-                <a href="{{ route('admin.users') }}" class="metric-card metric-card-link">
-                    <span class="metric-label">Total users</span>
-                    <p class="metric-value">{{ $stats['totalUsers'] }}</p>
-                </a>
-                <div class="metric-card">
-                    <span class="metric-label">Total students</span>
-                    <p class="metric-value">{{ $stats['totalStudents'] }}</p>
+            <section class="dashboard-section" aria-labelledby="overview-heading">
+                <h2 id="overview-heading" class="dashboard-section-heading">Overview</h2>
+                <div class="metric-grid" aria-label="Admin statistics">
+                    <a href="{{ route('admin.users') }}" class="metric-card metric-card-link">
+                        <span class="metric-label">Total users</span>
+                        <p class="metric-value">{{ $stats['totalUsers'] }}</p>
+                    </a>
+                    <div class="metric-card">
+                        <span class="metric-label">Total students</span>
+                        <p class="metric-value">{{ $stats['totalStudents'] }}</p>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Total supervisors</span>
+                        <p class="metric-value">{{ $stats['totalSupervisors'] }}</p>
+                    </div>
+                    <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
+                        <span class="metric-label">Total projects</span>
+                        <p class="metric-value">{{ $stats['totalProjects'] }}</p>
+                    </a>
+                    <a href="{{ route('admin.submissions') }}" class="metric-card metric-card-link">
+                        <span class="metric-label">Total submissions</span>
+                        <p class="metric-value">{{ $stats['totalSubmissions'] }}</p>
+                    </a>
+                    <a href="{{ route('admin.requests') }}" class="metric-card metric-card-link metric-card--highlight">
+                        <span class="metric-label">Pending requests</span>
+                        <p class="metric-value">{{ $stats['pendingRequests'] }}</p>
+                    </a>
+                    <a href="{{ route('admin.ideas') }}" class="metric-card metric-card-link metric-card--highlight">
+                        <span class="metric-label">Pending ideas</span>
+                        <p class="metric-value">{{ $stats['pendingIdeas'] }}</p>
+                    </a>
+                    <a href="{{ route('admin.users') }}" class="metric-card metric-card-link metric-card--highlight">
+                        <span class="metric-label">Pending email</span>
+                        <p class="metric-value">{{ $stats['pendingEmailUsers'] }}</p>
+                    </a>
                 </div>
-                <div class="metric-card">
-                    <span class="metric-label">Total supervisors</span>
-                    <p class="metric-value">{{ $stats['totalSupervisors'] }}</p>
-                </div>
-                <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
-                    <span class="metric-label">Total projects</span>
-                    <p class="metric-value">{{ $stats['totalProjects'] }}</p>
-                </a>
-                <a href="{{ route('admin.submissions') }}" class="metric-card metric-card-link">
-                    <span class="metric-label">Total submissions</span>
-                    <p class="metric-value">{{ $stats['totalSubmissions'] }}</p>
-                </a>
-                <a href="{{ route('admin.requests') }}" class="metric-card metric-card-link metric-card--highlight">
-                    <span class="metric-label">Pending requests</span>
-                    <p class="metric-value">{{ $stats['pendingRequests'] }}</p>
-                </a>
-                <a href="{{ route('admin.ideas') }}" class="metric-card metric-card-link metric-card--highlight">
-                    <span class="metric-label">Pending ideas</span>
-                    <p class="metric-value">{{ $stats['pendingIdeas'] }}</p>
-                </a>
-                <a href="{{ route('admin.users') }}" class="metric-card metric-card-link metric-card--highlight">
-                    <span class="metric-label">Pending email</span>
-                    <p class="metric-value">{{ $stats['pendingEmailUsers'] }}</p>
-                </a>
+
+                <section class="data-card data-card--spaced">
+                    <div class="data-card-header">
+                        <h2>Latest registered users</h2>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>University number</th>
+                                    <th>Email status</th>
+                                    <th>Role</th>
+                                    <th>Account status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($latestUsers as $user)
+                                    <tr>
+                                        <td>{{ $user['name'] }}</td>
+                                        <td>{{ $user['university_number'] }}</td>
+                                        <td>
+                                            <span @class([
+                                                'badge',
+                                                'badge-success' => $user['email_status'] === 'Complete',
+                                                'badge-pending' => $user['email_status'] === 'Pending',
+                                            ])>{{ $user['email_status'] }}</span>
+                                        </td>
+                                        <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
+                                        <td><span class="badge badge-success">{{ $user['status'] }}</span></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="empty-state">No users found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </section>
 
-            <section class="data-card">
-                <div class="data-card-header">
-                    <h2>Latest registered users</h2>
+            <section class="dashboard-section" aria-labelledby="projects-heading">
+                <h2 id="projects-heading" class="dashboard-section-heading">
+                    Projects
+                    <a href="{{ route('admin.projects') }}">View all</a>
+                </h2>
+                <div class="metric-grid metric-grid--compact">
+                    <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
+                        <span class="metric-label">Available projects</span>
+                        <p class="metric-value">{{ $stats['availableProjects'] }}</p>
+                    </a>
+                    <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
+                        <span class="metric-label">Taken projects</span>
+                        <p class="metric-value">{{ $stats['takenProjects'] }}</p>
+                    </a>
                 </div>
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>University number</th>
-                                <th>Email status</th>
-                                <th>Role</th>
-                                <th>Account status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($latestUsers as $user)
+            </section>
+
+            <section class="dashboard-section" aria-labelledby="workflow-heading">
+                <h2 id="workflow-heading" class="dashboard-section-heading">Workflow</h2>
+                <section class="data-card">
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
                                 <tr>
-                                    <td>{{ $user['name'] }}</td>
-                                    <td>{{ $user['university_number'] }}</td>
-                                    <td>
-                                        <span @class([
-                                            'badge',
-                                            'badge-success' => $user['email_status'] === 'Complete',
-                                            'badge-pending' => $user['email_status'] === 'Pending',
-                                        ])>{{ $user['email_status'] }}</span>
-                                    </td>
-                                    <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
-                                    <td><span class="badge badge-success">{{ $user['status'] }}</span></td>
+                                    <th>Area</th>
+                                    <th>Pending</th>
+                                    <th>Accepted</th>
+                                    <th>Rejected</th>
+                                    <th>View</th>
                                 </tr>
-                            @empty
+                            </thead>
+                            <tbody>
                                 <tr>
-                                    <td colspan="5" class="empty-state">No users found.</td>
+                                    <td><strong>Requests</strong></td>
+                                    <td><span class="report-count">{{ $workflowSummary['requests']['pending'] }}</span></td>
+                                    <td><span class="report-count">{{ $workflowSummary['requests']['accepted'] }}</span></td>
+                                    <td><span class="report-count">{{ $workflowSummary['requests']['rejected'] }}</span></td>
+                                    <td><a href="{{ route('admin.requests') }}">Requests</a></td>
                                 </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                <tr>
+                                    <td><strong>Ideas</strong></td>
+                                    <td><span class="report-count">{{ $workflowSummary['ideas']['pending'] }}</span></td>
+                                    <td><span class="report-count">{{ $workflowSummary['ideas']['accepted'] }}</span></td>
+                                    <td><span class="report-count">{{ $workflowSummary['ideas']['rejected'] }}</span></td>
+                                    <td><a href="{{ route('admin.ideas') }}">Ideas</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <section class="dashboard-section" aria-labelledby="submissions-heading">
+                <h2 id="submissions-heading" class="dashboard-section-heading">
+                    Submissions
+                    <a href="{{ route('admin.submissions') }}">View all</a>
+                </h2>
+                <section class="data-card">
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($submissionSummary as $row)
+                                    <tr>
+                                        <td>
+                                            <span @class([
+                                                'badge',
+                                                'badge-info' => $row['label'] === 'Submitted',
+                                                'badge-success' => $row['label'] === 'Approved',
+                                                'badge-warning' => $row['label'] === 'Needs revision',
+                                            ])>{{ $row['label'] }}</span>
+                                        </td>
+                                        <td><span class="report-count">{{ $row['count'] }}</span></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <section class="dashboard-section" aria-labelledby="supervisor-workload-heading">
+                <h2 id="supervisor-workload-heading" class="dashboard-section-heading">
+                    Supervisor workload
+                    <a href="{{ route('admin.projects') }}">View projects</a>
+                </h2>
+                <section class="data-card">
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Supervisor</th>
+                                    <th>Total projects</th>
+                                    <th>Taken</th>
+                                    <th>Available</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($supervisorWorkload as $row)
+                                    <tr>
+                                        <td><strong>{{ $row['name'] }}</strong></td>
+                                        <td><span class="report-count">{{ $row['total'] }}</span></td>
+                                        <td><span class="report-count">{{ $row['taken'] }}</span></td>
+                                        <td><span class="report-count">{{ $row['available'] }}</span></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="empty-state">No supervisors found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </section>
         </main>
     </div>
