@@ -283,12 +283,17 @@ class UserController extends Controller
         $progress = null;
         $nextSteps = collect();
         $recentActivity = collect();
+        $milestoneStates = collect();
 
         if ($enrollment['project']) {
             $submissions = ProjectSubmission::with('submittedBy')
                 ->where('project_id', $enrollment['project']->id)
                 ->orderByDesc('created_at')
                 ->get();
+            $milestoneStates = StudentEnrollmentService::resolveMilestoneStates(
+                $enrollment['project'],
+                $submissions,
+            );
             $progress = StudentEnrollmentService::computeProgress(
                 $enrollment['project'],
                 $enrollment['milestones'],
@@ -356,6 +361,7 @@ class UserController extends Controller
             'nextSteps' => $nextSteps,
             'recentActivity' => $recentActivity,
             'showEnrolledBanner' => $showEnrolledBanner,
+            'milestoneStates' => $milestoneStates,
             'milestoneLabels' => StudentEnrollmentService::milestoneLabels(),
         ]);
     }
