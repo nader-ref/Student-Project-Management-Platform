@@ -9,6 +9,7 @@ use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProjectSubmissionController extends Controller
@@ -48,6 +49,21 @@ class ProjectSubmissionController extends Controller
 
         $validated = $validator->validated();
 
+        $blockingExists = ProjectSubmission::query()
+            ->where('project_id', $project->id)
+            ->where('milestone', $validated['milestone'])
+            ->whereIn('status', ['submitted', 'approved'])
+            ->exists();
+
+        if ($blockingExists) {
+            return redirect()->back()
+                ->withErrors([
+                    'milestone' => 'A submission for this milestone is already pending or approved.',
+                ])
+                ->withInput($request->except('file'))
+                ->with('active_tab', 'submissions');
+        }
+
         $file = $request->file('file');
         $path = $file->store('submissions/'.$project->id, 'public');
 
@@ -86,7 +102,12 @@ class ProjectSubmissionController extends Controller
         $validated = $request->validate([
             'submission_id' => 'required|integer|exists:project_submissions,id',
             'status' => 'required|in:submitted,approved,needs_revision',
-            'supervisor_feedback' => 'nullable|string|max:1000',
+            'supervisor_feedback' => [
+                Rule::requiredIf($request->input('status') === 'needs_revision'),
+                'nullable',
+                'string',
+                'max:1000',
+            ],
         ]);
 
         $submission = ProjectSubmission::with('project')->findOrFail($validated['submission_id']);
@@ -96,18 +117,35 @@ class ProjectSubmissionController extends Controller
             return back()->with('error', 'You cannot review this submission.');
         }
 
+        $oldStatus = $submission->status;
+        $oldFeedback = $submission->supervisor_feedback;
+
         $submission->update([
             'status' => $validated['status'],
-            'supervisor_feedback' => $validated['supervisor_feedback'],
+            'supervisor_feedback' => $validated['supervisor_feedback'] ?? null,
+            'reviewed_at' => now(),
+            'reviewed_by_user_id' => Auth::id(),
         ]);
+
+        $statusChanged = $oldStatus !== $submission->status;
+        $feedbackChanged = $oldFeedback !== $submission->supervisor_feedback;
 
         $submission->loadMissing('submittedBy');
 
-        if ($submission->submittedBy) {
+        if (($statusChanged || $feedbackChanged) && $submission->submittedBy) {
+            $milestoneLabels = StudentEnrollmentService::milestoneLabels();
+            $milestoneLabel = $milestoneLabels[$submission->milestone] ?? $submission->milestone;
+
+            $body = match ($submission->status) {
+                'approved' => "Your {$milestoneLabel} submission was approved.",
+                'needs_revision' => "Revision required for your {$milestoneLabel} submission.",
+                default => "Your {$milestoneLabel} submission was updated.",
+            };
+
             $submission->submittedBy->notify(new WorkflowNotification(
                 type: 'submission_reviewed',
                 title: 'Submission reviewed',
-                body: 'Your supervisor has reviewed your submission.',
+                body: $body,
                 actionUrl: '/StudentDashboard',
                 relatedType: ProjectSubmission::class,
                 relatedId: $submission->id,

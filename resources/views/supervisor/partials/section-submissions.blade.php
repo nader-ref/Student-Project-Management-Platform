@@ -1,6 +1,16 @@
+@php
+    $sortedSubmissions = $submissions->sortBy(fn ($sub) => $sub->isPending() ? 0 : ($sub->needsRevision() ? 1 : 2))->values();
+    $pendingCount = $submissions->where('status', 'submitted')->count();
+@endphp
+
 <div class="tab-panel-header">
     <h2><i class="fas fa-file-upload"></i> Student Submissions</h2>
     <p>Review files uploaded by your project teams and provide feedback.</p>
+    @if ($pendingCount > 0)
+        <p style="margin-top: 0.5rem; font-weight: 600; color: #b45309;">
+            <i class="fas fa-hourglass-half"></i> {{ $pendingCount }} submission{{ $pendingCount === 1 ? '' : 's' }} pending review
+        </p>
+    @endif
 </div>
 
 @if ($submissions->isEmpty())
@@ -11,16 +21,19 @@
     </div>
 @else
     <div class="request-list">
-        @foreach ($submissions as $sub)
-            <article class="request-item {{ $sub->status === 'approved' ? 'is-accepted' : ($sub->status === 'needs_revision' ? 'is-rejected' : 'is-pending') }}">
+        @foreach ($sortedSubmissions as $sub)
+            <article class="request-item {{ $sub->isApproved() ? 'is-accepted' : ($sub->needsRevision() ? 'is-rejected' : 'is-pending') }}">
                 <div class="request-item-body">
                     <div class="request-item-top">
                         <div>
                             <div class="request-ref">{{ $sub->project->name ?? 'Project #'.$sub->project_id }}</div>
                             <h3>{{ $sub->title }}</h3>
                         </div>
-                        <span class="status-pill {{ $sub->status === 'approved' ? 'accepted' : ($sub->status === 'needs_revision' ? 'rejected' : 'pending') }}">
-                            {{ ucwords(str_replace('_', ' ', $sub->status)) }}
+                        <span class="status-pill {{ $sub->isApproved() ? 'accepted' : ($sub->needsRevision() ? 'rejected' : 'pending') }}">
+                            @if ($sub->isPending())
+                                <i class="fas fa-hourglass-half"></i>
+                            @endif
+                            {{ $sub->statusLabel() }}
                         </span>
                     </div>
                     <div class="request-meta-grid">
@@ -40,11 +53,23 @@
                             <label>Uploaded</label>
                             <span>{{ $sub->created_at?->format('M d, Y H:i') }}</span>
                         </div>
+                        @if ($sub->reviewed_at)
+                            <div class="meta-block">
+                                <label>Last Reviewed</label>
+                                <span>{{ $sub->reviewed_at->format('M d, Y H:i') }}</span>
+                            </div>
+                        @endif
                     </div>
                     @if ($sub->notes)
                         <div class="meta-block team-block">
                             <label>Student Notes</label>
                             <span>{{ $sub->notes }}</span>
+                        </div>
+                    @endif
+                    @if ($sub->supervisor_feedback)
+                        <div class="reply-bubble">
+                            <label>Current Feedback</label>
+                            {{ $sub->supervisor_feedback }}
                         </div>
                     @endif
                     <form action="{{ url('/supervisor/submission/review') }}" method="POST" class="reply-form-inline">
@@ -54,15 +79,18 @@
                             <div class="form-field form-field-pro">
                                 <label>Review Status</label>
                                 <select name="status" required>
-                                    <option value="submitted" {{ $sub->status === 'submitted' ? 'selected' : '' }}>Submitted</option>
+                                    <option value="submitted" {{ $sub->status === 'submitted' ? 'selected' : '' }}>Pending Review</option>
                                     <option value="approved" {{ $sub->status === 'approved' ? 'selected' : '' }}>Approved</option>
-                                    <option value="needs_revision" {{ $sub->status === 'needs_revision' ? 'selected' : '' }}>Needs Revision</option>
+                                    <option value="needs_revision" {{ $sub->status === 'needs_revision' ? 'selected' : '' }}>Revision Required</option>
                                 </select>
                             </div>
-                            <div class="form-field form-field-pro">
-                                <label>Feedback</label>
-                                <input type="text" name="supervisor_feedback" value="{{ $sub->supervisor_feedback }}" placeholder="Optional feedback for the student">
-                            </div>
+                        </div>
+                        <div class="form-field form-field-pro" style="margin-top: 0.75rem;">
+                            <label>
+                                Feedback
+                                <span class="form-badge optional-badge field-required-badge">Required for revision</span>
+                            </label>
+                            <textarea name="supervisor_feedback" rows="3" placeholder="Provide feedback for the student...">{{ old('supervisor_feedback', $sub->supervisor_feedback) }}</textarea>
                         </div>
                         <div class="form-pro-actions" style="padding: 0; margin-top: 0.75rem; gap: 0.5rem;">
                             <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Review</button>

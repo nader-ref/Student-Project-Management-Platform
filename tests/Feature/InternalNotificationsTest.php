@@ -221,6 +221,7 @@ it('notifies submitter when supervisor reviews submission', function () {
     $student->refresh();
     expect($student->notifications)->toHaveCount(1);
     expect($student->notifications->first()->data['type'])->toBe('submission_reviewed');
+    expect($student->notifications->first()->data['body'])->toContain('approved');
 });
 
 it('shows only current user notifications on index', function () {
@@ -317,6 +318,7 @@ it('marks all notifications as read', function () {
 });
 
 it('allows no-email users to receive database notifications', function () {
+    /** @var \App\Models\User $student */
     $student = User::factory()->create([
         'name' => 'Email Complete Student',
         'university_number' => 'NOTIF-STU-WITH-EMAIL',

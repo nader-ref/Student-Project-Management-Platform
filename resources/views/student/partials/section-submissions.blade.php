@@ -88,15 +88,18 @@
 @else
     <div class="request-list" style="margin-bottom: 1.5rem;">
         @foreach ($mySubmissions as $sub)
-            <article class="request-item {{ $sub->status === 'approved' ? 'is-accepted' : ($sub->status === 'needs_revision' ? 'is-rejected' : 'is-pending') }}">
+            <article class="request-item {{ $sub->isApproved() ? 'is-accepted' : ($sub->needsRevision() ? 'is-rejected' : 'is-pending') }}">
                 <div class="request-item-body">
                     <div class="request-item-top">
                         <div>
                             <div class="request-ref">{{ $milestoneLabels[$sub->milestone] ?? $sub->milestone }}</div>
                             <h3>{{ $sub->title }}</h3>
                         </div>
-                        <span class="status-pill {{ $sub->status === 'approved' ? 'accepted' : ($sub->status === 'needs_revision' ? 'rejected' : 'pending') }}">
-                            {{ ucwords(str_replace('_', ' ', $sub->status)) }}
+                        <span class="status-pill {{ $sub->isApproved() ? 'accepted' : ($sub->needsRevision() ? 'rejected' : 'pending') }}">
+                            @if ($sub->needsRevision())
+                                <i class="fas fa-exclamation-circle"></i>
+                            @endif
+                            {{ $sub->statusLabel() }}
                         </span>
                     </div>
                     <div class="request-meta-grid">
@@ -108,8 +111,19 @@
                             <label>Uploaded</label>
                             <span>{{ $sub->created_at?->format('M d, Y H:i') }}</span>
                         </div>
+                        @if ($sub->reviewed_at)
+                            <div class="meta-block">
+                                <label>Reviewed</label>
+                                <span>{{ $sub->reviewed_at->format('M d, Y H:i') }}</span>
+                            </div>
+                        @endif
                     </div>
-                    @if ($sub->supervisor_feedback)
+                    @if ($sub->needsRevision())
+                        <div class="reply-bubble" style="border-color: #f59e0b; background: #fffbeb;">
+                            <label><i class="fas fa-redo"></i> Revision Required — Supervisor Feedback</label>
+                            {{ $sub->supervisor_feedback }}
+                        </div>
+                    @elseif ($sub->supervisor_feedback)
                         <div class="reply-bubble">
                             <label>Supervisor Feedback</label>
                             {{ $sub->supervisor_feedback }}
