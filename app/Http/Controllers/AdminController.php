@@ -28,7 +28,23 @@ class AdminController extends Controller
                 'pendingRequests' => $this->countPendingRequests(),
                 'pendingIdeas' => $this->countPendingIdeas(),
                 'pendingEmailUsers' => User::whereNull('email')->count(),
+                'availableProjects' => UniProject::where('taken', false)->count(),
+                'takenProjects' => UniProject::where('taken', true)->count(),
             ],
+            'workflowSummary' => [
+                'requests' => [
+                    'pending' => $this->countPendingRequests(),
+                    'accepted' => $this->countAcceptedRequests(),
+                    'rejected' => $this->countRejectedRequests(),
+                ],
+                'ideas' => [
+                    'pending' => $this->countPendingIdeas(),
+                    'accepted' => $this->countAcceptedIdeas(),
+                    'rejected' => $this->countRejectedIdeas(),
+                ],
+            ],
+            'submissionSummary' => $this->submissionStatusCounts(),
+            'supervisorWorkload' => $this->supervisorProjectSummary(),
             'latestUsers' => $this->userSummaries(
                 User::query()->latest()->take(5)->get()
             ),
@@ -229,6 +245,82 @@ class AdminController extends Controller
             ->where('accepted', false)
             ->where('rejected', false)
             ->count();
+    }
+
+    private function countAcceptedRequests(): int
+    {
+        return projectrequest::query()
+            ->where('accepted', true)
+            ->count();
+    }
+
+    private function countRejectedRequests(): int
+    {
+        return projectrequest::query()
+            ->where('rejected', true)
+            ->count();
+    }
+
+    private function countAcceptedIdeas(): int
+    {
+        return idea::query()
+            ->where('accepted', true)
+            ->count();
+    }
+
+    private function countRejectedIdeas(): int
+    {
+        return idea::query()
+            ->where('rejected', true)
+            ->count();
+    }
+
+    private function submissionStatusCounts(): array
+    {
+        $counts = ProjectSubmission::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return collect(['submitted', 'approved', 'needs_revision'])
+            ->map(fn (string $status) => [
+                'label' => $this->submissionStatusLabel($status),
+                'count' => (int) ($counts[$status] ?? 0),
+            ])
+            ->all();
+    }
+
+    private function supervisorProjectSummary(): array
+    {
+        $projectCounts = UniProject::query()
+            ->selectRaw('supervisor_id, COUNT(*) as total, SUM(CASE WHEN taken = 1 THEN 1 ELSE 0 END) as taken')
+            ->groupBy('supervisor_id')
+            ->get()
+            ->keyBy('supervisor_id');
+
+        $summary = Supervisor::query()
+            ->orderBy('name')
+            ->get()
+            ->map(function (Supervisor $supervisor) use ($projectCounts) {
+                $counts = $projectCounts->get($supervisor->id);
+                $total = (int) ($counts->total ?? 0);
+                $taken = (int) ($counts->taken ?? 0);
+
+                return [
+                    'name' => $supervisor->name,
+                    'total' => $total,
+                    'taken' => $taken,
+                    'available' => $total - $taken,
+                ];
+            })
+            ->sortByDesc('total')
+            ->values();
+
+        if ($summary->count() > 5) {
+            return $summary->take(5)->all();
+        }
+
+        return $summary->all();
     }
 
     private function workflowStatus(mixed $accepted, mixed $rejected): string
