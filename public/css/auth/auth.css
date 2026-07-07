@@ -320,6 +320,26 @@ body.auth-page--supervisor {
     color: #c0392b;
 }
 
+.auth-flash {
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.auth-flash--success {
+    background: #e8f8ef;
+    color: #1f6b3f;
+    border: 1px solid #b8e6c8;
+}
+
+.auth-flash--error {
+    background: #fdeeee;
+    color: #9b2c2c;
+    border: 1px solid #f5c2c2;
+}
+
 .auth-form-row {
     display: flex;
     align-items: center;

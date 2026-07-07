@@ -21,8 +21,8 @@ Route::get('/', function () {
 
 // Guest auth routes
 Route::middleware('guest')->group(function () {
-    Route::get('signup', [UserController::class, 'show'])->name('register');
-    Route::post('signup', [UserController::class, 'Create']);
+    Route::get('signup', fn () => redirect()->route('login'))->name('register');
+    Route::post('signup', fn () => redirect()->route('login'));
     Route::get('Login', [UserController::class, 'Show2'])->name('login');
     Route::post('Login', [UserController::class, 'Enter']);
     Route::get('supervisorSignup', fn () => redirect()->route('login'))->name('supervisor.login');

@@ -20,7 +20,7 @@ beforeEach(function () {
         );
     }
 
-    Storage::fake('public');
+    Storage::fake('local');
 });
 
 it('creates submissions with relational submitter references', function () {
@@ -45,6 +45,7 @@ it('creates submissions with relational submitter references', function () {
 
 it('prevents uploads from students who are not project members', function () {
     [, $project] = createSubmissionFixture();
+    /** @var \App\Models\User $otherStudent */
     $otherStudent = User::factory()->create(['university_number' => 'STU-SUB-002']);
     $otherStudent->addRole('student');
 
@@ -77,6 +78,7 @@ it('keeps the submissions tab active when validation fails', function () {
 
 it('allows project members to download team submissions', function () {
     [$student, $project] = createSubmissionFixture();
+    /** @var \App\Models\User $teammate */
     $teammate = User::factory()->create([
         'name' => 'Teammate Student',
         'university_number' => 'STU-SUB-003',
@@ -99,12 +101,7 @@ it('allows project members to download team submissions', function () {
         'status' => 'submitted',
     ]);
 
-    Storage::disk('public')->put($submission->file_path, 'sample file contents');
-    $absolutePath = storage_path('app/public/'.$submission->file_path);
-    if (! is_dir(dirname($absolutePath))) {
-        mkdir(dirname($absolutePath), 0777, true);
-    }
-    file_put_contents($absolutePath, 'sample file contents');
+    Storage::disk('local')->put($submission->file_path, 'sample file contents');
 
     $this->actingAs($teammate)
         ->get("/student/submission/{$submission->id}/download")
@@ -113,6 +110,7 @@ it('allows project members to download team submissions', function () {
 
 it('prevents submission downloads without project membership', function () {
     [, $project] = createSubmissionFixture();
+    /** @var \App\Models\User $otherStudent */
     $otherStudent = User::factory()->create(['university_number' => 'STU-SUB-004']);
     $otherStudent->addRole('student');
 
@@ -126,12 +124,7 @@ it('prevents submission downloads without project membership', function () {
         'status' => 'submitted',
     ]);
 
-    Storage::disk('public')->put($submission->file_path, 'sample file contents');
-    $absolutePath = storage_path('app/public/'.$submission->file_path);
-    if (! is_dir(dirname($absolutePath))) {
-        mkdir(dirname($absolutePath), 0777, true);
-    }
-    file_put_contents($absolutePath, 'sample file contents');
+    Storage::disk('local')->put($submission->file_path, 'sample file contents');
 
     $this->actingAs($otherStudent)
         ->get("/student/submission/{$submission->id}/download")

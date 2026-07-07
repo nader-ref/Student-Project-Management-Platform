@@ -26,7 +26,7 @@ beforeEach(function () {
         );
     }
 
-    Storage::fake('public');
+    Storage::fake('local');
 });
 
 it('notifies supervisor when student submits project request', function () {

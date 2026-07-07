@@ -244,19 +244,16 @@ it('creates provisioned supervisors as active by default', function () {
     expect($user->is_active)->toBeTrue();
 });
 
-it('creates self-registered students as active by default', function () {
+it('redirects public self-registration attempts to login without creating accounts', function () {
     $this->post('/signup', [
         'name' => 'Self Registered Student',
         'university_number' => 'STU-SELF-ACTIVE',
         'email' => 'self.registered@test.local',
         'password' => 'password123',
         'password_confirmation' => 'password123',
-    ])->assertRedirect('/StudentDashboard');
+    ])->assertRedirect(route('login'));
 
-    $user = User::query()->where('university_number', 'STU-SELF-ACTIVE')->first();
-
-    expect($user)->not->toBeNull();
-    expect($user->is_active)->toBeTrue();
+    expect(User::query()->where('university_number', 'STU-SELF-ACTIVE')->exists())->toBeFalse();
 });
 
 it('blocks inactive users from completing email on protected routes', function () {

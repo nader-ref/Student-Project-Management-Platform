@@ -7,11 +7,13 @@ use App\Models\ProjectSubmission;
 use App\Notifications\WorkflowNotification;
 use App\Services\ActivityLogger;
 use App\Services\StudentEnrollmentService;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProjectSubmissionController extends Controller
 {
@@ -66,7 +68,7 @@ class ProjectSubmissionController extends Controller
         }
 
         $file = $request->file('file');
-        $path = $file->store('submissions/'.$project->id, 'public');
+        $path = $file->store('submissions/'.$project->id, 'local');
 
         $submission = ProjectSubmission::create([
             'project_id' => $project->id,
@@ -184,7 +186,7 @@ class ProjectSubmissionController extends Controller
             ->with('active_tab', 'Submissions');
     }
 
-    public function download(ProjectSubmission $submission): BinaryFileResponse
+    public function download(ProjectSubmission $submission): Response
     {
         $submission->load('project');
         $user = Auth::user();
@@ -207,12 +209,13 @@ class ProjectSubmissionController extends Controller
             abort(403);
         }
 
-        $absolutePath = storage_path('app/public/'.$submission->file_path);
+        /** @var FilesystemAdapter $disk */
+        $disk = Storage::disk('local');
 
-        if (! is_file($absolutePath)) {
+        if (! $disk->exists($submission->file_path)) {
             abort(404);
         }
 
-        return response()->download($absolutePath, $submission->original_filename);
+        return $disk->download($submission->file_path, $submission->original_filename);
     }
 }

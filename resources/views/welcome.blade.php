@@ -95,12 +95,9 @@
                     </p>
 
                     <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full bg-[#0a2942] px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-[#123d5c]">
-                            Create student account
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-full bg-[#0a2942] px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-[#123d5c]">
+                            Sign in
                             <i class="fas fa-arrow-right ml-2 text-xs" aria-hidden="true"></i>
-                        </a>
-                        <a href="{{ route('supervisor.login') }}" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-bold text-[#0a2942] transition hover:-translate-y-0.5 hover:border-[#0a2942]">
-                            Supervisor portal
                         </a>
                     </div>
 
@@ -249,26 +246,14 @@
                 </div>
 
                 <div class="mt-12 grid gap-6 lg:grid-cols-2">
-                    <article class="rounded-[2rem] border border-white/10 bg-white p-8 text-slate-950 shadow-2xl shadow-slate-950/20">
+                    <article class="rounded-[2rem] border border-white/10 bg-white p-8 text-slate-950 shadow-2xl shadow-slate-950/20 lg:col-span-2">
                         <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-50 text-2xl text-[#2d7ead]">
-                            <i class="fas fa-user-graduate" aria-hidden="true"></i>
+                            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
                         </div>
-                        <h3 class="mt-6 text-2xl font-extrabold">Student Portal</h3>
-                        <p class="mt-3 leading-7 text-slate-600">Create an account, browse available projects, send requests, submit ideas, message supervisors, and upload deliverables.</p>
-                        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-                            <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full bg-[#0a2942] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#123d5c]">Create account</a>
-                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-bold text-[#0a2942] transition hover:border-[#0a2942]">Student sign in</a>
-                        </div>
-                    </article>
-
-                    <article class="rounded-[2rem] border border-white/10 bg-white/10 p-8 text-white shadow-2xl shadow-slate-950/20">
-                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-2xl text-sky-200">
-                            <i class="fas fa-chalkboard-teacher" aria-hidden="true"></i>
-                        </div>
-                        <h3 class="mt-6 text-2xl font-extrabold">Supervisor Portal</h3>
-                        <p class="mt-3 leading-7 text-sky-50/85">Manage project offerings, review student requests, approve ideas, respond to messages, and evaluate submitted work.</p>
+                        <h3 class="mt-6 text-2xl font-extrabold">University Portal</h3>
+                        <p class="mt-3 leading-7 text-slate-600">Students, supervisors, and administrators sign in with their university number. New accounts are created by the administrator.</p>
                         <div class="mt-7">
-                            <a href="{{ route('supervisor.login') }}" class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0a2942] transition hover:bg-sky-50">Supervisor sign in</a>
+                            <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-full bg-[#0a2942] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#123d5c]">Sign in</a>
                         </div>
                     </article>
                 </div>
