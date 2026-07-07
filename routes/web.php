@@ -39,6 +39,8 @@ Route::middleware(['auth', 'account.active', 'email.complete', 'admin'])->group(
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::post('/admin/users/{user}/deactivate', [AdminController::class, 'deactivateUser'])->name('admin.users.deactivate');
     Route::post('/admin/users/{user}/activate', [AdminController::class, 'activateUser'])->name('admin.users.activate');
+    Route::get('/admin/users/{user}/reset-password', [AdminController::class, 'showResetPassword'])->name('admin.users.reset-password');
+    Route::post('/admin/users/{user}/reset-password', [AdminController::class, 'resetUserPassword'])->name('admin.users.reset-password.store');
     Route::get('/admin/projects', [AdminController::class, 'projects'])->name('admin.projects');
     Route::get('/admin/requests', [AdminController::class, 'requests'])->name('admin.requests');
     Route::get('/admin/ideas', [AdminController::class, 'ideas'])->name('admin.ideas');

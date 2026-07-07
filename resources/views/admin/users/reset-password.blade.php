@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users · Admin · Projects Hub</title>
+    <title>Reset Password · Admin · Projects Hub</title>
     <style>
         :root {
             --admin-navy: #0f172a;
             --admin-slate: #1e293b;
             --admin-accent: #6366f1;
+            --admin-accent-hover: #4f46e5;
             --admin-bg: #f1f5f9;
             --admin-card: #ffffff;
             --admin-border: #e2e8f0;
@@ -125,43 +126,36 @@
             color: var(--admin-muted);
             font-size: 15px;
         }
-        .data-card {
+        .summary-card,
+        .form-card {
             background: var(--admin-card);
             border: 1px solid var(--admin-border);
             border-radius: var(--admin-radius);
             box-shadow: var(--admin-shadow);
-            overflow: hidden;
+            padding: 24px 28px;
+            max-width: 640px;
         }
-        .table-wrap { overflow-x: auto; }
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
+        .summary-card { margin-bottom: 20px; }
+        .summary-card h2 {
+            margin: 0 0 16px;
+            font-size: 16px;
+            font-weight: 800;
         }
-        .data-table th,
-        .data-table td {
-            padding: 14px 18px;
-            text-align: left;
-            border-bottom: 1px solid var(--admin-border);
-            vertical-align: middle;
+        .summary-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
-        .data-table th {
-            background: var(--admin-navy);
-            color: #fff;
+        .summary-item span {
+            display: block;
             font-size: 12px;
             font-weight: 700;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
-            white-space: nowrap;
-        }
-        .data-table tbody tr:hover { background: #f8fafc; }
-        .data-table tbody tr:last-child td { border-bottom: 0; }
-        .empty-state {
-            padding: 36px 18px;
-            text-align: center;
             color: var(--admin-muted);
-            font-weight: 600;
+            margin-bottom: 4px;
         }
+        .summary-item strong { font-size: 15px; }
         .badge {
             display: inline-flex;
             align-items: center;
@@ -176,31 +170,49 @@
         .badge-pending { background: var(--admin-warning-bg); color: var(--admin-warning); }
         .badge-danger { background: var(--admin-danger-bg); color: var(--admin-danger); }
         .badge-neutral { background: #f1f5f9; color: #475569; }
-        .text-muted { color: var(--admin-muted); font-style: italic; }
-        .action-btn {
-            border: 1px solid var(--admin-border);
-            border-radius: 8px;
-            background: #fff;
-            color: var(--admin-text);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 12px;
-            transition: background 0.15s ease, border-color 0.15s ease;
+        .note {
+            margin: 0 0 20px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            background: var(--admin-warning-bg);
+            color: #92400e;
+            border: 1px solid #fcd34d;
         }
-        .action-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
-        .action-btn--danger {
+        .note--inactive {
+            background: var(--admin-danger-bg);
             color: var(--admin-danger);
             border-color: #fecaca;
-            background: var(--admin-danger-bg);
         }
-        .action-btn--danger:hover { background: #fee2e2; }
-        .action-btn--success {
-            color: var(--admin-success);
-            border-color: #a7f3d0;
-            background: var(--admin-success-bg);
+        .form-grid { display: grid; gap: 18px; }
+        .form-field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 700;
         }
-        .action-btn--success:hover { background: #d1fae5; }
+        .form-field input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--admin-border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .form-field input:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .form-field.has-error input { border-color: var(--admin-danger); }
+        .field-error {
+            margin-top: 6px;
+            color: var(--admin-danger);
+            font-size: 13px;
+            font-weight: 600;
+        }
         .alert {
             padding: 14px 16px;
             border-radius: 10px;
@@ -208,19 +220,39 @@
             font-size: 14px;
             font-weight: 600;
         }
-        .alert-success {
-            background: var(--admin-success-bg);
-            color: var(--admin-success);
-            border: 1px solid #a7f3d0;
-        }
         .alert-error {
             background: var(--admin-danger-bg);
             color: var(--admin-danger);
             border: 1px solid #fecaca;
         }
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .btn-primary {
+            border: 0;
+            border-radius: 10px;
+            background: var(--admin-accent);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 12px 20px;
+            transition: background 0.15s ease;
+        }
+        .btn-primary:hover { background: var(--admin-accent-hover); }
+        .btn-link {
+            color: var(--admin-accent);
+            font-weight: 700;
+            font-size: 14px;
+        }
         @media (max-width: 720px) {
             .admin-main { padding: 20px 16px 32px; }
             .admin-nav { padding: 0 16px; }
+            .form-card, .summary-card { padding: 20px; }
         }
     </style>
 </head>
@@ -257,92 +289,81 @@
 
         <main class="admin-main">
             <div class="admin-page-header">
-                <h1>Users</h1>
-                <p>Account overview with lifecycle actions.</p>
+                <h1>Reset Password</h1>
+                <p>Set a temporary password for {{ $user['name'] }}.</p>
             </div>
-
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
 
             @if ($errors->any())
                 <div class="alert alert-error">
-                    @foreach ($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
+                    Please correct the errors below and try again.
                 </div>
             @endif
 
-            <section class="data-card">
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>University number</th>
-                                <th>Email</th>
-                                <th>Email status</th>
-                                <th>Role</th>
-                                <th>Account status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($users as $user)
-                                <tr>
-                                    <td>{{ $user['name'] }}</td>
-                                    <td>{{ $user['university_number'] }}</td>
-                                    <td>
-                                        @if ($user['email'])
-                                            {{ $user['email'] }}
-                                        @else
-                                            <span class="text-muted">Not set</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <span @class([
-                                            'badge',
-                                            'badge-success' => $user['email_status'] === 'Complete',
-                                            'badge-pending' => $user['email_status'] === 'Pending',
-                                        ])>{{ $user['email_status'] }}</span>
-                                    </td>
-                                    <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
-                                    <td>
-                                        <span @class([
-                                            'badge',
-                                            'badge-success' => $user['is_active'],
-                                            'badge-danger' => ! $user['is_active'],
-                                        ])>{{ $user['status'] }}</span>
-                                    </td>
-                                    <td>
-                                        @if ($user['id'] !== auth()->id())
-                                            <a href="{{ route('admin.users.reset-password', $user['id']) }}" class="action-btn">Reset password</a>
-                                        @endif
-                                        @if ($user['can_deactivate'])
-                                            <form method="POST" action="{{ route('admin.users.deactivate', $user['id']) }}" style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="action-btn action-btn--danger">Deactivate</button>
-                                            </form>
-                                        @elseif ($user['is_active'])
-                                            @if ($user['id'] === auth()->id())
-                                                <span class="text-muted">—</span>
-                                            @endif
-                                        @else
-                                            <form method="POST" action="{{ route('admin.users.activate', $user['id']) }}" style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="action-btn action-btn--success">Activate</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="empty-state">No users found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+            <section class="summary-card">
+                <h2>User summary</h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span>Name</span>
+                        <strong>{{ $user['name'] }}</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>University number</span>
+                        <strong>{{ $user['university_number'] }}</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Role</span>
+                        <strong><span class="badge badge-neutral">{{ $user['role'] }}</span></strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Account status</span>
+                        <strong>
+                            <span @class([
+                                'badge',
+                                'badge-success' => $user['is_active'],
+                                'badge-danger' => ! $user['is_active'],
+                            ])>{{ $user['status'] }}</span>
+                        </strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Email status</span>
+                        <strong>
+                            <span @class([
+                                'badge',
+                                'badge-success' => $user['email_status'] === 'Complete',
+                                'badge-pending' => $user['email_status'] === 'Pending',
+                            ])>{{ $user['email_status'] }}</span>
+                        </strong>
+                    </div>
                 </div>
+            </section>
+
+            <p class="note">Set a temporary password and share it securely with the user.</p>
+
+            @if (! $user['is_active'])
+                <p class="note note--inactive">This account is inactive and cannot log in until activated.</p>
+            @endif
+
+            <section class="form-card">
+                <form method="POST" action="{{ route('admin.users.reset-password.store', $user['id']) }}" class="form-grid">
+                    @csrf
+
+                    <div @class(['form-field', 'has-error' => $errors->has('password')])>
+                        <label for="password">New password</label>
+                        <input id="password" name="password" type="password" required autocomplete="new-password">
+                        @error('password')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div @class(['form-field', 'has-error' => $errors->has('password_confirmation')])>
+                        <label for="password_confirmation">Confirm password</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password">
+                        @error('password_confirmation')<div class="field-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Reset password</button>
+                        <a href="{{ route('admin.users') }}" class="btn-link">Back to users</a>
+                    </div>
+                </form>
             </section>
         </main>
     </div>

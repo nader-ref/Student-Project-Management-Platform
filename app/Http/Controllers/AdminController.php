@@ -90,6 +90,38 @@ class AdminController extends Controller
             ->with('success', 'User account activated successfully.');
     }
 
+    public function showResetPassword(User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return redirect()
+                ->route('admin.users')
+                ->withErrors(['user' => 'You cannot reset your own password through this page.']);
+        }
+
+        return view('admin.users.reset-password', [
+            'user' => $this->userSummaries(collect([$user]))->first(),
+        ]);
+    }
+
+    public function resetUserPassword(Request $request, User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return redirect()
+                ->route('admin.users')
+                ->withErrors(['user' => 'You cannot reset your own password through this page.']);
+        }
+
+        $validated = $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->update(['password' => $validated['password']]);
+
+        return redirect()
+            ->route('admin.users')
+            ->with('success', 'Password reset successfully. Share the temporary password securely with the user.');
+    }
+
     public function projects()
     {
         $projects = UniProject::query()
