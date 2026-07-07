@@ -205,10 +205,6 @@ class StudentEnrollmentService
 
         $currentPhase = $steps->first(fn ($s) => ! $s['done'])['label'] ?? 'Completed';
 
-        if ($project->status) {
-            $currentPhase = ucwords(str_replace('_', ' ', $project->status));
-        }
-
         return [
             'percent' => $percent,
             'current_phase' => $currentPhase,

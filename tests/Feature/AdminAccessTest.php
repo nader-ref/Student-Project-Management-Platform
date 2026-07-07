@@ -143,7 +143,7 @@ it('shows a read-only projects page to admins', function () {
     $response->assertSee('Read-only project overview.');
     $response->assertSee('AI-Assisted Graduation Project Tracker');
     $response->assertSee('Dr. Lina Haddad');
-    $response->assertSee('Taken');
+    $response->assertSee('Assigned');
     $response->assertSee('1');
 });
 

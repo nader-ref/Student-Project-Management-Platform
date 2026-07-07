@@ -35,7 +35,7 @@
             </div>
             <div class="meta-block">
                 <label>Status</label>
-                <span>Active — In Progress</span>
+                <span>Active</span>
             </div>
         </div>
         <div class="meta-block team-block">

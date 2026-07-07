@@ -244,7 +244,7 @@
                                     <td>
                                         <span @class([
                                             'badge',
-                                            'badge-taken' => $project['status'] === 'Taken',
+                                            'badge-taken' => $project['status'] === 'Assigned',
                                             'badge-available' => $project['status'] === 'Available',
                                         ])>{{ $project['status'] }}</span>
                                     </td>

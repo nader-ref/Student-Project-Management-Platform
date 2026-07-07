@@ -53,4 +53,37 @@ class UniProject extends Model
     {
         return $this->hasMany(ProjectSubmission::class, 'project_id');
     }
+
+    public function memberCount(): int
+    {
+        if ($this->relationLoaded('members')) {
+            return $this->members->count();
+        }
+
+        if (array_key_exists('members_count', $this->attributes)) {
+            return (int) $this->members_count;
+        }
+
+        return $this->members()->count();
+    }
+
+    public function isAssigned(): bool
+    {
+        return (bool) $this->taken && $this->memberCount() > 0;
+    }
+
+    public function isAvailable(): bool
+    {
+        return ! $this->taken && $this->memberCount() === 0;
+    }
+
+    public function isLifecycleConsistent(): bool
+    {
+        return $this->isAssigned() || $this->isAvailable();
+    }
+
+    public function lifecycleLabel(): string
+    {
+        return $this->isAssigned() ? 'Assigned' : 'Available';
+    }
 }
