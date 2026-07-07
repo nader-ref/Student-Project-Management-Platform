@@ -18,6 +18,8 @@
             --admin-success-bg: #ecfdf5;
             --admin-warning: #d97706;
             --admin-warning-bg: #fffbeb;
+            --admin-danger: #dc2626;
+            --admin-danger-bg: #fef2f2;
             --admin-radius: 14px;
             --admin-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.06);
         }
@@ -172,8 +174,33 @@
         }
         .badge-success { background: var(--admin-success-bg); color: var(--admin-success); }
         .badge-pending { background: var(--admin-warning-bg); color: var(--admin-warning); }
+        .badge-danger { background: var(--admin-danger-bg); color: var(--admin-danger); }
         .badge-neutral { background: #f1f5f9; color: #475569; }
         .text-muted { color: var(--admin-muted); font-style: italic; }
+        .action-btn {
+            border: 1px solid var(--admin-border);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--admin-text);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .action-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .action-btn--danger {
+            color: var(--admin-danger);
+            border-color: #fecaca;
+            background: var(--admin-danger-bg);
+        }
+        .action-btn--danger:hover { background: #fee2e2; }
+        .action-btn--success {
+            color: var(--admin-success);
+            border-color: #a7f3d0;
+            background: var(--admin-success-bg);
+        }
+        .action-btn--success:hover { background: #d1fae5; }
         .alert {
             padding: 14px 16px;
             border-radius: 10px;
@@ -185,6 +212,11 @@
             background: var(--admin-success-bg);
             color: var(--admin-success);
             border: 1px solid #a7f3d0;
+        }
+        .alert-error {
+            background: var(--admin-danger-bg);
+            color: var(--admin-danger);
+            border: 1px solid #fecaca;
         }
         @media (max-width: 720px) {
             .admin-main { padding: 20px 16px 32px; }
@@ -226,11 +258,19 @@
         <main class="admin-main">
             <div class="admin-page-header">
                 <h1>Users</h1>
-                <p>Read-only account overview.</p>
+                <p>Account overview with lifecycle actions.</p>
             </div>
 
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-error">
+                    @foreach ($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
             @endif
 
             <section class="data-card">
@@ -244,6 +284,7 @@
                                 <th>Email status</th>
                                 <th>Role</th>
                                 <th>Account status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -266,11 +307,32 @@
                                         ])>{{ $user['email_status'] }}</span>
                                     </td>
                                     <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
-                                    <td><span class="badge badge-success">{{ $user['status'] }}</span></td>
+                                    <td>
+                                        <span @class([
+                                            'badge',
+                                            'badge-success' => $user['is_active'],
+                                            'badge-danger' => ! $user['is_active'],
+                                        ])>{{ $user['status'] }}</span>
+                                    </td>
+                                    <td>
+                                        @if ($user['can_deactivate'])
+                                            <form method="POST" action="{{ route('admin.users.deactivate', $user['id']) }}" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="action-btn action-btn--danger">Deactivate</button>
+                                            </form>
+                                        @elseif ($user['is_active'])
+                                            <span class="text-muted">—</span>
+                                        @else
+                                            <form method="POST" action="{{ route('admin.users.activate', $user['id']) }}" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="action-btn action-btn--success">Activate</button>
+                                            </form>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="empty-state">No users found.</td>
+                                    <td colspan="7" class="empty-state">No users found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
