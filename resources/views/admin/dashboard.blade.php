@@ -101,7 +101,7 @@ Signed in as {{ auth()->user()->name }}
                 <p class="metric-value">{{ $stats['availableProjects'] }}</p>
             </a>
             <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
-                <span class="metric-label">Taken projects</span>
+                <span class="metric-label">Assigned projects</span>
                 <p class="metric-value">{{ $stats['takenProjects'] }}</p>
             </a>
         </div>
@@ -162,9 +162,9 @@ Signed in as {{ auth()->user()->name }}
                                 <td>
                                     <span @class([
                                         'badge',
-                                        'badge-info' => $row['label'] === 'Submitted',
+                                        'badge-info' => $row['label'] === 'Pending Review',
                                         'badge-success' => $row['label'] === 'Approved',
-                                        'badge-warning' => $row['label'] === 'Needs revision',
+                                        'badge-warning' => $row['label'] === 'Revision Required',
                                     ])>{{ $row['label'] }}</span>
                                 </td>
                                 <td><span class="report-count">{{ $row['count'] }}</span></td>
@@ -188,7 +188,7 @@ Signed in as {{ auth()->user()->name }}
                         <tr>
                             <th>Supervisor</th>
                             <th>Total projects</th>
-                            <th>Taken</th>
+                            <th>Assignment</th>
                             <th>Available</th>
                         </tr>
                     </thead>

@@ -234,7 +234,7 @@ it('admin dashboard counts still rely on taken for available and taken projects'
 
     $response->assertOk();
     $response->assertSee('Available projects');
-    $response->assertSee('Taken projects');
+    $response->assertSee('Assigned projects');
     $response->assertSee('1', false);
 });
 
