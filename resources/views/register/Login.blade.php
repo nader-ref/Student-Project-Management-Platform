@@ -14,6 +14,10 @@
         <p>Sign in once and we will open the right portal for your role.</p>
     </header>
 
+    @if (session('status'))
+        <p class="auth-flash auth-flash--success" role="status">{{ session('status') }}</p>
+    @endif
+
     <form action="{{ url('/Login') }}" method="POST" class="auth-form">
         @csrf
 
@@ -63,8 +67,7 @@
     </form>
 
     <footer class="auth-card-footer">
-        Don't have an account?
-        <a href="{{ route('register') }}" class="auth-link">Create account</a>
+        Accounts are created by the university administrator.
     </footer>
 
     <div class="auth-switch-portal">

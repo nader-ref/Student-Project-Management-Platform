@@ -49,8 +49,8 @@ class ProjectrequestController extends Controller
             return redirect()->back()->with('faild2', 'Your already have a project');
         }
 
-        if (WorkflowGuard::anyUserHasPendingProjectRequest(WorkflowGuard::userIdsFromUsers($memberResult['users']))) {
-            return redirect()->back()->with('faild2', 'Your team already has a pending project request.');
+        if (WorkflowGuard::anyUserHasPendingApplication(WorkflowGuard::userIdsFromUsers($memberResult['users']))) {
+            return redirect()->back()->with('faild2', 'One or more team members already has a pending request or idea.');
         }
 
         $projectRequest = DB::transaction(function () use ($validated, $memberResult) {
@@ -143,8 +143,8 @@ class ProjectrequestController extends Controller
             return redirect()->back()->with('faild2', 'Your already have a project');
         }
 
-        if (WorkflowGuard::anyUserHasPendingIdea(WorkflowGuard::userIdsFromUsers($memberResult['users']))) {
-            return redirect()->back()->with('faild2', 'Your team already has a pending project idea.');
+        if (WorkflowGuard::anyUserHasPendingApplication(WorkflowGuard::userIdsFromUsers($memberResult['users']))) {
+            return redirect()->back()->with('faild2', 'One or more team members already has a pending request or idea.');
         }
 
         $idea = DB::transaction(function () use ($validated, $supervisor, $memberResult) {

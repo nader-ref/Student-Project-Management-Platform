@@ -36,13 +36,12 @@
 
             <form action="/change" method="POST" class="space-y-6">
                 @csrf
-                <div>
-                    <label class="block text-sm font-semibold text-blue-400 mb-1">Email</label>
-                    <input type="email" name="email" class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="you@gmail.com" required />
-                </div>
-                @error('email')
-                    <span class="text-sm text-red-300">{{$message}}</span>
-                @enderror
+                @if ($user?->email)
+                    <div>
+                        <label class="block text-sm font-semibold text-blue-400 mb-1">Email</label>
+                        <input type="email" value="{{ $user->email }}" class="w-full px-4 py-3 bg-gray-800 text-gray-300 rounded-lg" readonly disabled />
+                    </div>
+                @endif
 
                 <div>
                     <label class="block text-sm font-semibold text-blue-400 mb-1">Old Password</label>
@@ -62,19 +61,14 @@
                     <label class="block text-sm font-semibold text-blue-400 mb-1 code-font">Confirm Your Password</label>
                     <input type="password" name="password_confirmation" class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="••••••••" required />
                 </div>
-                @if(!empty(Session::get('failed')))
-                    password and password confirmation does not match
-                @endif
+                @error('new')
+                    <span class="text-sm text-red-300">{{ $message }}</span>
+                @enderror
 
                 <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-blue-500/25">
                     Change Password
                 </button>
             </form>
-
-            <p class="text-sm text-center text-gray-400 mt-6">
-                Don't have an account?
-                <a href="/signup" class="text-blue-400 hover:underline">Sign up</a>
-            </p>
         </div>
     </section>
 </body>
