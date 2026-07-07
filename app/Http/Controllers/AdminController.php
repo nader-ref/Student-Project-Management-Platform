@@ -402,8 +402,8 @@ class AdminController extends Controller
     {
         return match ($status) {
             'approved' => 'Approved',
-            'needs_revision' => 'Needs revision',
-            'submitted' => 'Submitted',
+            'needs_revision' => 'Revision Required',
+            'submitted' => 'Pending Review',
             default => ucfirst(str_replace('_', ' ', (string) $status)),
         };
     }
