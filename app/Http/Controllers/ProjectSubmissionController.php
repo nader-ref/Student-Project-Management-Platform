@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProjectMember;
 use App\Models\ProjectSubmission;
+use App\Notifications\WorkflowNotification;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,7 @@ class ProjectSubmissionController extends Controller
         $file = $request->file('file');
         $path = $file->store('submissions/'.$project->id, 'public');
 
-        ProjectSubmission::create([
+        $submission = ProjectSubmission::create([
             'project_id' => $project->id,
             'submitted_by_user_id' => $user->id,
             'milestone' => $validated['milestone'],
@@ -60,6 +61,20 @@ class ProjectSubmissionController extends Controller
             'notes' => $validated['notes'] ?? null,
             'status' => 'submitted',
         ]);
+
+        $project->loadMissing('supervisor.user');
+        $supervisorUser = $project->supervisor?->user;
+
+        if ($supervisorUser) {
+            $supervisorUser->notify(new WorkflowNotification(
+                type: 'submission_uploaded',
+                title: 'New submission uploaded',
+                body: 'A student has uploaded a project submission.',
+                actionUrl: '/supervisorDashboard',
+                relatedType: ProjectSubmission::class,
+                relatedId: $submission->id,
+            ));
+        }
 
         return redirect()->back()
             ->with('success', 'File submitted successfully!')
@@ -85,6 +100,19 @@ class ProjectSubmissionController extends Controller
             'status' => $validated['status'],
             'supervisor_feedback' => $validated['supervisor_feedback'],
         ]);
+
+        $submission->loadMissing('submittedBy');
+
+        if ($submission->submittedBy) {
+            $submission->submittedBy->notify(new WorkflowNotification(
+                type: 'submission_reviewed',
+                title: 'Submission reviewed',
+                body: 'Your supervisor has reviewed your submission.',
+                actionUrl: '/StudentDashboard',
+                relatedType: ProjectSubmission::class,
+                relatedId: $submission->id,
+            ));
+        }
 
         return redirect()->back()
             ->with('success', 'Submission updated.')

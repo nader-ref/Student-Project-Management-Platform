@@ -61,6 +61,7 @@
         @endunless
 
         <div class="navbar-actions">
+            @include('partials.navbar-notifications')
             @include('partials.navbar-user-menu', [
                 'menuOnDashboard' => $onDashboard,
                 'menuLogoutUrl' => route('logout'),

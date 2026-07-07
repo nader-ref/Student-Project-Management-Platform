@@ -7,6 +7,7 @@ use App\Models\Projectrequest;
 use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
+use App\Notifications\WorkflowNotification;
 use App\Services\WorkflowGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +67,20 @@ class ProjectrequestController extends Controller
             }
         });
 
+        $project->loadMissing('supervisor.user');
+        $supervisorUser = $project->supervisor?->user;
+
+        if ($supervisorUser) {
+            $supervisorUser->notify(new WorkflowNotification(
+                type: 'request_submitted',
+                title: 'New project request',
+                body: 'A student has submitted a project request.',
+                actionUrl: '/supervisorDashboard',
+                relatedType: UniProject::class,
+                relatedId: $project->id,
+            ));
+        }
+
         return redirect()->back()->with('success', 'Your request has been submitted successfully.');
     }
 
@@ -114,7 +129,9 @@ class ProjectrequestController extends Controller
             return redirect()->back()->with('faild2', 'Your team already has a pending project idea.');
         }
 
-        DB::transaction(function () use ($validated, $supervisor, $memberResult) {
+        $idea = null;
+
+        DB::transaction(function () use ($validated, $supervisor, $memberResult, &$idea) {
             $idea = Idea::create([
                 'projectname' => $validated['projectname'],
                 'supervisor_id' => $supervisor->id,
@@ -129,6 +146,19 @@ class ProjectrequestController extends Controller
                 ]);
             }
         });
+
+        $supervisor->loadMissing('user');
+
+        if ($supervisor->user && $idea) {
+            $supervisor->user->notify(new WorkflowNotification(
+                type: 'idea_submitted',
+                title: 'New project idea',
+                body: 'A student has submitted a project idea.',
+                actionUrl: '/supervisorDashboard',
+                relatedType: Idea::class,
+                relatedId: $idea->id,
+            ));
+        }
 
         return redirect()->back()->with('success', 'Your request has been submitted successfully.');
     }

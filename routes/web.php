@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectrequestController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProjectSubmissionController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupervisorController;
 
 /*
@@ -32,6 +33,12 @@ Route::middleware(['auth', 'account.active'])->group(function () {
     Route::get('/complete-email', [UserController::class, 'showCompleteEmail'])->name('profile.complete-email');
     Route::post('/complete-email', [UserController::class, 'storeCompleteEmail'])->name('profile.complete-email.store');
     Route::post('/logout', [UserController::class, 'Out'])->name('logout');
+});
+
+Route::middleware(['auth', 'account.active', 'email.complete'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 Route::middleware(['auth', 'account.active', 'email.complete', 'admin'])->group(function () {

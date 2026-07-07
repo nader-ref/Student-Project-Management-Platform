@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\contact;
 use App\Models\Supervisor;
 use App\Models\supcontact;
+use App\Notifications\WorkflowNotification;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,12 +23,25 @@ class MessageController extends Controller
         $student = Auth::user();
         $supervisor = Supervisor::findOrFail($validated['supervisor_id']);
 
-        contact::create([
+        $message = contact::create([
             'student_user_id' => $student->id,
             'supervisor_id' => $supervisor->id,
             'subject' => $validated['subject'],
             'Message' => $validated['Message'] ?? null,
         ]);
+
+        $supervisor->loadMissing('user');
+
+        if ($supervisor->user) {
+            $supervisor->user->notify(new WorkflowNotification(
+                type: 'message_received',
+                title: 'New student message',
+                body: 'A student has sent you a message.',
+                actionUrl: '/supervisorDashboard',
+                relatedType: contact::class,
+                relatedId: $message->id,
+            ));
+        }
 
         return redirect()->back()->with('success', 'Your request has been submitted successfully.');
     }
