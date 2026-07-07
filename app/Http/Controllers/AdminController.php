@@ -10,8 +10,8 @@ use App\Models\UniProject;
 use App\Models\User;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Laratrust\Models\Role;
 
 class AdminController extends Controller
@@ -58,6 +58,36 @@ class AdminController extends Controller
                 User::query()->orderBy('name')->get()
             ),
         ]);
+    }
+
+    public function deactivateUser(User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return redirect()
+                ->route('admin.users')
+                ->withErrors(['user' => 'You cannot deactivate your own account.']);
+        }
+
+        if ($this->isLastActiveAdmin($user)) {
+            return redirect()
+                ->route('admin.users')
+                ->withErrors(['user' => 'You cannot deactivate the last active admin account.']);
+        }
+
+        $user->update(['is_active' => false]);
+
+        return redirect()
+            ->route('admin.users')
+            ->with('success', 'User account deactivated successfully.');
+    }
+
+    public function activateUser(User $user)
+    {
+        $user->update(['is_active' => true]);
+
+        return redirect()
+            ->route('admin.users')
+            ->with('success', 'User account activated successfully.');
     }
 
     public function projects()
@@ -349,6 +379,7 @@ class AdminController extends Controller
     private function userSummaries($users)
     {
         $userIds = $users->pluck('id');
+        $activeAdminCount = $this->countActiveAdmins();
 
         $rolesByUserId = DB::table('role_user')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
@@ -358,15 +389,22 @@ class AdminController extends Controller
             ->groupBy('user_id')
             ->map(fn ($roles) => $roles->pluck('name')->implode(', '));
 
-        return $users->map(fn (User $user) => [
-            'name' => $user->name,
-            'university_number' => $user->university_number,
-            'email' => $user->email,
-            'email_status' => $this->emailStatus($user),
-            'role' => $rolesByUserId->get($user->id) ?? 'No role',
-            'status' => $this->accountStatus($user),
-            'created_at' => $user->created_at,
-        ]);
+        return $users->map(function (User $user) use ($rolesByUserId, $activeAdminCount) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'university_number' => $user->university_number,
+                'email' => $user->email,
+                'email_status' => $this->emailStatus($user),
+                'role' => $rolesByUserId->get($user->id) ?? 'No role',
+                'status' => $this->accountStatus($user),
+                'is_active' => $user->isActive(),
+                'can_deactivate' => $user->isActive()
+                    && $user->id !== Auth::id()
+                    && ! ($user->hasRole('admin') && $activeAdminCount <= 1),
+                'created_at' => $user->created_at,
+            ];
+        });
     }
 
     private function emailStatus(User $user): string
@@ -376,10 +414,21 @@ class AdminController extends Controller
 
     private function accountStatus(User $user): string
     {
-        if (Schema::hasColumn('users', 'is_active')) {
-            return $user->is_active ? 'Active' : 'Inactive';
-        }
+        return $user->isActive() ? 'Active' : 'Inactive';
+    }
 
-        return 'Active';
+    private function countActiveAdmins(): int
+    {
+        return DB::table('role_user')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->join('users', 'users.id', '=', 'role_user.user_id')
+            ->where('roles.name', 'admin')
+            ->where('users.is_active', true)
+            ->count();
+    }
+
+    private function isLastActiveAdmin(User $user): bool
+    {
+        return $user->hasRole('admin') && $this->countActiveAdmins() <= 1;
     }
 }

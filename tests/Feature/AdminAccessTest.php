@@ -122,7 +122,7 @@ it('shows a read-only users page to admins', function () {
     $response = $this->actingAs($admin)->get('/admin/users');
 
     $response->assertOk();
-    $response->assertSee('Read-only account overview.');
+    $response->assertSee('Account overview with lifecycle actions.');
     $response->assertSee($admin->name);
     $response->assertSee($student->university_number);
     $response->assertSee($supervisor->university_number);
