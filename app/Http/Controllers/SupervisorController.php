@@ -11,6 +11,7 @@ use App\Models\Supcontact;
 use App\Models\UniProject;
 use App\Models\User;
 use App\Notifications\WorkflowNotification;
+use App\Services\ActivityLogger;
 use App\Services\WorkflowGuard;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -337,6 +338,18 @@ class SupervisorController extends Controller
             $projectRequest->save();
         });
 
+        ActivityLogger::log(
+            ActivityLogger::PROJECT_REQUEST_ACCEPTED,
+            'Accepted project request REQ-'.str_pad((string) $projectRequest->id, 4, '0', STR_PAD_LEFT)." for {$project->name}",
+            subject: $projectRequest,
+            metadata: [
+                'request_id' => $projectRequest->id,
+                'project_id' => $project->id,
+                'project_name' => $project->name,
+                'members_count' => count($memberResult['members']),
+            ],
+        );
+
         $projectRequest->loadMissing('members.user');
 
         foreach ($projectRequest->members as $member) {
@@ -395,6 +408,18 @@ class SupervisorController extends Controller
             $projectRequest->save();
         });
 
+        ActivityLogger::log(
+            ActivityLogger::PROJECT_REQUEST_REJECTED,
+            'Rejected project request REQ-'.str_pad((string) $projectRequest->id, 4, '0', STR_PAD_LEFT),
+            subject: $projectRequest,
+            metadata: array_filter([
+                'request_id' => $projectRequest->id,
+                'project_id' => $projectRequest->project_id,
+                'project_name' => $projectRequest->project?->name,
+                'reason' => $request->reason,
+            ]),
+        );
+
         $projectRequest->loadMissing('members.user');
 
         foreach ($projectRequest->members as $member) {
@@ -447,7 +472,7 @@ class SupervisorController extends Controller
             return back()->with('error', 'One or more students in this idea are already enrolled in another project.');
         }
 
-        DB::transaction(function () use ($idea, $memberResult, $supervisor) {
+        $createdProject = DB::transaction(function () use ($idea, $memberResult, $supervisor) {
             $project = UniProject::create([
                 'name' => $idea->projectname,
                 'description' => null,
@@ -466,7 +491,21 @@ class SupervisorController extends Controller
             $idea->accepted = 1;
             $idea->rejected = 0;
             $idea->save();
+
+            return $project;
         });
+
+        ActivityLogger::log(
+            ActivityLogger::IDEA_ACCEPTED,
+            "Accepted project idea: {$idea->projectname}",
+            subject: $idea,
+            metadata: [
+                'idea_id' => $idea->id,
+                'title' => $idea->projectname,
+                'created_project_id' => $createdProject->id,
+                'members_count' => count($memberResult['members']),
+            ],
+        );
 
         $idea->loadMissing('members.user');
 
@@ -519,6 +558,17 @@ class SupervisorController extends Controller
             $idea->reason = $request->reason;
             $idea->save();
         });
+
+        ActivityLogger::log(
+            ActivityLogger::IDEA_REJECTED,
+            "Rejected project idea: {$idea->projectname}",
+            subject: $idea,
+            metadata: array_filter([
+                'idea_id' => $idea->id,
+                'title' => $idea->projectname,
+                'reason' => $request->reason,
+            ]),
+        );
 
         $idea->loadMissing('members.user');
 

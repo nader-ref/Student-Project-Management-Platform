@@ -8,6 +8,7 @@ use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
 use App\Notifications\WorkflowNotification;
+use App\Services\ActivityLogger;
 use App\Services\WorkflowGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +53,7 @@ class ProjectrequestController extends Controller
             return redirect()->back()->with('faild2', 'Your team already has a pending project request.');
         }
 
-        DB::transaction(function () use ($validated, $memberResult) {
+        $projectRequest = DB::transaction(function () use ($validated, $memberResult) {
             $projectRequest = Projectrequest::create([
                 'project_id' => $validated['project_id'],
                 'requested_by_user_id' => Auth::id(),
@@ -65,7 +66,24 @@ class ProjectrequestController extends Controller
                     'position' => $member['position'],
                 ]);
             }
+
+            return $projectRequest;
         });
+
+        ActivityLogger::log(
+            ActivityLogger::PROJECT_REQUEST_SUBMITTED,
+            "Submitted project request for {$project->name}",
+            subject: $projectRequest,
+            metadata: [
+                'request_id' => $projectRequest->id,
+                'project_id' => $project->id,
+                'project_name' => $project->name,
+                'member_university_numbers' => collect($memberResult['members'])
+                    ->map(fn (array $member) => $member['user']->university_number)
+                    ->values()
+                    ->all(),
+            ],
+        );
 
         $project->loadMissing('supervisor.user');
         $supervisorUser = $project->supervisor?->user;
@@ -129,9 +147,7 @@ class ProjectrequestController extends Controller
             return redirect()->back()->with('faild2', 'Your team already has a pending project idea.');
         }
 
-        $idea = null;
-
-        DB::transaction(function () use ($validated, $supervisor, $memberResult, &$idea) {
+        $idea = DB::transaction(function () use ($validated, $supervisor, $memberResult) {
             $idea = Idea::create([
                 'projectname' => $validated['projectname'],
                 'supervisor_id' => $supervisor->id,
@@ -145,7 +161,24 @@ class ProjectrequestController extends Controller
                     'position' => $member['position'],
                 ]);
             }
+
+            return $idea;
         });
+
+        ActivityLogger::log(
+            ActivityLogger::IDEA_SUBMITTED,
+            "Submitted project idea: {$idea->projectname}",
+            subject: $idea,
+            metadata: [
+                'idea_id' => $idea->id,
+                'title' => $idea->projectname,
+                'supervisor_id' => $supervisor->id,
+                'member_university_numbers' => collect($memberResult['members'])
+                    ->map(fn (array $member) => $member['user']->university_number)
+                    ->values()
+                    ->all(),
+            ],
+        );
 
         $supervisor->loadMissing('user');
 
