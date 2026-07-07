@@ -107,7 +107,9 @@ it('creates project members when a supervisor accepts a project request', functi
         'position' => 1,
     ]);
 
-    expect($project->fresh()->student_one_id)->toBeNull();
+    expect($project->fresh()->taken)->toBeTruthy();
+    expect($project->fresh()->student_count)->toBe(1);
+    expect($project->fresh()->isAssigned())->toBeTrue();
 });
 
 function createMembershipFixture(): array

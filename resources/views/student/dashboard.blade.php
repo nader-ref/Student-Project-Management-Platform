@@ -186,7 +186,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                 <div class="filter-group" role="group" aria-label="Filter projects">
                     <button type="button" class="filter-btn active" data-project-filter="all">All</button>
                     <button type="button" class="filter-btn" data-project-filter="available">Available</button>
-                    <button type="button" class="filter-btn" data-project-filter="taken">Taken</button>
+                    <button type="button" class="filter-btn" data-project-filter="assigned">Assigned</button>
                 </div>
             </div>
 
@@ -199,10 +199,10 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
             @else
             <div class="request-list" id="project-list">
                 @foreach ($projects as $project)
-                @php $isAvailable = $project->taken == 0; @endphp
+                @php $isAvailable = $project->isAvailable(); @endphp
                 <article
                     class="project-item {{ $isAvailable ? 'is-available' : 'is-taken' }}"
-                    data-status="{{ $isAvailable ? 'available' : 'taken' }}">
+                    data-status="{{ $isAvailable ? 'available' : 'assigned' }}">
                     <div class="project-item-body">
                         <div class="request-item-top">
                             <div>
@@ -213,7 +213,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                             </div>
                             <span class="status-pill {{ $isAvailable ? 'accepted' : 'pending' }}">
                                 <i class="fas fa-{{ $isAvailable ? 'check-circle' : 'lock' }}"></i>
-                                {{ $isAvailable ? 'Available' : 'Taken' }}
+                                {{ $project->lifecycleLabel() }}
                             </span>
                         </div>
 

@@ -133,7 +133,7 @@ class AdminController extends Controller
                 'name' => $project->name,
                 'supervisor' => $project->supervisor?->name ?? '—',
                 'department' => $project->department ?? '—',
-                'status' => $project->taken ? 'Taken' : 'Available',
+                'status' => $project->lifecycleLabel(),
                 'member_count' => $project->members_count,
                 'seminar_1' => $project->seminar_1,
                 'seminar_2' => $project->seminar_2,

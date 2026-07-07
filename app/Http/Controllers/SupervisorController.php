@@ -157,11 +157,14 @@ class SupervisorController extends Controller
             return back()->with('error', 'Supervisor profile not found.');
         }
 
-        $tak = $request->taken == 'Yes' ? 1 : 0;
-
         $memberResult = $this->membersFromRequest($request);
         if (isset($memberResult['error'])) {
             return back()->with('error', $memberResult['error'])->withInput();
+        }
+
+        $assignment = $this->resolveAssignmentFromMembers($memberResult['members'], $request->taken);
+        if (isset($assignment['error'])) {
+            return back()->with('error', $assignment['error'])->withInput();
         }
 
         $memberUserIds = WorkflowGuard::userIdsFromMembers($memberResult['members']);
@@ -170,21 +173,25 @@ class SupervisorController extends Controller
             return back()->with('error', 'One or more selected students are already enrolled in another project.')->withInput();
         }
 
-        DB::transaction(function () use ($request, $sup, $tak, $memberResult) {
+        DB::transaction(function () use ($request, $sup, $assignment, $memberResult) {
             $project = UniProject::create([
                 'name' => $request->project_name,
                 'description' => $request->description,
                 'supervisor_id' => $sup->id,
                 'department' => $request->department,
-                'taken' => $tak,
-                'student_count' => count($memberResult['members']) ?: ($request->students_number ?? null),
+                'taken' => $assignment['taken'],
+                'student_count' => $assignment['student_count'] ?? ($request->students_number ?? null),
                 'seminar_1' => $request->seminar1_date,
                 'seminar_2' => $request->seminar2_date,
                 'seminar_3' => $request->seminar3_date,
                 'final' => $request->final_date,
             ]);
 
-            $this->syncProjectMembers($project, $memberResult['members']);
+            $this->syncProjectMembers(
+                $project,
+                $memberResult['members'],
+                $assignment['student_count'] ?? ($request->students_number ?? null),
+            );
         });
 
         return redirect()->back()->with('success', 'Project registered successfully!');
@@ -245,20 +252,29 @@ class SupervisorController extends Controller
                 ->with('active_tab', 'show_pro');
         }
 
-        DB::transaction(function () use ($request, $project, $memberResult) {
+        $assignment = $this->resolveAssignmentFromMembers($memberResult['members'], $request->taken);
+        if (isset($assignment['error'])) {
+            return back()->with('error', $assignment['error'])->withInput()->with('active_tab', 'show_pro');
+        }
+
+        DB::transaction(function () use ($request, $project, $assignment, $memberResult) {
             $project->update([
                 'name' => $request->project_name,
                 'description' => $request->description,
                 'department' => $request->department,
-                'taken' => $request->taken == 'Yes' ? 1 : 0,
-                'student_count' => count($memberResult['members']) ?: ($request->students_number ?? null),
+                'taken' => $assignment['taken'],
+                'student_count' => $assignment['student_count'] ?? ($request->students_number ?? null),
                 'seminar_1' => $request->seminar1_date,
                 'seminar_2' => $request->seminar2_date,
                 'seminar_3' => $request->seminar3_date,
                 'final' => $request->final_date,
             ]);
 
-            $this->syncProjectMembers($project, $memberResult['members']);
+            $this->syncProjectMembers(
+                $project,
+                $memberResult['members'],
+                $assignment['student_count'] ?? ($request->students_number ?? null),
+            );
         });
 
         return redirect()->back()->with('success', 'Project updated successfully!')->with('active_tab', 'show_pro');
@@ -314,10 +330,6 @@ class SupervisorController extends Controller
         }
 
         DB::transaction(function () use ($project, $projectRequest, $memberResult) {
-            $project->taken = 1;
-            $project->student_count = count($memberResult['members']);
-            $project->save();
-
             $this->syncProjectMembers($project, $memberResult['members']);
 
             $projectRequest->accepted = 1;
@@ -441,8 +453,8 @@ class SupervisorController extends Controller
                 'description' => null,
                 'supervisor_id' => $supervisor->id,
                 'department' => 'software',
-                'taken' => 1,
-                'student_count' => count($memberResult['members']),
+                'taken' => false,
+                'student_count' => null,
                 'seminar_1' => null,
                 'seminar_2' => null,
                 'seminar_3' => null,
@@ -699,7 +711,31 @@ class SupervisorController extends Controller
         return ['members' => $members];
     }
 
-    private function syncProjectMembers(UniProject $project, array $members): void
+    /**
+     * @param  array<int, array{user: User, position: int}>  $members
+     * @return array{taken: int, student_count: int|null}|array{error: string}
+     */
+    private function resolveAssignmentFromMembers(array $members, string $requestedTaken): array
+    {
+        $memberCount = count($members);
+        $derivedTaken = $memberCount > 0 ? 1 : 0;
+        $requested = $requestedTaken === 'Yes' ? 1 : 0;
+
+        if ($requested !== $derivedTaken) {
+            return [
+                'error' => $memberCount > 0
+                    ? 'Projects with team members must be marked as assigned (taken).'
+                    : 'Projects without team members must be marked as available (not taken).',
+            ];
+        }
+
+        return [
+            'taken' => $derivedTaken,
+            'student_count' => $memberCount > 0 ? $memberCount : null,
+        ];
+    }
+
+    private function syncProjectMembers(UniProject $project, array $members, ?int $fallbackStudentCount = null): void
     {
         $project->members()->delete();
 
@@ -709,5 +745,10 @@ class SupervisorController extends Controller
                 'position' => $member['position'],
             ]);
         }
+
+        $memberCount = count($members);
+        $project->taken = $memberCount > 0 ? 1 : 0;
+        $project->student_count = $memberCount > 0 ? $memberCount : $fallbackStudentCount;
+        $project->save();
     }
 }

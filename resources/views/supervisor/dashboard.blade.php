@@ -301,7 +301,7 @@
                         <select id="project-filter-status" aria-label="Filter by status">
                             <option value="all">All Status</option>
                             <option value="available">Available</option>
-                            <option value="taken">Taken</option>
+                            <option value="assigned">Assigned</option>
                         </select>
                     </div>
                 @endif
@@ -321,10 +321,10 @@
                     <div class="request-list" id="project-list">
                         @foreach ($myProjects as $project)
                             <article
-                                class="project-item {{ $project->taken == 0 ? 'is-available' : 'is-taken' }}"
+                                class="project-item {{ $project->isAvailable() ? 'is-available' : 'is-taken' }}"
                                 data-name="{{ strtolower($project->name) }}"
                                 data-department="{{ $project->department }}"
-                                data-status="{{ $project->taken == 0 ? 'available' : 'taken' }}"
+                                data-status="{{ $project->isAvailable() ? 'available' : 'assigned' }}"
                             >
                                 <div class="project-item-body">
                                     <div class="request-item-top">
@@ -334,8 +334,8 @@
                                             </div>
                                             <h3>{{ $project->name }}</h3>
                                         </div>
-                                        <span class="status-pill {{ $project->taken == 0 ? 'accepted' : 'pending' }}">
-                                            {{ $project->taken == 0 ? 'Available' : 'Taken' }}
+                                        <span class="status-pill {{ $project->isAvailable() ? 'accepted' : 'pending' }}">
+                                            {{ $project->lifecycleLabel() }}
                                         </span>
                                     </div>
                                     <div class="request-meta-grid">
