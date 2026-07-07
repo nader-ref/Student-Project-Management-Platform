@@ -107,6 +107,11 @@ it('shows the admin dashboard metrics to admins', function () {
     $response->assertSee('Pending requests');
     $response->assertSee('Pending ideas');
     $response->assertSee('Pending email');
+    $response->assertSee('Overview', false);
+    $response->assertSee('Projects', false);
+    $response->assertSee('Workflow', false);
+    $response->assertSee('Submissions', false);
+    $response->assertSee('Supervisor workload', false);
     $response->assertSee($student->name);
     $response->assertSee($supervisor->name);
 });
