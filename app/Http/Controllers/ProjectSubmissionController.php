@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProjectMember;
 use App\Models\ProjectSubmission;
 use App\Notifications\WorkflowNotification;
+use App\Services\ActivityLogger;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,19 @@ class ProjectSubmissionController extends Controller
             'status' => 'submitted',
         ]);
 
+        ActivityLogger::log(
+            ActivityLogger::SUBMISSION_UPLOADED,
+            "Uploaded submission: {$submission->title}",
+            subject: $submission,
+            metadata: [
+                'project_id' => $project->id,
+                'project_name' => $project->name,
+                'milestone' => $submission->milestone,
+                'title' => $submission->title,
+                'original_filename' => $submission->original_filename,
+            ],
+        );
+
         $project->loadMissing('supervisor.user');
         $supervisorUser = $project->supervisor?->user;
 
@@ -133,6 +147,19 @@ class ProjectSubmissionController extends Controller
         $submission->loadMissing('submittedBy');
 
         if (($statusChanged || $feedbackChanged) && $submission->submittedBy) {
+            ActivityLogger::log(
+                ActivityLogger::SUBMISSION_REVIEWED,
+                "Reviewed submission: {$submission->title}",
+                targetUser: $submission->submittedBy,
+                subject: $submission,
+                metadata: [
+                    'milestone' => $submission->milestone,
+                    'old_status' => $oldStatus,
+                    'new_status' => $submission->status,
+                    'feedback_changed' => $feedbackChanged,
+                ],
+            );
+
             $milestoneLabels = StudentEnrollmentService::milestoneLabels();
             $milestoneLabel = $milestoneLabels[$submission->milestone] ?? $submission->milestone;
 
