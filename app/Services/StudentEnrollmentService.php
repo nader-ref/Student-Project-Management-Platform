@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Idea;
+use App\Models\ProjectSubmission;
 use App\Models\Projectrequest;
 use App\Models\UniProject;
 use App\Models\User;
@@ -173,29 +174,223 @@ class StudentEnrollmentService
     }
 
     /**
+     * @return Collection<string, ProjectSubmission>
+     */
+    public static function latestSubmissionsByMilestone(Collection $submissions): Collection
+    {
+        return $submissions
+            ->sortByDesc('created_at')
+            ->groupBy('milestone')
+            ->map(fn (Collection $group) => $group->first());
+    }
+
+    /**
+     * @return array{
+     *     key: string,
+     *     label: string,
+     *     date: ?Carbon,
+     *     formatted: ?string,
+     *     latest_submission: ?ProjectSubmission,
+     *     status_key: string,
+     *     status_label: string,
+     *     is_done: bool,
+     *     is_overdue: bool,
+     *     action_label: ?string,
+     *     action_description: ?string
+     * }
+     */
+    public static function resolveMilestoneState(array $milestone, ?ProjectSubmission $latestSubmission, Carbon $now): array
+    {
+        $key = $milestone['key'];
+        $label = $milestone['label'];
+        $date = $milestone['date'] ?? null;
+        $formatted = $milestone['formatted'] ?? null;
+
+        if ($date === null) {
+            return [
+                'key' => $key,
+                'label' => $label,
+                'date' => null,
+                'formatted' => null,
+                'latest_submission' => $latestSubmission,
+                'status_key' => 'not_scheduled',
+                'status_label' => 'Not scheduled',
+                'is_done' => false,
+                'is_overdue' => false,
+                'action_label' => null,
+                'action_description' => null,
+            ];
+        }
+
+        if ($latestSubmission?->isApproved()) {
+            return [
+                'key' => $key,
+                'label' => $label,
+                'date' => $date,
+                'formatted' => $formatted,
+                'latest_submission' => $latestSubmission,
+                'status_key' => 'approved',
+                'status_label' => 'Completed',
+                'is_done' => true,
+                'is_overdue' => false,
+                'action_label' => null,
+                'action_description' => null,
+            ];
+        }
+
+        if ($latestSubmission?->isPending()) {
+            return [
+                'key' => $key,
+                'label' => $label,
+                'date' => $date,
+                'formatted' => $formatted,
+                'latest_submission' => $latestSubmission,
+                'status_key' => 'pending_review',
+                'status_label' => 'Pending Review',
+                'is_done' => false,
+                'is_overdue' => false,
+                'action_label' => 'View Submissions',
+                'action_description' => 'Your file has been sent to the supervisor. You will be notified once it is reviewed.',
+            ];
+        }
+
+        if ($latestSubmission?->needsRevision()) {
+            return [
+                'key' => $key,
+                'label' => $label,
+                'date' => $date,
+                'formatted' => $formatted,
+                'latest_submission' => $latestSubmission,
+                'status_key' => 'revision_required',
+                'status_label' => 'Revision Required',
+                'is_done' => false,
+                'is_overdue' => false,
+                'action_label' => 'Revise Upload',
+                'action_description' => $latestSubmission->supervisor_feedback
+                    ? \Illuminate\Support\Str::limit($latestSubmission->supervisor_feedback, 120)
+                    : 'Your supervisor requested changes. Upload an updated file.',
+            ];
+        }
+
+        $isPast = $milestone['is_past'] ?? $date->isPast();
+        $daysLeft = $milestone['days_left'] ?? ($date->isFuture() ? (int) $now->diffInDays($date, false) : 0);
+
+        if ($isPast) {
+            return [
+                'key' => $key,
+                'label' => $label,
+                'date' => $date,
+                'formatted' => $formatted,
+                'latest_submission' => $latestSubmission,
+                'status_key' => 'overdue',
+                'status_label' => 'Overdue',
+                'is_done' => false,
+                'is_overdue' => true,
+                'action_label' => 'Upload File',
+                'action_description' => 'This milestone date has passed. Upload your deliverable or contact your supervisor.',
+            ];
+        }
+
+        if ($daysLeft <= 14) {
+            return [
+                'key' => $key,
+                'label' => $label,
+                'date' => $date,
+                'formatted' => $formatted,
+                'latest_submission' => $latestSubmission,
+                'status_key' => 'due_soon',
+                'status_label' => 'Due soon',
+                'is_done' => false,
+                'is_overdue' => false,
+                'action_label' => 'Upload File',
+                'action_description' => $daysLeft.' day'.($daysLeft === 1 ? '' : 's').' remaining — upload your deliverable for review.',
+            ];
+        }
+
+        return [
+            'key' => $key,
+            'label' => $label,
+            'date' => $date,
+            'formatted' => $formatted,
+            'latest_submission' => $latestSubmission,
+            'status_key' => 'upcoming',
+            'status_label' => 'Upcoming',
+            'is_done' => false,
+            'is_overdue' => false,
+            'action_label' => 'View Timeline',
+            'action_description' => 'Scheduled for '.$formatted.'. Prepare your deliverable ahead of the deadline.',
+        ];
+    }
+
+    /**
+     * @return Collection<int, array{
+     *     key: string,
+     *     label: string,
+     *     date: ?Carbon,
+     *     formatted: ?string,
+     *     latest_submission: ?ProjectSubmission,
+     *     status_key: string,
+     *     status_label: string,
+     *     is_done: bool,
+     *     is_overdue: bool,
+     *     action_label: ?string,
+     *     action_description: ?string
+     * }>
+     */
+    public static function resolveMilestoneStates(UniProject $project, Collection $submissions): Collection
+    {
+        $now = now();
+        $latestByMilestone = self::latestSubmissionsByMilestone($submissions);
+        $labels = self::milestoneLabels();
+        $scheduledMilestones = self::buildMilestones($project)->keyBy('key');
+
+        return collect(['seminar_1', 'seminar_2', 'seminar_3', 'final'])
+            ->map(function (string $key) use ($scheduledMilestones, $labels, $latestByMilestone, $now) {
+                $milestone = $scheduledMilestones->get($key) ?? [
+                    'key' => $key,
+                    'label' => $labels[$key],
+                    'date' => null,
+                    'formatted' => null,
+                ];
+
+                return self::resolveMilestoneState(
+                    $milestone,
+                    $latestByMilestone->get($key),
+                    $now,
+                );
+            })
+            ->values();
+    }
+
+    /**
      * @return array{percent: int, current_phase: string, steps: Collection}
      */
     public static function computeProgress(UniProject $project, Collection $milestones, Collection $submissions): array
     {
+        $milestoneStates = self::resolveMilestoneStates($project, $submissions)
+            ->filter(fn (array $state) => $state['status_key'] !== 'not_scheduled');
+
         $steps = collect([
             [
                 'key' => 'enrolled',
                 'label' => 'Team Registered',
                 'done' => true,
+                'status_key' => 'approved',
+                'status_label' => 'Completed',
+                'date' => null,
+                'latest_submission_title' => null,
             ],
         ]);
 
-        foreach ($milestones as $milestone) {
-            $approved = $submissions
-                ->where('milestone', $milestone['key'])
-                ->where('status', 'approved')
-                ->isNotEmpty();
-
+        foreach ($milestoneStates as $state) {
             $steps->push([
-                'key' => $milestone['key'],
-                'label' => $milestone['label'],
-                'done' => $milestone['is_past'] || $approved,
-                'date' => $milestone['formatted'],
+                'key' => $state['key'],
+                'label' => $state['label'],
+                'done' => $state['is_done'],
+                'date' => $state['formatted'],
+                'status_key' => $state['status_key'],
+                'status_label' => $state['status_label'],
+                'latest_submission_title' => $state['latest_submission']?->title,
             ]);
         }
 
@@ -223,47 +418,67 @@ class StudentEnrollmentService
         Collection $contacts,
     ): Collection {
         $steps = collect();
-        $labels = self::milestoneLabels();
+        $milestoneStates = self::resolveMilestoneStates($project, $submissions);
+        $scheduledStates = $milestoneStates->filter(fn (array $state) => $state['status_key'] !== 'not_scheduled');
 
-        foreach ($submissions->where('status', 'needs_revision') as $submission) {
-            $milestoneLabel = $labels[$submission->milestone] ?? $submission->milestone;
+        if ($scheduledStates->isNotEmpty() && $scheduledStates->every(fn (array $state) => $state['is_done'])) {
             $steps->push([
-                'priority' => 'urgent',
-                'icon' => 'fas fa-exclamation-circle',
-                'title' => 'Revise your '.$milestoneLabel.' submission',
-                'description' => $submission->supervisor_feedback
-                    ? \Illuminate\Support\Str::limit($submission->supervisor_feedback, 120)
-                    : 'Your supervisor requested changes. Upload an updated file.',
-                'tab' => 'submissions',
-                'cta' => 'Revise Upload',
+                'priority' => 'normal',
+                'icon' => 'fas fa-check-circle',
+                'title' => 'All scheduled milestones completed',
+                'description' => 'Your approved submissions cover every scheduled milestone. Review your timeline or check in with your supervisor.',
+                'tab' => 'timeline',
+                'cta' => 'View Timeline',
             ]);
-        }
+        } else {
+            foreach ($scheduledStates as $state) {
+                $step = match ($state['status_key']) {
+                    'revision_required' => [
+                        'priority' => 'urgent',
+                        'icon' => 'fas fa-exclamation-circle',
+                        'title' => 'Revise your '.$state['label'].' submission',
+                        'description' => $state['action_description'],
+                        'tab' => 'submissions',
+                        'cta' => $state['action_label'],
+                    ],
+                    'pending_review' => [
+                        'priority' => 'normal',
+                        'icon' => 'fas fa-hourglass-half',
+                        'title' => $state['label'].' submission under review',
+                        'description' => $state['action_description'],
+                        'tab' => 'submissions',
+                        'cta' => $state['action_label'],
+                    ],
+                    'overdue' => [
+                        'priority' => 'urgent',
+                        'icon' => 'fas fa-exclamation-triangle',
+                        'title' => $state['label'].' is overdue',
+                        'description' => $state['action_description'],
+                        'tab' => 'submissions',
+                        'cta' => $state['action_label'],
+                    ],
+                    'due_soon' => [
+                        'priority' => ($state['date'] && $state['date']->isFuture() && (int) now()->diffInDays($state['date'], false) <= 7) ? 'urgent' : 'high',
+                        'icon' => 'fas fa-file-upload',
+                        'title' => 'Submit '.$state['label'].' before '.$state['formatted'],
+                        'description' => $state['action_description'],
+                        'tab' => 'submissions',
+                        'cta' => $state['action_label'],
+                    ],
+                    'upcoming' => [
+                        'priority' => 'normal',
+                        'icon' => 'fas fa-calendar-alt',
+                        'title' => 'Prepare for '.$state['label'],
+                        'description' => $state['action_description'],
+                        'tab' => 'timeline',
+                        'cta' => $state['action_label'],
+                    ],
+                    default => null,
+                };
 
-        if ($nextMilestone) {
-            $milestoneKey = $nextMilestone['key'];
-            $milestoneSubs = $submissions->where('milestone', $milestoneKey);
-            $hasApproved = $milestoneSubs->where('status', 'approved')->isNotEmpty();
-            $awaitingReview = $milestoneSubs->where('status', 'submitted')->isNotEmpty();
-
-            if (! $hasApproved && ! $awaitingReview && $nextMilestone['days_left'] <= 21) {
-                $priority = $nextMilestone['days_left'] <= 7 ? 'urgent' : 'high';
-                $steps->push([
-                    'priority' => $priority,
-                    'icon' => 'fas fa-file-upload',
-                    'title' => 'Submit '.$nextMilestone['label'].' before '.$nextMilestone['formatted'],
-                    'description' => $nextMilestone['days_left'].' day'.($nextMilestone['days_left'] === 1 ? '' : 's').' remaining — upload your deliverable for review.',
-                    'tab' => 'submissions',
-                    'cta' => 'Upload File',
-                ]);
-            } elseif ($awaitingReview) {
-                $steps->push([
-                    'priority' => 'normal',
-                    'icon' => 'fas fa-hourglass-half',
-                    'title' => $nextMilestone['label'].' submission under review',
-                    'description' => 'Your file has been sent to the supervisor. You will be notified once it is reviewed.',
-                    'tab' => 'submissions',
-                    'cta' => 'View Submissions',
-                ]);
+                if ($step !== null) {
+                    $steps->push($step);
+                }
             }
         }
 
@@ -279,7 +494,7 @@ class StudentEnrollmentService
             ]);
         }
 
-        if ($submissions->isEmpty()) {
+        if ($submissions->isEmpty() && $scheduledStates->contains(fn (array $state) => in_array($state['status_key'], ['due_soon', 'overdue', 'upcoming'], true))) {
             $steps->push([
                 'priority' => 'normal',
                 'icon' => 'fas fa-cloud-upload-alt',
@@ -300,20 +515,6 @@ class StudentEnrollmentService
                 'tab' => 'message',
                 'cta' => 'Send Message',
             ]);
-        }
-
-        if ($nextMilestone && $nextMilestone['days_left'] <= 14) {
-            $alreadyListed = $steps->contains(fn ($s) => str_contains($s['title'], $nextMilestone['label']));
-            if (! $alreadyListed) {
-                $steps->push([
-                    'priority' => $nextMilestone['days_left'] <= 7 ? 'urgent' : 'high',
-                    'icon' => 'fas fa-calendar-alt',
-                    'title' => 'Prepare for '.$nextMilestone['label'],
-                    'description' => 'Scheduled for '.$nextMilestone['formatted'].' ('.$nextMilestone['days_left'].' days left).',
-                    'tab' => 'timeline',
-                    'cta' => 'View Timeline',
-                ]);
-            }
         }
 
         if ($steps->isEmpty()) {
@@ -354,7 +555,7 @@ class StudentEnrollmentService
                 'icon' => 'fas fa-file-upload',
                 'tone' => 'info',
                 'title' => 'Uploaded: '.$submission->title,
-                'meta' => $milestoneLabel.' · '.ucfirst(str_replace('_', ' ', $submission->status)),
+                'meta' => $milestoneLabel.' · '.$submission->statusLabel(),
                 'tab' => 'submissions',
                 'timestamp' => $submission->created_at,
             ]);

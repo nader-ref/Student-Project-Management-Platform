@@ -22,6 +22,14 @@
 
     <div class="progress-steps-grid">
         @foreach ($progress['steps'] as $step)
+            @php
+                $pillClass = match ($step['status_key'] ?? '') {
+                    'approved' => 'accepted',
+                    'revision_required', 'overdue' => 'rejected',
+                    'pending_review', 'due_soon', 'upcoming' => 'pending',
+                    default => $step['done'] ? 'accepted' : 'pending',
+                };
+            @endphp
             <div class="progress-step-card {{ $step['done'] ? 'done' : 'upcoming' }}">
                 <div class="progress-step-icon">
                     <i class="fas fa-{{ $step['done'] ? 'check' : 'circle' }}"></i>
@@ -31,9 +39,14 @@
                     @if (!empty($step['date']))
                         <span>{{ $step['date'] }}</span>
                     @endif
-                    <span class="status-pill {{ $step['done'] ? 'accepted' : 'pending' }}" style="margin-top: 0.35rem; display: inline-flex;">
-                        {{ $step['done'] ? 'Complete' : 'Upcoming' }}
+                    <span class="status-pill {{ $pillClass }}" style="margin-top: 0.35rem; display: inline-flex;">
+                        {{ $step['status_label'] ?? ($step['done'] ? 'Completed' : 'Upcoming') }}
                     </span>
+                    @if (!empty($step['latest_submission_title']))
+                        <span style="display: block; margin-top: 0.25rem; color: #64748b; font-size: 0.9rem;">
+                            {{ $step['latest_submission_title'] }}
+                        </span>
+                    @endif
                 </div>
             </div>
         @endforeach
