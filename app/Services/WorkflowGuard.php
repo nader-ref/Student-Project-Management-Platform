@@ -104,4 +104,13 @@ class WorkflowGuard
             ->whereHas('members', fn ($query) => $query->whereIn('user_id', $userIds))
             ->exists();
     }
+
+    /**
+     * @param  array<int, int>  $userIds
+     */
+    public static function anyUserHasPendingApplication(array $userIds): bool
+    {
+        return self::anyUserHasPendingProjectRequest($userIds)
+            || self::anyUserHasPendingIdea($userIds);
+    }
 }

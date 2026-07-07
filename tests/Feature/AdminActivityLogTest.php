@@ -23,7 +23,7 @@ beforeEach(function () {
         );
     }
 
-    Storage::fake('public');
+    Storage::fake('local');
 });
 
 it('redirects guests away from the activity log page', function () {
@@ -39,7 +39,7 @@ it('redirects students away from the activity log page', function () {
 });
 
 it('redirects supervisors away from the activity log page', function () {
-    [, $supervisorUser] = createActivitySupervisorPair();
+    [$supervisor, $supervisorUser] = createActivitySupervisorPair();
 
     $this->actingAs($supervisorUser)
         ->get(route('admin.activity'))
@@ -417,7 +417,7 @@ function createActivityWorkflowFixture(): array
 }
 
 /**
- * @return array{0: User, 1: Supervisor}
+ * @return array{0: Supervisor, 1: User}
  */
 function createActivitySupervisorPair(): array
 {

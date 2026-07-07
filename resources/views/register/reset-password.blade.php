@@ -1,108 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Software Developer Portfolio · Login blue</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .floating-code {
-            position: absolute;
-            font-family: monospace;
-            color: white;
-            opacity: 0.8;
-            animation: floatUpDown 6s ease-in-out infinite;
-        }
-        @keyframes floatUpDown {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        /* subtle blue glow for heading */
-        .neon-glow {
-            text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
-        }
-    </style>
-</head>
-<body>
-    <!-- changed background to blue-950, all red accents → blue/cyan -->
-    <section class="min-h-screen flex items-center justify-center bg-blue-950/100 relative text-white px-6">
-        <!-- Floating Code Elements (unchanged, neutral) -->
-       
-        <!-- Sign In Card (same glass background) -->
-        <div class="m-10 bg-gray-900/70 backdrop-blur-md shadow-2xl p-10 rounded-xl w-full max-w-md z-10">
-            <div class="text-center mb-10">
-                <div class="mb-4"></div>
-                <h2 class="text-4xl font-bold neon-glow mb-4">Enter New Password</h2>
-               <img src="{{asset('img/grad3.png')}}" alt="Profile" class="w-[150px] h-[150px] mx-auto rounded-full shadow-xl bg-white" />
-                <p class="text-gray-400 mt-2 text-sm">Welcome , student 👨</p>
-                <div class="mt-4"></div>
-            </div>
+@extends('layouts.auth')
 
+@section('portal', 'student')
+@section('title', 'Projects Hub · Reset Password')
 
-            @if ($errors->any())
-                    <div style="color: red;">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-            @endif
+@section('brand')
+    @include('auth.partials.brand-student')
+@endsection
 
-            <form method="POST" action="{{ route('password.update') }}">
-                @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
+@section('content')
+    <header class="auth-card-header">
+        <span class="auth-portal-badge"><i class="fas fa-lock" aria-hidden="true"></i> Password Recovery</span>
+        <h1>Reset Password</h1>
+        <p>Enter your university number and choose a new password.</p>
+    </header>
 
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" required class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+    @error('reset')
+        <p class="auth-flash auth-flash--error" role="alert">{{ $message }}</p>
+    @enderror
 
-                <label for="password">New Password:</label>
-                <input type="password" name="password" id="password" required class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-
-                <label for="password_confirmation">Confirm Password:</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" required class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-
-                <button type="submit" class="mt-4 w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full font-semibold hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-blue-500/25">Reset Password</button>
-            </form>
-         
-        </div>
-    </section>
-</body>
-</html>
-
-{{-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Reset Password</title>
-</head>
-<body>
-    <h1>Enter New Password</h1>
-
-    @if ($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form method="POST" action="{{ route('password.update') }}">
+    <form method="POST" action="{{ route('password.update') }}" class="auth-form">
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required>
+        <div class="auth-field">
+            <label for="university_number"><i class="fas fa-id-card" aria-hidden="true"></i> University Number</label>
+            <input
+                type="text"
+                id="university_number"
+                name="university_number"
+                value="{{ old('university_number') }}"
+                placeholder="Your university number"
+                autocomplete="username"
+                required
+            >
+        </div>
 
-        <label for="password">New Password:</label>
-        <input type="password" name="password" id="password" required>
+        <div class="auth-field">
+            <label for="password"><i class="fas fa-lock" aria-hidden="true"></i> New Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter a new password"
+                autocomplete="new-password"
+                required
+            >
+            @error('password')
+                <span class="auth-field-error">{{ $message }}</span>
+            @enderror
+        </div>
 
-        <label for="password_confirmation">Confirm Password:</label>
-        <input type="password" name="password_confirmation" id="password_confirmation" required>
+        <div class="auth-field">
+            <label for="password_confirmation"><i class="fas fa-lock" aria-hidden="true"></i> Confirm Password</label>
+            <input
+                type="password"
+                id="password_confirmation"
+                name="password_confirmation"
+                placeholder="Confirm your new password"
+                autocomplete="new-password"
+                required
+            >
+        </div>
 
-        <button type="submit">Reset Password</button>
+        <button type="submit" class="auth-btn">
+            <i class="fas fa-check" aria-hidden="true"></i>
+            Reset Password
+        </button>
     </form>
-</body>
-</html> --}}
+
+    <footer class="auth-card-footer">
+        <a href="{{ route('login') }}" class="auth-link">Back to Sign In</a>
+    </footer>
+@endsection

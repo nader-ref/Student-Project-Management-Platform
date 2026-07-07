@@ -21,7 +21,7 @@ beforeEach(function () {
         );
     }
 
-    Storage::fake('public');
+    Storage::fake('local');
 });
 
 it('rejects needs_revision review without supervisor feedback', function () {

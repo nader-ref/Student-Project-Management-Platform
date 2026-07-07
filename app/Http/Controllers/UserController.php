@@ -192,37 +192,29 @@ class UserController extends Controller
 
     public function Change()
     {
-         return view('register.ChangePassword');
+        return view('register.ChangePassword', [
+            'user' => Auth::user(),
+        ]);
     }
 
     public function changepost(Request $request)
     {
-        
-        request()->validate( [
-            'email' => 'required|email|exists:users,email',
+        $user = Auth::user();
+
+        $validated = $request->validate([
             'old' => 'required|string',
-            'new' => 'required|string|min:8', 
-        ], [
-            'email.exists' => 'The provided email does not exist in our records.',
+            'new' => 'required|string|min:8',
+            'password_confirmation' => 'required|same:new',
         ]);
 
-        
-        $user = User::where('email', $request->email)->first();
-
-        
-        if (!Hash::check($request->old, $user->password)) {
+        if (! Hash::check($validated['old'], $user->password)) {
             return redirect()->back()->withErrors([
-                'old' => 'The old password is incorrect.'
-            ])->withInput();
+                'old' => 'The old password is incorrect.',
+            ])->withInput($request->except('old', 'new', 'password_confirmation'));
         }
 
-        if($request->new == $request->password_confirmation){
-        $user->password = Hash::make($request->new);
-        $user->save();
-        }else{
-            return redirect()->back()->with('failed', 'Password not match');
-        }
-        
+        $user->update(['password' => $validated['new']]);
+
         return redirect()->back()->with('success', 'Password changed successfully!');
     }
 
@@ -232,19 +224,23 @@ class UserController extends Controller
     }
     
 
-    // Handle form submission: generate token, store it, log the reset link
     public function sendResetLink(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate([
+            'university_number' => 'required|string',
+        ]);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $genericMessage = 'If this university number is linked to an email address, a password reset link will be sent.';
 
-        // Check the status and respond accordingly
-        return $status === Password::RESET_LINK_SENT
-                    ? back()->with(['status' => __($status)])
-                    : back()->withErrors(['email' => __($status)]);
+        $user = User::query()
+            ->where('university_number', $request->university_number)
+            ->first();
+
+        if ($user && filled($user->email)) {
+            Password::sendResetLink(['email' => $user->email]);
+        }
+
+        return back()->with('status', $genericMessage);
     }
 
     public function showForms($token)
@@ -252,17 +248,33 @@ class UserController extends Controller
         return view('register.reset-password', ['token' => $token]);
     }
 
-    // Handle the password reset
     public function reset(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
+            'university_number' => 'required|string',
             'password' => 'required|confirmed|min:8',
         ]);
 
+        $genericError = 'Unable to reset password. Please check your information or request a new reset link.';
+
+        $user = User::query()
+            ->where('university_number', $validated['university_number'])
+            ->first();
+
+        if (! $user || blank($user->email)) {
+            return back()
+                ->withInput($request->only('university_number'))
+                ->withErrors(['reset' => $genericError]);
+        }
+
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+            [
+                'email' => $user->email,
+                'password' => $validated['password'],
+                'password_confirmation' => $request->password_confirmation,
+                'token' => $validated['token'],
+            ],
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
@@ -272,7 +284,9 @@ class UserController extends Controller
 
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('status', 'Password reset successful!')
-            : back()->withErrors(['email' => [__($status)]]);
+            : back()
+                ->withInput($request->only('university_number'))
+                ->withErrors(['reset' => $genericError]);
     }
     
     public function showDash()
