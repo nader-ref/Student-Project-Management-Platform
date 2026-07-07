@@ -100,6 +100,9 @@ it('accepts ideas and creates project members from idea members', function () {
     $project = UniProject::where('name', 'Accepted Student Idea')->first();
 
     expect($project)->not->toBeNull();
+    expect($project->taken)->toBeTruthy();
+    expect($project->student_count)->toBe(1);
+    expect($project->isAssigned())->toBeTrue();
     expect($project->members()->where('user_id', $student->id)->exists())->toBeTrue();
 
     $this->assertDatabaseHas('ideas', [
