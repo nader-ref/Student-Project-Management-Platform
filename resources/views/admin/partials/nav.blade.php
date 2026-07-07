@@ -6,6 +6,7 @@
         <a href="{{ route('admin.requests') }}" @class(['admin-nav-link', 'is-active' => request()->routeIs('admin.requests')])>Requests</a>
         <a href="{{ route('admin.ideas') }}" @class(['admin-nav-link', 'is-active' => request()->routeIs('admin.ideas')])>Ideas</a>
         <a href="{{ route('admin.submissions') }}" @class(['admin-nav-link', 'is-active' => request()->routeIs('admin.submissions')])>Submissions</a>
+        <a href="{{ route('admin.activity') }}" @class(['admin-nav-link', 'is-active' => request()->routeIs('admin.activity')])>Activity Log</a>
         <a href="{{ route('admin.supervisors.create') }}" @class(['admin-nav-link', 'is-active' => request()->routeIs('admin.supervisors.create')])>Create Supervisor</a>
         <a href="{{ route('admin.students.create') }}" @class(['admin-nav-link', 'is-active' => request()->routeIs('admin.students.create')])>Create Student</a>
     </div>

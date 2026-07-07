@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\idea;
 use App\Models\projectrequest;
 use App\Models\ProjectSubmission;
 use App\Models\Supervisor;
 use App\Models\UniProject;
 use App\Models\User;
+use App\Services\ActivityLogger;
 use App\Services\StudentEnrollmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -76,6 +78,13 @@ class AdminController extends Controller
 
         $user->update(['is_active' => false]);
 
+        ActivityLogger::log(
+            ActivityLogger::USER_DEACTIVATED,
+            "Deactivated account for {$user->name}",
+            targetUser: $user,
+            subject: $user,
+        );
+
         return redirect()
             ->route('admin.users')
             ->with('success', 'User account deactivated successfully.');
@@ -84,6 +93,13 @@ class AdminController extends Controller
     public function activateUser(User $user)
     {
         $user->update(['is_active' => true]);
+
+        ActivityLogger::log(
+            ActivityLogger::USER_ACTIVATED,
+            "Activated account for {$user->name}",
+            targetUser: $user,
+            subject: $user,
+        );
 
         return redirect()
             ->route('admin.users')
@@ -116,6 +132,16 @@ class AdminController extends Controller
         ]);
 
         $user->update(['password' => $validated['password']]);
+
+        ActivityLogger::log(
+            ActivityLogger::USER_PASSWORD_RESET,
+            "Reset password for {$user->name}",
+            targetUser: $user,
+            subject: $user,
+            metadata: [
+                'university_number' => $user->university_number,
+            ],
+        );
 
         return redirect()
             ->route('admin.users')
@@ -223,7 +249,7 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated) {
+        $user = DB::transaction(function () use ($validated) {
             $user = User::create([
                 'name' => $validated['name'],
                 'university_number' => $validated['university_number'],
@@ -243,7 +269,21 @@ class AdminController extends Controller
                 'email' => $user->email ?? null,
                 'user_id' => $user->id,
             ]);
+
+            return $user;
         });
+
+        ActivityLogger::log(
+            ActivityLogger::USER_SUPERVISOR_CREATED,
+            "Created supervisor account for {$user->name}",
+            targetUser: $user,
+            subject: $user,
+            metadata: array_filter([
+                'university_number' => $user->university_number,
+                'email' => $user->email,
+                'role' => 'supervisor',
+            ]),
+        );
 
         return redirect()
             ->route('admin.users')
@@ -264,7 +304,7 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated) {
+        $user = DB::transaction(function () use ($validated) {
             $user = User::create([
                 'name' => $validated['name'],
                 'university_number' => $validated['university_number'],
@@ -278,11 +318,39 @@ class AdminController extends Controller
             );
 
             $user->addRole('student');
+
+            return $user;
         });
+
+        ActivityLogger::log(
+            ActivityLogger::USER_STUDENT_CREATED,
+            "Created student account for {$user->name}",
+            targetUser: $user,
+            subject: $user,
+            metadata: array_filter([
+                'university_number' => $user->university_number,
+                'email' => $user->email,
+                'role' => 'student',
+            ]),
+        );
 
         return redirect()
             ->route('admin.users')
             ->with('success', 'Student account created successfully.');
+    }
+
+    public function activity()
+    {
+        $logs = ActivityLog::query()
+            ->with(['actor', 'targetUser'])
+            ->latest('created_at')
+            ->latest('id')
+            ->paginate(25)
+            ->withQueryString();
+
+        return view('admin.activity', [
+            'logs' => $logs,
+        ]);
     }
 
     private function countUsersWithRole(string $role): int

@@ -52,6 +52,7 @@ Route::middleware(['auth', 'account.active', 'email.complete', 'admin'])->group(
     Route::get('/admin/requests', [AdminController::class, 'requests'])->name('admin.requests');
     Route::get('/admin/ideas', [AdminController::class, 'ideas'])->name('admin.ideas');
     Route::get('/admin/submissions', [AdminController::class, 'submissions'])->name('admin.submissions');
+    Route::get('/admin/activity', [AdminController::class, 'activity'])->name('admin.activity');
     Route::get('/admin/supervisors/create', [AdminController::class, 'createSupervisor'])->name('admin.supervisors.create');
     Route::post('/admin/supervisors', [AdminController::class, 'storeSupervisor'])->name('admin.supervisors.store');
     Route::get('/admin/students/create', [AdminController::class, 'createStudent'])->name('admin.students.create');

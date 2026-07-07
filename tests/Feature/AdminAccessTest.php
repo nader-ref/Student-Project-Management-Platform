@@ -28,6 +28,7 @@ it('redirects guests away from admin oversight routes', function (string $path) 
     'requests' => '/admin/requests',
     'ideas' => '/admin/ideas',
     'submissions' => '/admin/submissions',
+    'activity' => '/admin/activity',
 ]);
 
 it('redirects students away from the admin dashboard', function () {
@@ -53,6 +54,7 @@ it('redirects students away from admin oversight routes', function (string $path
     'requests' => '/admin/requests',
     'ideas' => '/admin/ideas',
     'submissions' => '/admin/submissions',
+    'activity' => '/admin/activity',
 ]);
 
 it('redirects supervisors away from the admin dashboard', function () {
@@ -90,6 +92,7 @@ it('redirects supervisors away from admin oversight routes', function (string $p
     'requests' => '/admin/requests',
     'ideas' => '/admin/ideas',
     'submissions' => '/admin/submissions',
+    'activity' => '/admin/activity',
 ]);
 
 it('shows the admin dashboard metrics to admins', function () {
