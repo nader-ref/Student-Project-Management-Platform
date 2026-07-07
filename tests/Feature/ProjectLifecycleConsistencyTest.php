@@ -157,6 +157,7 @@ it('still resolves student enrolled mode from taken and project members', functi
 });
 
 it('admin projects page uses lifecycle labels instead of the status column', function () {
+    /** @var \App\Models\User $admin */
     $admin = User::factory()->create();
     $admin->addRole('admin');
 
@@ -199,6 +200,7 @@ it('admin projects page uses lifecycle labels instead of the status column', fun
 });
 
 it('admin dashboard counts still rely on taken for available and taken projects', function () {
+    /** @var \App\Models\User $admin */
     $admin = User::factory()->create();
     $admin->addRole('admin');
 
@@ -240,13 +242,13 @@ it('does not let the project status column override progress current phase', fun
     $project = UniProject::make([
         'taken' => true,
         'status' => 'in_progress',
+        'seminar_1' => now()->addWeeks(2)->toDateString(),
     ]);
 
+    $milestones = StudentEnrollmentService::buildMilestones($project);
     $progress = StudentEnrollmentService::computeProgress(
         $project,
-        collect([
-            ['key' => 'seminar_1', 'label' => 'Seminar 1', 'is_past' => false, 'formatted' => 'Jan 1'],
-        ]),
+        $milestones,
         new Collection,
     );
 

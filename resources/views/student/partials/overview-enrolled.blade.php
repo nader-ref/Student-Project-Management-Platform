@@ -1,19 +1,23 @@
 @php
     $teamMembers = collect($teamMembers ?? []);
     $milestones = collect($milestones ?? []);
+    $milestoneStates = collect($milestoneStates ?? []);
     $submissions = collect($submissions ?? []);
     $recentActivity = collect($recentActivity ?? []);
+    $urgentStates = $milestoneStates->filter(fn ($state) => in_array($state['status_key'], ['due_soon', 'overdue'], true));
 @endphp
 
-@if ($nextMilestone && $nextMilestone['days_left'] <= 14)
+@if ($urgentStates->isNotEmpty())
     <div class="deadline-alerts">
-        <div class="deadline-alert">
-            <i class="fas fa-calendar-exclamation"></i>
-            <span>
-                <strong>{{ $nextMilestone['label'] }}</strong> on {{ $nextMilestone['formatted'] }}
-            </span>
-            <span class="days-badge">{{ $nextMilestone['days_left'] }} day{{ $nextMilestone['days_left'] === 1 ? '' : 's' }} left</span>
-        </div>
+        @foreach ($urgentStates->take(1) as $state)
+            <div class="deadline-alert">
+                <i class="fas fa-calendar-exclamation"></i>
+                <span>
+                    <strong>{{ $state['label'] }}</strong> on {{ $state['formatted'] }}
+                </span>
+                <span class="days-badge">{{ $state['status_label'] }}</span>
+            </div>
+        @endforeach
     </div>
 @endif
 
@@ -107,7 +111,7 @@
 
                 <div class="progress-snapshot-steps">
                     @foreach ($progress['steps'] as $step)
-                        <span class="progress-pill {{ $step['done'] ? 'done' : 'upcoming' }}">
+                        <span class="progress-pill {{ $step['done'] ? 'done' : 'upcoming' }}" title="{{ $step['status_label'] ?? '' }}">
                             <i class="fas fa-{{ $step['done'] ? 'check' : 'circle' }}"></i>
                             {{ $step['label'] }}
                         </span>
@@ -169,13 +173,13 @@
                     <span>{{ \Illuminate\Support\Str::limit($enrolledProject->description ?? 'No description provided.', 140) }}</span>
                 </div>
             </div>
-            @if ($milestones->where('is_past', false)->isNotEmpty())
+            @if ($milestoneStates->filter(fn ($state) => in_array($state['status_key'], ['due_soon', 'upcoming'], true))->isNotEmpty())
                 <div class="project-mini-milestones">
                     <label>Upcoming</label>
-                    @foreach ($milestones->where('is_past', false)->take(2) as $milestone)
+                    @foreach ($milestoneStates->filter(fn ($state) => in_array($state['status_key'], ['due_soon', 'upcoming'], true))->take(2) as $state)
                         <span class="mini-milestone-chip">
                             <i class="fas fa-calendar"></i>
-                            {{ $milestone['label'] }} · {{ $milestone['days_left'] }}d
+                            {{ $state['label'] }} · {{ $state['status_label'] }}
                         </span>
                     @endforeach
                 </div>
