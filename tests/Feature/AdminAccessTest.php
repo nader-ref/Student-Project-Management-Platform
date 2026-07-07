@@ -178,7 +178,7 @@ it('shows a read-only submissions page to admins', function () {
     $response->assertSee('Read-only submission overview.');
     $response->assertSee('Initial Project Proposal');
     $response->assertSee('Seminar 1');
-    $response->assertSee('Submitted');
+    $response->assertSee('Pending Review');
     $response->assertSee($student->name);
 });
 

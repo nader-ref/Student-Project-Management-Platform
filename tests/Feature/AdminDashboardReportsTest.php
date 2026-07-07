@@ -180,7 +180,7 @@ it('shows available and taken project counts on the dashboard', function () {
     $response->assertOk();
     $response->assertSee('Projects', false);
     $response->assertSee('Available projects');
-    $response->assertSee('Taken projects');
+    $response->assertSee('Assigned projects');
     $response->assertSee('2', false);
     $response->assertSee('1', false);
 });
@@ -214,9 +214,9 @@ it('shows submission status counts on the dashboard', function () {
 
     $response->assertOk();
     $response->assertSee('Submissions', false);
-    $response->assertSee('Submitted');
+    $response->assertSee('Pending Review');
     $response->assertSee('Approved');
-    $response->assertSee('Needs revision');
+    $response->assertSee('Revision Required');
 });
 
 it('shows projects per supervisor summary on the dashboard', function () {

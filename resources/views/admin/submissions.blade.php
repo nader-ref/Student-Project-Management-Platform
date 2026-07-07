@@ -40,9 +40,9 @@
                             <td>
                                 <span @class([
                                     'badge',
-                                    'badge-info' => $submission['status'] === 'Submitted',
+                                    'badge-info' => $submission['status'] === 'Pending Review',
                                     'badge-success' => $submission['status'] === 'Approved',
-                                    'badge-warning' => $submission['status'] === 'Needs revision',
+                                    'badge-warning' => $submission['status'] === 'Revision Required',
                                 ])>{{ $submission['status'] }}</span>
                             </td>
                             <td>{{ $submission['submitted_at']?->format('M d, Y') ?? '—' }}</td>
