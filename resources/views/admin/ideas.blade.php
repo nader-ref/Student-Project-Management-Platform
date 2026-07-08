@@ -3,17 +3,19 @@
 @section('title', 'Ideas · Admin · Projects Hub')
 
 @section('content')
-    <div class="admin-page-header">
-        <span class="admin-page-header-icon"><i class="fas fa-lightbulb"></i></span>
-        <div>
-            <h1>Project Ideas</h1>
-            <p>Read-only idea overview.</p>
-        </div>
-    </div>
+    @include('admin.partials.page-hero', [
+        'title' => 'Project Ideas',
+        'description' => 'Read-only idea overview.',
+        'breadcrumb' => '<span>Admin</span><span class="sep">/</span><span>Ideas</span>',
+    ])
 
     <section class="data-card">
+        <div class="data-card-header-bar">
+            <h2><i class="fas fa-lightbulb"></i> Idea submissions</h2>
+            <span>{{ count($ideas) }} total</span>
+        </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table data-table--compact">
                 <thead>
                     <tr>
                         <th>Idea</th>

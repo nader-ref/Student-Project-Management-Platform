@@ -3,20 +3,21 @@
 @section('title', 'Users · Admin · Projects Hub')
 
 @section('content')
-    <div class="admin-page-header">
-        <span class="admin-page-header-icon"><i class="fas fa-users"></i></span>
-        <div>
-            <h1>Users</h1>
-            <p>Account overview with lifecycle actions.</p>
-        </div>
-    </div>
+    @include('admin.partials.page-hero', [
+        'title' => 'Users',
+        'description' => 'Account overview with lifecycle actions.',
+        'breadcrumb' => '<span>Admin</span><span class="sep">/</span><span>Users</span>',
+    ])
 
     @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="form-pro-alert success form-pro-alert--spaced">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
     @endif
 
     @if ($errors->any())
-        <div class="alert alert-error">
+        <div class="form-pro-alert error form-pro-alert--spaced">
+            <i class="fas fa-exclamation-circle"></i>
             @foreach ($errors->all() as $error)
                 <div>{{ $error }}</div>
             @endforeach
@@ -24,8 +25,12 @@
     @endif
 
     <section class="data-card">
+        <div class="data-card-header-bar">
+            <h2><i class="fas fa-users"></i> All accounts</h2>
+            <span>{{ count($users) }} registered</span>
+        </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table data-table--compact">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -40,7 +45,7 @@
                 <tbody>
                     @forelse ($users as $user)
                         <tr>
-                            <td>{{ $user['name'] }}</td>
+                            <td class="user-name-cell"><strong>{{ $user['name'] }}</strong></td>
                             <td>{{ $user['university_number'] }}</td>
                             <td>
                                 @if ($user['email'])
@@ -58,13 +63,16 @@
                             </td>
                             <td><span class="badge badge-neutral">{{ $user['role'] }}</span></td>
                             <td>
-                                <span @class([
-                                    'badge',
-                                    'badge-success' => $user['is_active'],
-                                    'badge-danger' => ! $user['is_active'],
-                                ])>{{ $user['status'] }}</span>
+                                <div class="status-stack">
+                                    <span @class([
+                                        'badge',
+                                        'badge-success' => $user['is_active'],
+                                        'badge-danger' => ! $user['is_active'],
+                                    ])>{{ $user['status'] }}</span>
+                                </div>
                             </td>
                             <td>
+                                <div class="action-group">
                                 @if ($user['id'] !== auth()->id())
                                     <a href="{{ route('admin.users.reset-password', $user['id']) }}" class="action-btn">Reset password</a>
                                 @endif
@@ -83,6 +91,7 @@
                                         <button type="submit" class="action-btn action-btn--success">Activate</button>
                                     </form>
                                 @endif
+                                </div>
                             </td>
                         </tr>
                     @empty

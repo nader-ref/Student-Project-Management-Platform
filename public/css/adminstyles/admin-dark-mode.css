@@ -1,0 +1,252 @@
+/* Admin dark mode – violet / indigo high contrast */
+
+body.admin-portal.dark-mode {
+    --adm-dm-bg: #0d0b1a;
+    --adm-dm-surface: #12102a;
+    --adm-dm-card: #1a1730;
+    --adm-dm-elevated: #241f42;
+    --adm-dm-input: #1a1730;
+    --adm-dm-border: #2a2547;
+    --adm-dm-border-soft: #3a3363;
+    --adm-dm-text: #e7e3f7;
+    --adm-dm-text-muted: #a29ec4;
+
+    --adm-dm-violet: #a78bfa;
+    --adm-dm-violet-dim: #8b5cf6;
+    --adm-dm-violet-soft: #241f42;
+
+    --adm-dm-glow: rgba(139, 92, 246, 0.14);
+    --adm-dm-shadow: rgba(0, 0, 0, 0.35);
+
+    background-color: var(--adm-dm-bg);
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .dashboard {
+    background-color: var(--adm-dm-surface);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .content-panel {
+    background-color: transparent;
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .dashboard-footer-accent {
+    background: linear-gradient(90deg, #0a0814, var(--adm-dm-violet-dim), #0a0814);
+}
+
+body.admin-portal.dark-mode .navbar-pro {
+    background: linear-gradient(135deg, #0a0814 0%, #1a1235 100%);
+    border-bottom: 2px solid var(--adm-dm-violet-dim);
+    box-shadow: 0 4px 20px var(--adm-dm-shadow);
+}
+
+body.admin-portal.dark-mode .navbar-pro::after {
+    background: radial-gradient(circle, var(--adm-dm-glow) 0%, transparent 70%);
+}
+
+body.admin-portal.dark-mode .navbar-brand-icon {
+    color: var(--adm-dm-violet);
+}
+
+body.admin-portal.dark-mode .navbar-user-chip {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .navbar-user-avatar {
+    background: var(--adm-dm-violet-soft);
+    color: var(--adm-dm-violet);
+}
+
+body.admin-portal.dark-mode .navbar-user-dropdown {
+    background: var(--adm-dm-card);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .navbar-dropdown-item {
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .navbar-dropdown-item i {
+    color: var(--adm-dm-violet);
+}
+
+body.admin-portal.dark-mode .navbar-dropdown-item:hover {
+    background: var(--adm-dm-elevated);
+}
+
+body.admin-portal.dark-mode .acceptance-hero {
+    background: linear-gradient(135deg, #0a0814 0%, #1a1235 100%);
+    border: 1px solid var(--adm-dm-border);
+    border-left: 4px solid var(--adm-dm-violet-dim);
+}
+
+body.admin-portal.dark-mode .acceptance-hero h1,
+body.admin-portal.dark-mode .acceptance-hero p {
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .btn-hero-solid {
+    color: var(--adm-dm-bg);
+}
+
+body.admin-portal.dark-mode .dash-nav.tabs-container {
+    background: rgba(26, 23, 48, 0.96);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .dash-nav .tab-btn,
+body.admin-portal.dark-mode .dash-nav .admin-tab-link {
+    color: var(--adm-dm-text-muted);
+}
+
+body.admin-portal.dark-mode .dash-nav .tab-btn:hover:not(.active),
+body.admin-portal.dark-mode .dash-nav .admin-tab-link:hover:not(.active) {
+    background: var(--adm-dm-elevated);
+    border-color: var(--adm-dm-border-soft);
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .dash-nav .tab-btn.active,
+body.admin-portal.dark-mode .dash-nav .admin-tab-link.active {
+    background: linear-gradient(135deg, #241f42 0%, #3a1e7a 100%);
+    color: #ffffff;
+}
+
+body.admin-portal.dark-mode .kpi-card,
+body.admin-portal.dark-mode .overview-section-card,
+body.admin-portal.dark-mode .data-card,
+body.admin-portal.dark-mode .form-card,
+body.admin-portal.dark-mode .summary-card,
+body.admin-portal.dark-mode .quick-action-card {
+    background: var(--adm-dm-card);
+    border-color: var(--adm-dm-border);
+    box-shadow: 0 2px 12px var(--adm-dm-shadow);
+}
+
+body.admin-portal.dark-mode .kpi-card.highlight {
+    background: linear-gradient(160deg, var(--adm-dm-elevated) 0%, var(--adm-dm-card) 72%);
+    border-color: var(--adm-dm-border-soft);
+}
+
+body.admin-portal.dark-mode .kpi-value,
+body.admin-portal.dark-mode .report-count,
+body.admin-portal.dark-mode .overview-section-header h3,
+body.admin-portal.dark-mode .data-card-header h2,
+body.admin-portal.dark-mode .summary-card h2,
+body.admin-portal.dark-mode .section-title,
+body.admin-portal.dark-mode .quick-action-card strong {
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .kpi-meta,
+body.admin-portal.dark-mode .quick-action-card span {
+    color: var(--adm-dm-text-muted);
+}
+
+body.admin-portal.dark-mode .data-table th {
+    background: linear-gradient(135deg, #241f42 0%, #2f2857 100%);
+}
+
+body.admin-portal.dark-mode .data-table tbody tr:hover {
+    background: var(--adm-dm-elevated);
+}
+
+body.admin-portal.dark-mode .badge-neutral {
+    background: var(--adm-dm-elevated);
+    color: #c8c3e6;
+}
+
+body.admin-portal.dark-mode .request-code {
+    background: var(--adm-dm-elevated);
+    color: var(--adm-dm-violet);
+}
+
+body.admin-portal.dark-mode .form-field input,
+body.admin-portal.dark-mode .form-field-pro input,
+body.admin-portal.dark-mode .form-field-pro select,
+body.admin-portal.dark-mode .form-field-pro textarea {
+    background: var(--adm-dm-input);
+    color: var(--adm-dm-text);
+    border-color: var(--adm-dm-border-soft);
+}
+
+body.admin-portal.dark-mode .action-btn {
+    background: var(--adm-dm-input);
+    color: var(--adm-dm-text);
+    border-color: var(--adm-dm-border-soft);
+}
+
+body.admin-portal.dark-mode .action-btn:hover {
+    background: var(--adm-dm-elevated);
+}
+
+body.admin-portal.dark-mode .form-pro-card {
+    background: var(--adm-dm-card);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .form-pro-card-header {
+    background: linear-gradient(180deg, var(--adm-dm-elevated) 0%, var(--adm-dm-card) 100%);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .form-pro-card-header h3,
+body.admin-portal.dark-mode .form-field-pro label {
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .admin-notifications-page .notification-item {
+    background: var(--adm-dm-card);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .admin-notifications-page .notification-item--unread {
+    background: linear-gradient(90deg, var(--adm-dm-elevated), var(--adm-dm-card) 22%);
+}
+
+body.admin-portal.dark-mode .admin-notification-empty {
+    background: var(--adm-dm-card);
+    border-color: var(--adm-dm-border-soft);
+}
+
+body.admin-portal.dark-mode .admin-mark-all-btn {
+    background: var(--adm-dm-card);
+    border-color: var(--adm-dm-border-soft);
+    color: var(--adm-dm-violet);
+}
+
+body.admin-portal.dark-mode .data-card-header-bar {
+    background: linear-gradient(180deg, var(--adm-dm-elevated) 0%, var(--adm-dm-card) 100%);
+    border-color: var(--adm-dm-border);
+}
+
+body.admin-portal.dark-mode .data-card-header-bar h2 {
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .data-card-header-bar span {
+    color: var(--adm-dm-text-muted);
+}
+
+body.admin-portal.dark-mode .admin-notifications-page .notification-status-badge--read {
+    background: var(--adm-dm-elevated);
+    color: var(--adm-dm-text-muted);
+}
+
+body.admin-portal.dark-mode .admin-notifications-page .notification-item-header h2,
+body.admin-portal.dark-mode .admin-notification-empty h2 {
+    color: var(--adm-dm-text);
+}
+
+body.admin-portal.dark-mode .admin-notifications-page .notification-item-body,
+body.admin-portal.dark-mode .admin-notifications-page .notification-item-meta,
+body.admin-portal.dark-mode .admin-notification-empty p {
+    color: var(--adm-dm-text-muted);
+}
+
+body.admin-portal.dark-mode .data-table--activity .cell-description {
+    color: var(--adm-dm-text);
+}

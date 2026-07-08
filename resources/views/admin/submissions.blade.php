@@ -2,27 +2,20 @@
 
 @section('title', 'Submissions · Admin · Projects Hub')
 
-@push('styles')
-<style>
-    .badge-info {
-        background: var(--admin-indigo-bg);
-        color: var(--admin-indigo);
-    }
-</style>
-@endpush
-
 @section('content')
-    <div class="admin-page-header">
-        <span class="admin-page-header-icon"><i class="fas fa-file-arrow-up"></i></span>
-        <div>
-            <h1>Submissions</h1>
-            <p>Read-only submission overview.</p>
-        </div>
-    </div>
+    @include('admin.partials.page-hero', [
+        'title' => 'Submissions',
+        'description' => 'Read-only submission overview.',
+        'breadcrumb' => '<span>Admin</span><span class="sep">/</span><span>Submissions</span>',
+    ])
 
     <section class="data-card">
+        <div class="data-card-header-bar">
+            <h2><i class="fas fa-file-arrow-up"></i> Uploaded deliverables</h2>
+            <span>{{ count($submissions) }} total</span>
+        </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table data-table--compact">
                 <thead>
                     <tr>
                         <th>Title</th>

@@ -33,7 +33,7 @@
             @enderror
         </div>
 
-        <button type="submit" class="auth-btn">
+        <button type="submit" class="auth-btn" data-loading-label="Saving...">
             <i class="fas fa-check" aria-hidden="true"></i>
             Save and continue
         </button>
@@ -42,9 +42,7 @@
     <footer class="auth-card-footer">
         <form action="{{ route('logout') }}" method="POST">
             @csrf
-            <button type="submit" class="auth-link" style="background:none;border:none;padding:0;cursor:pointer;font:inherit;">
-                Sign out
-            </button>
+            <button type="submit" class="auth-signout-btn">Sign out</button>
         </form>
     </footer>
 @endsection

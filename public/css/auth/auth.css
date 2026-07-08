@@ -321,11 +321,19 @@ body.auth-page--supervisor {
 }
 
 .auth-flash {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
     margin-bottom: 1.25rem;
     padding: 0.85rem 1rem;
     border-radius: 0.75rem;
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+.auth-flash i {
+    margin-top: 0.1rem;
+    flex-shrink: 0;
 }
 
 .auth-flash--success {
@@ -451,6 +459,35 @@ body.auth-page--supervisor {
 
 .auth-secure-note i {
     color: var(--auth-accent);
+}
+
+.auth-signout-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: var(--auth-accent);
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.auth-signout-btn:hover {
+    text-decoration: underline;
+}
+
+.auth-brand-icon--logo {
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+}
+
+.auth-brand-icon--logo .brand-logo-mark {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
 }
 
 /* Mobile */
