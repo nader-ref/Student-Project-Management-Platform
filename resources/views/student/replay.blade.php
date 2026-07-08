@@ -116,7 +116,13 @@
                 @else
                     <div class="request-list message-thread-list" id="message-list">
                         @foreach ($myMessages as $message)
-                            @php $hasReply = !empty($message->Replay); @endphp
+                            @php
+                                $hasReply = !empty($message->Replay);
+                                $studentDisplayName = $message->student?->name ?? $studentName;
+                                $studentInitial = strtoupper(substr($studentDisplayName, 0, 1));
+                                $supervisorDisplayName = $message->supervisor?->name ?? 'Supervisor';
+                                $supervisorInitial = strtoupper(substr($supervisorDisplayName, 0, 1));
+                            @endphp
                             <article
                                 class="request-item {{ $hasReply ? 'is-accepted' : 'is-pending' }}"
                                 data-status="{{ $hasReply ? 'replied' : 'pending' }}"
@@ -153,15 +159,17 @@
                                     <div class="message-chat-thread">
                                         <div class="chat-bubble chat-bubble--outgoing">
                                             <div class="chat-bubble-header">
-                                                <span class="chat-bubble-author">{{ $message->student?->name ?? $studentName }}</span>
-                                                <time>{{ $message->created_at?->format('M d, Y') ?? '—' }}</time>
+                                                <span class="chat-bubble-avatar" aria-hidden="true">{{ $studentInitial }}</span>
+                                                <span class="chat-bubble-author">{{ $studentDisplayName }}</span>
+                                                <time datetime="{{ $message->created_at?->toIso8601String() }}">{{ $message->created_at?->format('M d, H:i') ?? '—' }}</time>
                                             </div>
                                             <p class="chat-bubble-text">{{ $message->Message ?: '—' }}</p>
                                         </div>
 
                                         <div class="chat-bubble chat-bubble--incoming {{ $hasReply ? '' : 'is-pending' }}">
                                             <div class="chat-bubble-header">
-                                                <span class="chat-bubble-author">{{ $message->supervisor?->name ?? 'Supervisor' }}</span>
+                                                <span class="chat-bubble-avatar" aria-hidden="true">{{ $hasReply ? $supervisorInitial : '…' }}</span>
+                                                <span class="chat-bubble-author">{{ $supervisorDisplayName }}</span>
                                                 <span class="chat-bubble-status">{{ $hasReply ? 'Replied' : 'Awaiting reply' }}</span>
                                             </div>
                                             <p class="chat-bubble-text">{{ $message->Replay ?? 'No reply yet — check back later.' }}</p>
@@ -235,9 +243,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="meta-block message-content-block message-content-block--announcement">
-                                        <label>Announcement</label>
+                                    <div class="message-chat-thread">
                                         <div class="chat-bubble chat-bubble--announcement">
+                                            <div class="chat-bubble-header">
+                                                <span class="chat-bubble-avatar" aria-hidden="true"><i class="fas fa-bullhorn"></i></span>
+                                                <span class="chat-bubble-author">{{ $message->supervisor?->name ?? 'Supervisor' }}</span>
+                                                <time datetime="{{ $message->created_at?->toIso8601String() }}">{{ $message->created_at?->format('M d, H:i') ?? '—' }}</time>
+                                            </div>
                                             <p class="chat-bubble-text">{{ $message->Message }}</p>
                                         </div>
                                     </div>

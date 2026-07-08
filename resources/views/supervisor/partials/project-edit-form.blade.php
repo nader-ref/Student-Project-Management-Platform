@@ -5,7 +5,7 @@
 
 <details class="project-edit-panel">
     <summary><i class="fas fa-edit"></i> Edit Project</summary>
-    <form method="POST" action="{{ url('/updateproject') }}" class="request-form-pro" style="margin-top: 1rem;">
+    <form method="POST" action="{{ url('/updateproject') }}" class="request-form-pro project-edit-form">
         @csrf
         <input type="hidden" name="project_id" value="{{ $project->id }}">
         <div class="form-grid">
@@ -81,7 +81,7 @@
                 <input type="date" name="final_date" required value="{{ $fmtDate($project->final) }}">
             </div>
         </div>
-        <div class="form-pro-actions" style="padding: 0; margin-top: 1rem;">
+        <div class="form-pro-actions form-pro-actions--compact">
             <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Save Changes</button>
         </div>
     </form>
