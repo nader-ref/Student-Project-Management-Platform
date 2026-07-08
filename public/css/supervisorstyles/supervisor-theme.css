@@ -104,40 +104,74 @@ body.supervisor-portal .btn-hero-outline:hover {
     background: rgba(61, 107, 158, 0.15);
 }
 
-/* Tabs */
-body.supervisor-portal .tab-btn {
+/* Tabs — same layout as student dash-nav, supervisor charcoal + steel blue */
+body.supervisor-portal .dash-nav-shell {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+body.supervisor-portal .dash-nav-shell--compact {
+    margin-bottom: 1.25rem;
+}
+
+body.supervisor-portal .tabs-container.dash-nav,
+body.supervisor-portal .dash-nav.tabs-container {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--sup-border);
+    border-bottom: none;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px var(--sup-shadow);
+    scrollbar-color: rgba(30, 36, 44, 0.18) transparent;
+}
+
+body.supervisor-portal .dash-nav::-webkit-scrollbar-thumb {
+    background: rgba(30, 36, 44, 0.18);
+}
+
+body.supervisor-portal .dash-nav .tab-btn {
     color: var(--sup-text-muted);
-    border-color: var(--sup-border);
-    background: var(--sup-card);
+    border: 1px solid transparent;
+    background: transparent;
 }
 
-body.supervisor-portal .tab-btn:hover {
+body.supervisor-portal .dash-nav .tab-btn i {
+    color: #7a8794;
+}
+
+body.supervisor-portal .dash-nav .tab-btn:hover:not(.active) {
     background: var(--sup-blue-soft);
-    border-color: #b8cfe6;
-    color: var(--sup-text);
-}
-
-body.supervisor-portal .tab-btn.active {
-    background: var(--sup-card);
-    border-color: var(--sup-blue);
+    border-color: var(--sup-blue-muted);
     color: var(--sup-charcoal-deep);
-    box-shadow: 0 0 0 1px var(--sup-blue), 0 4px 12px rgba(61, 107, 158, 0.12);
 }
 
-body.supervisor-portal .tab-btn.active i {
+body.supervisor-portal .dash-nav .tab-btn:hover:not(.active) i {
     color: var(--sup-blue);
 }
 
-body.supervisor-portal .dash-nav {
-    background: var(--sup-card);
-    border-color: var(--sup-border);
-    box-shadow: 0 4px 16px var(--sup-shadow);
+body.supervisor-portal .dash-nav .tab-btn.active {
+    background: linear-gradient(135deg, var(--sup-charcoal-dark) 0%, var(--sup-charcoal-deep) 55%, #3d4654 100%);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(30, 36, 44, 0.24);
 }
 
-body.supervisor-portal .dash-nav .tab-btn.active {
-    background: var(--sup-blue-soft);
-    border-color: var(--sup-blue);
-    box-shadow: none;
+body.supervisor-portal .dash-nav .tab-btn.active i {
+    color: var(--sup-blue-light);
+}
+
+body.supervisor-portal .dash-nav .tab-btn:focus-visible {
+    outline: 2px solid var(--sup-blue-light);
+    outline-offset: 2px;
+}
+
+body.supervisor-portal .dash-nav .tab-btn .tab-label {
+    line-height: 1.2;
+}
+
+body.supervisor-portal .supervisor-tabs .tab-btn {
+    scroll-margin-inline: 0.35rem;
 }
 
 /* KPI */

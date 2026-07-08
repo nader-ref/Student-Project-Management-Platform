@@ -189,3 +189,61 @@ body.supervisor-portal .reply-form-inline {
     padding-top: 1rem;
     border-top: 1px solid var(--sup-border);
 }
+
+/* Supervisor tab bar — mobile (matches student responsive behavior) */
+@media (max-width: 700px) {
+    body.supervisor-portal .dash-nav-shell {
+        margin-bottom: 1.25rem;
+    }
+
+    body.supervisor-portal .dash-nav {
+        padding: 0.35rem;
+        gap: 0.3rem;
+        border-radius: 12px;
+        justify-content: center;
+    }
+
+    body.supervisor-portal .dash-nav .tab-btn {
+        min-height: 2.5rem;
+        min-width: 2.5rem;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.8rem;
+    }
+
+    body.supervisor-portal .supervisor-tabs .tab-btn .tab-label {
+        display: none;
+    }
+
+    body.supervisor-portal .dash-nav .tab-btn i {
+        font-size: 0.95rem;
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    body.supervisor-portal .dash-nav-shell {
+        margin-bottom: 1rem;
+    }
+
+    body.supervisor-portal .dash-nav {
+        padding: 0.3rem;
+        gap: 0.25rem;
+    }
+
+    body.supervisor-portal .dash-nav .tab-btn {
+        min-height: 2.375rem;
+        padding: 0.4rem 0.55rem;
+        font-size: 0.78rem;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1200px) {
+    body.supervisor-portal .supervisor-tabs .tab-btn {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    body.supervisor-portal .supervisor-tabs .tab-btn .tab-label {
+        font-size: 0.76rem;
+    }
+}

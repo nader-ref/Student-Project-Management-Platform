@@ -150,3 +150,11 @@ body.dark-mode .notifications-page .notification-empty p {
 body.dark-mode .notifications-page .notification-empty {
     background: rgba(18, 45, 68, 0.92);
 }
+
+body.dark-mode .notifications-page .notification-empty h2 {
+    color: #e8f4fc;
+}
+
+body.dark-mode .notifications-page .notification-item--unread {
+    background: linear-gradient(90deg, rgba(79, 195, 247, 0.1), rgba(18, 45, 68, 0.92) 18%);
+}

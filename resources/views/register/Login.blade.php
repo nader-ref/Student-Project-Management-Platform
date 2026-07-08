@@ -60,7 +60,7 @@
             <a href="{{ route('password.request') }}" class="auth-link">Forgot password?</a>
         </div>
 
-        <button type="submit" class="auth-btn">
+        <button type="submit" class="auth-btn" data-loading-label="Signing in...">
             <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i>
             Sign in
         </button>

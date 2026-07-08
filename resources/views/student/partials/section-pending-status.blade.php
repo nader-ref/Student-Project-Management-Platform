@@ -25,7 +25,7 @@
                         <span>{{ $pendingRequest->count }} member(s)</span>
                     </div>
                 </div>
-                <div class="empty-state-actions" style="margin-top: 1rem;">
+                <div class="empty-state-actions empty-state-actions--spaced">
                     <a href="{{ url('/StudentDashboard/acceptance') }}" class="btn-primary">
                         <i class="fas fa-external-link-alt"></i> Full Request History
                     </a>
@@ -54,7 +54,7 @@
                         <span>{{ $pendingIdea->created_at?->format('M d, Y') ?? '—' }}</span>
                     </div>
                 </div>
-                <div class="empty-state-actions" style="margin-top: 1rem;">
+                <div class="empty-state-actions empty-state-actions--spaced">
                     <a href="{{ url('/StudentDashboard/acceptanceidea') }}" class="btn-primary">
                         <i class="fas fa-external-link-alt"></i> Full Idea History
                     </a>

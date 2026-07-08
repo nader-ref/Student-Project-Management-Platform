@@ -30,19 +30,24 @@
     </div>
 </div>
 
-<div class="tabs-container dash-nav" style="margin-bottom: 1.25rem;">
-    <button type="button" class="tab-btn active message-subtab" data-message-panel="inbox">
-        <i class="fas fa-inbox"></i> Student Inbox
-        @if ($pendingReplyCount > 0)
-            <span class="form-badge optional-badge badge-inline">{{ $pendingReplyCount }}</span>
-        @endif
-    </button>
-    <button type="button" class="tab-btn message-subtab" data-message-panel="announce">
-        <i class="fas fa-bullhorn"></i> Send Announcement
-    </button>
-    <button type="button" class="tab-btn message-subtab" data-message-panel="sent">
-        <i class="fas fa-paper-plane"></i> Sent Announcements
-    </button>
+<div class="dash-nav-shell dash-nav-shell--compact">
+    <nav class="tabs-container dash-nav supervisor-tabs" aria-label="Message sections">
+        <button type="button" class="tab-btn active message-subtab" data-message-panel="inbox" title="Student Inbox">
+            <i class="fas fa-inbox"></i>
+            <span class="tab-label">Student Inbox</span>
+            @if ($pendingReplyCount > 0)
+                <span class="form-badge optional-badge badge-inline">{{ $pendingReplyCount }}</span>
+            @endif
+        </button>
+        <button type="button" class="tab-btn message-subtab" data-message-panel="announce" title="Send Announcement">
+            <i class="fas fa-bullhorn"></i>
+            <span class="tab-label">Send Announcement</span>
+        </button>
+        <button type="button" class="tab-btn message-subtab" data-message-panel="sent" title="Sent Announcements">
+            <i class="fas fa-paper-plane"></i>
+            <span class="tab-label">Sent Announcements</span>
+        </button>
+    </nav>
 </div>
 
 <div id="message-inbox" class="message-panel active-content">

@@ -124,46 +124,57 @@
                 </div>
             </section>
 
-            <div class="tabs-container dash-nav" id="main-tabs">
-                <button class="tab-btn {{ $activeTab === 'dashboard' ? 'active' : '' }}" data-tab="dashboard">
-                    <i class="fas fa-th-large"></i> Overview
-                </button>
-                <button class="tab-btn {{ $activeTab === 'show_pro' ? 'active' : '' }}" data-tab="show_pro">
-                    <i class="fas fa-folder-open"></i> Projects
-                </button>
-                <button class="tab-btn {{ $activeTab === 'projects' ? 'active' : '' }}" data-tab="projects">
-                    <i class="fas fa-plus-circle"></i> Add
-                </button>
-                <button class="tab-btn {{ $activeTab === 'Request' ? 'active' : '' }}" data-tab="Request">
-                    <i class="fas fa-clipboard-list"></i> Requests
-                    @if ($pendingRequests->count() > 0)
-                        <span class="form-badge optional-badge badge-inline">{{ $pendingRequests->count() }}</span>
-                    @endif
-                </button>
-                <button class="tab-btn {{ $activeTab === 'Idea' ? 'active' : '' }}" data-tab="Idea">
-                    <i class="far fa-lightbulb"></i> Ideas
-                    @if ($pendingIdeas->count() > 0)
-                        <span class="form-badge optional-badge badge-inline">{{ $pendingIdeas->count() }}</span>
-                    @endif
-                </button>
-                <button class="tab-btn {{ $activeTab === 'Message' ? 'active' : '' }}" data-tab="Message">
-                    <i class="fas fa-envelope"></i> Messages
-                    @if ($pendingReplyCount > 0)
-                        <span class="form-badge optional-badge badge-inline">{{ $pendingReplyCount }}</span>
-                    @endif
-                </button>
-                <button class="tab-btn {{ $activeTab === 'Submissions' ? 'active' : '' }}" data-tab="Submissions">
-                    <i class="fas fa-file-upload"></i> Submissions
-                    @if ($pendingSubmissions > 0)
-                        <span class="form-badge optional-badge badge-inline">{{ $pendingSubmissions }}</span>
-                    @endif
-                </button>
-                <button class="tab-btn {{ $activeTab === 'History' ? 'active' : '' }}" data-tab="History">
-                    <i class="fas fa-history"></i> History
-                </button>
-                <button class="tab-btn {{ $activeTab === 'Reports' ? 'active' : '' }}" data-tab="Reports">
-                    <i class="fas fa-chart-bar"></i> Reports
-                </button>
+            <div class="dash-nav-shell">
+                <nav class="tabs-container dash-nav supervisor-tabs" id="main-tabs" aria-label="Supervisor dashboard sections">
+                    <button type="button" class="tab-btn {{ $activeTab === 'dashboard' ? 'active' : '' }}" data-tab="dashboard" title="Overview">
+                        <i class="fas fa-th-large"></i>
+                        <span class="tab-label">Overview</span>
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'show_pro' ? 'active' : '' }}" data-tab="show_pro" title="Projects">
+                        <i class="fas fa-folder-open"></i>
+                        <span class="tab-label">Projects</span>
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'projects' ? 'active' : '' }}" data-tab="projects" title="Add Project">
+                        <i class="fas fa-plus-circle"></i>
+                        <span class="tab-label">Add</span>
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'Request' ? 'active' : '' }}" data-tab="Request" title="Requests">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span class="tab-label">Requests</span>
+                        @if ($pendingRequests->count() > 0)
+                            <span class="form-badge optional-badge badge-inline">{{ $pendingRequests->count() }}</span>
+                        @endif
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'Idea' ? 'active' : '' }}" data-tab="Idea" title="Ideas">
+                        <i class="far fa-lightbulb"></i>
+                        <span class="tab-label">Ideas</span>
+                        @if ($pendingIdeas->count() > 0)
+                            <span class="form-badge optional-badge badge-inline">{{ $pendingIdeas->count() }}</span>
+                        @endif
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'Message' ? 'active' : '' }}" data-tab="Message" title="Messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="tab-label">Messages</span>
+                        @if ($pendingReplyCount > 0)
+                            <span class="form-badge optional-badge badge-inline">{{ $pendingReplyCount }}</span>
+                        @endif
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'Submissions' ? 'active' : '' }}" data-tab="Submissions" title="Submissions">
+                        <i class="fas fa-file-upload"></i>
+                        <span class="tab-label">Submissions</span>
+                        @if ($pendingSubmissions > 0)
+                            <span class="form-badge optional-badge badge-inline">{{ $pendingSubmissions }}</span>
+                        @endif
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'History' ? 'active' : '' }}" data-tab="History" title="History">
+                        <i class="fas fa-history"></i>
+                        <span class="tab-label">History</span>
+                    </button>
+                    <button type="button" class="tab-btn {{ $activeTab === 'Reports' ? 'active' : '' }}" data-tab="Reports" title="Reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="tab-label">Reports</span>
+                    </button>
+                </nav>
             </div>
 
             {{-- OVERVIEW --}}

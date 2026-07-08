@@ -145,6 +145,18 @@
     background: #082033;
 }
 
+.btn-primary.is-loading,
+.auth-btn.is-loading {
+    opacity: 0.88;
+    cursor: wait;
+}
+
+.btn-primary:disabled,
+.auth-btn:disabled {
+    opacity: 0.75;
+    cursor: wait;
+}
+
 .btn-secondary {
     background: #6c757d;
     color: white;
@@ -156,6 +168,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 .btn-secondary:hover {
@@ -234,6 +250,13 @@
     left: 26px;
 }
 
+.toggle-switch.is-disabled,
+.color-badge.is-disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
 .color-badge {
     background: #0a2942;
     color: white;
@@ -245,15 +268,21 @@
 .settings-note {
     margin-top: 1.5rem;
     background: #eef6ff;
-    padding: 1rem;
+    padding: 1rem 1.25rem;
     border-radius: 12px;
     color: #0a2942;
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.6rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    border: 1px solid #d0e3f5;
+}
+
+.settings-note i {
+    margin-top: 0.15rem;
+    flex-shrink: 0;
 }
 
 

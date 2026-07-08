@@ -5,6 +5,7 @@
     width: min(100%, 1440px);
     max-width: 100%;
     min-width: 0;
+    flex: 1 0 auto;
     margin: 0 auto;
     background-color: transparent;
     padding: 2rem clamp(1.25rem, 3vw, 3rem) 3rem;

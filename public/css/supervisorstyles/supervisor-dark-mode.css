@@ -110,32 +110,40 @@ body.supervisor-portal.dark-mode .btn-hero-outline {
 
 /* Tabs */
 body.supervisor-portal.dark-mode .dash-nav,
-body.supervisor-portal.dark-mode .tabs-container {
-    background: var(--sup-dm-card);
+body.supervisor-portal.dark-mode .tabs-container.dash-nav {
+    background: rgba(34, 42, 52, 0.94);
     border-color: var(--sup-dm-border);
+    box-shadow: 0 10px 28px var(--sup-dm-shadow);
 }
 
-body.supervisor-portal.dark-mode .tab-btn {
-    background: var(--sup-dm-input);
-    border-color: var(--sup-dm-border);
+body.supervisor-portal.dark-mode .dash-nav .tab-btn {
     color: var(--sup-dm-text-muted);
+    background: transparent;
+    border-color: transparent;
 }
 
-body.supervisor-portal.dark-mode .tab-btn:hover,
-body.supervisor-portal.dark-mode .dash-nav .tab-btn:hover {
+body.supervisor-portal.dark-mode .dash-nav .tab-btn i {
+    color: #7d8a98;
+}
+
+body.supervisor-portal.dark-mode .dash-nav .tab-btn:hover:not(.active) {
     background: var(--sup-dm-elevated);
+    border-color: var(--sup-dm-border);
     color: var(--sup-dm-text);
 }
 
-body.supervisor-portal.dark-mode .tab-btn.active,
+body.supervisor-portal.dark-mode .dash-nav .tab-btn:hover:not(.active) i {
+    color: var(--sup-dm-blue);
+}
+
 body.supervisor-portal.dark-mode .dash-nav .tab-btn.active {
-    background: var(--sup-dm-blue-soft);
-    border-color: var(--sup-dm-blue-dim);
-    color: var(--sup-dm-text);
-    box-shadow: 0 0 0 1px var(--sup-dm-blue-dim);
+    background: linear-gradient(135deg, #1a2028 0%, #2c3238 55%, #3d4654 100%);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
-body.supervisor-portal.dark-mode .tab-btn.active i {
+body.supervisor-portal.dark-mode .dash-nav .tab-btn.active i {
     color: var(--sup-dm-blue);
 }
 

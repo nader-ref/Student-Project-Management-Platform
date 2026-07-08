@@ -1,4 +1,25 @@
 ﻿/* Base reset, body, and dashboard shell */
+:root {
+    --color-primary: #0a2942;
+    --color-primary-light: #123d5c;
+    --color-accent: #4fc3f7;
+    --color-text: #0a2942;
+    --color-text-muted: #5a6b7d;
+    --color-border: #dce6f3;
+    --color-surface: #ffffff;
+    --color-surface-muted: #f8fbff;
+    --color-success: #0a7a0a;
+    --color-warning: #b8860b;
+    --color-danger: #b30000;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --shadow-card: 0 4px 18px rgba(10, 41, 66, 0.06);
+    --shadow-elevated: 0 12px 32px rgba(10, 41, 66, 0.1);
+    --content-max: 1440px;
+    --transition-fast: 0.2s ease;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -35,6 +56,8 @@ body {
     max-width: 100%;
     min-width: 0;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background: transparent;
     border-radius: 0;
     box-shadow: none;
@@ -57,6 +80,9 @@ body {
 }
 
 .dashboard-footer-accent {
-    height: 4px;
-    background: #0a0a0a;
+    flex-shrink: 0;
+    margin-top: auto;
+    height: 3px;
+    background: linear-gradient(90deg, #0a2942 0%, #123d5c 50%, #4fc3f7 100%);
+    opacity: 0.85;
 }
