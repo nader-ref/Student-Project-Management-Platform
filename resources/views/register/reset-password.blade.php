@@ -15,7 +15,7 @@
     </header>
 
     @error('reset')
-        <p class="auth-flash auth-flash--error" role="alert">{{ $message }}</p>
+        <p class="auth-flash auth-flash--error" role="alert"><i class="fas fa-exclamation-circle" aria-hidden="true"></i><span>{{ $message }}</span></p>
     @enderror
 
     <form method="POST" action="{{ route('password.update') }}" class="auth-form">

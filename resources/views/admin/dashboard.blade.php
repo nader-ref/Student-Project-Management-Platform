@@ -1,16 +1,12 @@
 @extends('layouts.admin')
 
 @section('title', 'Admin Dashboard · Projects Hub')
-@section('brand_title', 'Admin Dashboard')
-@section('user_name')
-Signed in as {{ auth()->user()->name }}
-@endsection
 
 @section('content')
-    <section class="admin-hero">
-        <div class="admin-hero-inner">
+    <section class="acceptance-hero">
+        <div class="acceptance-hero-inner">
             <div>
-                <nav class="admin-breadcrumb" aria-label="Breadcrumb">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
                     <span>Admin</span>
                     <span class="sep">/</span>
                     <span>Dashboard</span>
@@ -18,7 +14,7 @@ Signed in as {{ auth()->user()->name }}
                 <h1>Welcome back, {{ auth()->user()->name }}</h1>
                 <p>Institutional command center — monitor users, projects, and workflow activity across the platform from one place.</p>
             </div>
-            <div class="admin-hero-actions">
+            <div class="hero-actions">
                 <a href="{{ route('admin.requests') }}" class="btn-hero-outline">
                     <i class="fas fa-inbox"></i> Review requests
                 </a>
@@ -31,44 +27,84 @@ Signed in as {{ auth()->user()->name }}
 
     <section class="dashboard-section" aria-labelledby="overview-heading">
         <h2 id="overview-heading" class="dashboard-section-heading"><i class="fas fa-chart-pie"></i> Overview</h2>
-        <div class="metric-grid" aria-label="Admin statistics">
-            <a href="{{ route('admin.users') }}" class="metric-card metric-card-link">
-                <span class="metric-label"><i class="fas fa-users"></i> Total users</span>
-                <p class="metric-value">{{ $stats['totalUsers'] }}</p>
+        <div class="dash-kpi-grid dash-kpi-grid--admin-8" aria-label="Admin statistics">
+            <a href="{{ route('admin.users') }}" class="kpi-card total kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Total users</span>
+                    <span class="kpi-icon"><i class="fas fa-users"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['totalUsers'] }}</div>
+                <div class="kpi-meta">Registered accounts</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </a>
-            <div class="metric-card">
-                <span class="metric-label"><i class="fas fa-user-graduate"></i> Total students</span>
-                <p class="metric-value">{{ $stats['totalStudents'] }}</p>
+            <div class="kpi-card available">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Total students</span>
+                    <span class="kpi-icon"><i class="fas fa-user-graduate"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['totalStudents'] }}</div>
+                <div class="kpi-meta">Student accounts</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </div>
-            <div class="metric-card">
-                <span class="metric-label"><i class="fas fa-user-tie"></i> Total supervisors</span>
-                <p class="metric-value">{{ $stats['totalSupervisors'] }}</p>
+            <div class="kpi-card taken">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Total supervisors</span>
+                    <span class="kpi-icon"><i class="fas fa-user-tie"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['totalSupervisors'] }}</div>
+                <div class="kpi-meta">Supervisor accounts</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </div>
-            <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
-                <span class="metric-label"><i class="fas fa-diagram-project"></i> Total projects</span>
-                <p class="metric-value">{{ $stats['totalProjects'] }}</p>
+            <a href="{{ route('admin.projects') }}" class="kpi-card total kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Total projects</span>
+                    <span class="kpi-icon"><i class="fas fa-diagram-project"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['totalProjects'] }}</div>
+                <div class="kpi-meta">In the system</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </a>
-            <a href="{{ route('admin.submissions') }}" class="metric-card metric-card-link">
-                <span class="metric-label"><i class="fas fa-file-arrow-up"></i> Total submissions</span>
-                <p class="metric-value">{{ $stats['totalSubmissions'] }}</p>
+            <a href="{{ route('admin.submissions') }}" class="kpi-card taken kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Total submissions</span>
+                    <span class="kpi-icon"><i class="fas fa-file-arrow-up"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['totalSubmissions'] }}</div>
+                <div class="kpi-meta">Uploaded files</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </a>
-            <a href="{{ route('admin.requests') }}" class="metric-card metric-card-link metric-card--highlight">
-                <span class="metric-label"><i class="fas fa-inbox"></i> Pending requests</span>
-                <p class="metric-value">{{ $stats['pendingRequests'] }}</p>
+            <a href="{{ route('admin.requests') }}" class="kpi-card highlight kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Pending requests</span>
+                    <span class="kpi-icon"><i class="fas fa-inbox"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['pendingRequests'] }}</div>
+                <div class="kpi-meta">Awaiting review</div>
+                <div class="kpi-bar" style="--bar-width: {{ min(100, $stats['pendingRequests'] * 10) }}%"><div class="kpi-bar-fill"></div></div>
             </a>
-            <a href="{{ route('admin.ideas') }}" class="metric-card metric-card-link metric-card--highlight">
-                <span class="metric-label"><i class="fas fa-lightbulb"></i> Pending ideas</span>
-                <p class="metric-value">{{ $stats['pendingIdeas'] }}</p>
+            <a href="{{ route('admin.ideas') }}" class="kpi-card highlight kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Pending ideas</span>
+                    <span class="kpi-icon"><i class="fas fa-lightbulb"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['pendingIdeas'] }}</div>
+                <div class="kpi-meta">Awaiting review</div>
+                <div class="kpi-bar" style="--bar-width: {{ min(100, $stats['pendingIdeas'] * 10) }}%"><div class="kpi-bar-fill"></div></div>
             </a>
-            <a href="{{ route('admin.users') }}" class="metric-card metric-card-link metric-card--highlight">
-                <span class="metric-label"><i class="fas fa-envelope"></i> Pending email</span>
-                <p class="metric-value">{{ $stats['pendingEmailUsers'] }}</p>
+            <a href="{{ route('admin.users') }}" class="kpi-card highlight kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Pending email</span>
+                    <span class="kpi-icon"><i class="fas fa-envelope"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['pendingEmailUsers'] }}</div>
+                <div class="kpi-meta">Incomplete profiles</div>
+                <div class="kpi-bar" style="--bar-width: {{ min(100, $stats['pendingEmailUsers'] * 10) }}%"><div class="kpi-bar-fill"></div></div>
             </a>
         </div>
 
         <section class="data-card data-card--spaced">
             <div class="data-card-header">
-                <h2>Latest registered users</h2>
+                <h2><i class="fas fa-user-plus"></i> Latest registered users</h2>
             </div>
             <div class="table-wrap">
                 <table class="data-table">
@@ -112,14 +148,24 @@ Signed in as {{ auth()->user()->name }}
             <i class="fas fa-diagram-project"></i> Projects
             <a href="{{ route('admin.projects') }}">View all</a>
         </h2>
-        <div class="metric-grid metric-grid--compact">
-            <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
-                <span class="metric-label">Available projects</span>
-                <p class="metric-value">{{ $stats['availableProjects'] }}</p>
+        <div class="dash-kpi-grid dash-kpi-grid--compact">
+            <a href="{{ route('admin.projects') }}" class="kpi-card available kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Available projects</span>
+                    <span class="kpi-icon"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['availableProjects'] }}</div>
+                <div class="kpi-meta">Open for assignment</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </a>
-            <a href="{{ route('admin.projects') }}" class="metric-card metric-card-link">
-                <span class="metric-label">Assigned projects</span>
-                <p class="metric-value">{{ $stats['takenProjects'] }}</p>
+            <a href="{{ route('admin.projects') }}" class="kpi-card taken kpi-card-link">
+                <div class="kpi-card-top">
+                    <span class="kpi-label">Assigned projects</span>
+                    <span class="kpi-icon"><i class="fas fa-users"></i></span>
+                </div>
+                <div class="kpi-value">{{ $stats['takenProjects'] }}</div>
+                <div class="kpi-meta">Already taken</div>
+                <div class="kpi-bar" style="--bar-width: 100%"><div class="kpi-bar-fill"></div></div>
             </a>
         </div>
     </section>

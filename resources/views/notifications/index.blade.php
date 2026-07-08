@@ -10,19 +10,17 @@
 
 @section('content')
     @if ($isAdmin)
-        <div class="admin-page-header">
-            <span class="admin-page-header-icon"><i class="fas fa-bell"></i></span>
-            <div>
-                <h1>Notifications</h1>
-                <p>Stay up to date with platform activity and workflow events.</p>
-            </div>
-        </div>
+        @include('admin.partials.page-hero', [
+            'title' => 'Notifications',
+            'description' => 'Stay up to date with platform activity and workflow events.',
+            'breadcrumb' => '<span>Admin</span><span class="sep">/</span><span>Notifications</span>',
+        ])
 
         @if ($notifications->whereNull('read_at')->isNotEmpty())
             <div class="admin-notifications-toolbar">
                 <form method="POST" action="{{ route('notifications.read-all') }}">
                     @csrf
-                    <button type="submit" class="btn-hero-outline admin-mark-all-btn">
+                    <button type="submit" class="admin-mark-all-btn">
                         <i class="fas fa-check-double"></i> Mark all as read
                     </button>
                 </form>
