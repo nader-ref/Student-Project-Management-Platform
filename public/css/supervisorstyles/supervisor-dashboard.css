@@ -1,5 +1,176 @@
 /* Supervisor dashboard extras – charcoal + steel blue */
 
+/* Panel alerts */
+body.supervisor-portal .tab-panel-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+body.supervisor-portal .tab-panel-alert--pending {
+    background: var(--sup-blue-soft);
+    color: var(--sup-blue-deep);
+    border: 1px solid var(--sup-blue-muted);
+}
+
+body.supervisor-portal .tab-panel-alert--info {
+    background: var(--sup-surface);
+    color: var(--sup-text-muted);
+    border: 1px solid var(--sup-border);
+}
+
+/* Accept / reject decision layout */
+body.supervisor-portal .decision-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 1.15rem 1.25rem;
+    background: var(--sup-surface);
+    border: 1px solid var(--sup-border);
+    border-radius: 14px;
+}
+
+body.supervisor-portal .decision-actions__accept {
+    flex: 0 0 auto;
+}
+
+body.supervisor-portal .decision-actions__reject {
+    flex: 1 1 280px;
+    min-width: 0;
+}
+
+body.supervisor-portal .decision-actions__reject-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+    width: 100%;
+}
+
+body.supervisor-portal .decision-actions__reject-field {
+    flex: 1 1 180px;
+    min-width: 0;
+}
+
+body.supervisor-portal .decision-actions__reject-field label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sup-text-muted);
+    margin-bottom: 0.35rem;
+}
+
+body.supervisor-portal .decision-actions__reject-field input {
+    width: 100%;
+    padding: 0.75rem 0.95rem;
+    border: 1px solid var(--sup-border);
+    border-radius: 10px;
+    font: inherit;
+    background: var(--sup-card);
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .decision-actions__reject-field input:focus {
+    outline: none;
+    border-color: var(--sup-blue);
+    box-shadow: 0 0 0 3px rgba(61, 107, 158, 0.15);
+}
+
+body.supervisor-portal .decision-actions .btn-secondary {
+    flex-shrink: 0;
+    min-height: 2.75rem;
+}
+
+/* Review / reply form panels */
+body.supervisor-portal .review-form-panel,
+body.supervisor-portal .reply-form-inline {
+    margin-top: 1.15rem;
+    padding: 1.15rem 1.25rem;
+    background: var(--sup-surface);
+    border: 1px solid var(--sup-border);
+    border-radius: 14px;
+}
+
+body.supervisor-portal .reply-form-inline {
+    border-top: none;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+body.supervisor-portal .review-form-panel .form-pro-actions,
+body.supervisor-portal .reply-form-inline .form-pro-actions {
+    padding: 0;
+    margin-top: 0.85rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+body.supervisor-portal .form-pro-actions--compact {
+    padding: 0;
+    margin-top: 0.85rem;
+    background: transparent;
+    border: none;
+}
+
+body.supervisor-portal .review-form-panel .btn-secondary,
+body.supervisor-portal .reply-form-inline .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+}
+
+body.supervisor-portal .reply-bubble--revision {
+    background: #fffbeb;
+    border-left-color: #f59e0b;
+}
+
+body.supervisor-portal .reply-bubble--revision label {
+    color: #92400e;
+}
+
+body.supervisor-portal .field-hint {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--sup-text-muted);
+}
+
+body.supervisor-portal .form-field-pro--spaced {
+    margin-top: 1rem;
+}
+
+body.supervisor-portal .messages-kpi-grid {
+    margin-bottom: 1.5rem;
+}
+
+body.supervisor-portal .report-empty-note {
+    color: var(--sup-text-muted);
+    font-size: 0.9rem;
+}
+
+body.supervisor-portal .password-settings-card > .field-hint {
+    margin-bottom: 1rem;
+}
+
+body.supervisor-portal .password-settings-card .form-pro-actions {
+    padding: 0;
+    margin-top: 1rem;
+    background: transparent;
+    border: none;
+}
+
 body.supervisor-portal .project-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -27,6 +198,10 @@ body.supervisor-portal .project-toolbar select:focus {
     outline: none;
     border-color: var(--sup-blue, var(--sup-gold));
     box-shadow: 0 0 0 3px rgba(61, 107, 158, 0.15);
+}
+
+body.supervisor-portal .project-edit-form {
+    margin-top: 1rem;
 }
 
 body.supervisor-portal .project-edit-panel {
@@ -115,29 +290,136 @@ body.supervisor-portal .history-subtabs {
 
 body.supervisor-portal .history-subtab {
     padding: 0.5rem 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid var(--sup-border);
     background: var(--sup-card);
     font-weight: 600;
     font-size: 0.85rem;
     color: var(--sup-text-muted);
     cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+body.supervisor-portal .history-subtab:hover {
+    border-color: var(--sup-blue-muted);
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .message-subtab.tab-btn {
+    min-height: 2.5rem;
+    font-size: 0.82rem;
+}
+
+body.supervisor-portal .profile-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.supervisor-portal .profile-card h3 i {
+    color: var(--sup-blue);
+}
+
+body.supervisor-portal .profile-card:last-child {
+    margin-bottom: 0;
+}
+
+body.supervisor-portal .request-list {
+    gap: 1.15rem;
+}
+
+body.supervisor-portal .request-item {
+    box-shadow: 0 4px 16px var(--sup-shadow);
+}
+
+body.supervisor-portal .request-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(30, 36, 44, 0.1);
+}
+
+body.supervisor-portal .empty-state {
+    background: linear-gradient(180deg, var(--sup-surface) 0%, var(--sup-card) 100%);
+}
+
+body.supervisor-portal .empty-state-icon {
+    background: var(--sup-blue-soft);
+}
+
+body.supervisor-portal .message-thread-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+}
+
+body.supervisor-portal .message-thread-list .message-chat-thread {
+    border-top-color: var(--sup-border-soft);
+}
+
+/* Supervisor chat bubbles — steel blue outgoing */
+body.supervisor-portal .chat-bubble--outgoing {
+    border-color: var(--sup-blue-deep);
+    background: linear-gradient(135deg, var(--sup-charcoal-deep) 0%, var(--sup-blue-deep) 100%);
+    box-shadow: 0 4px 14px rgba(30, 36, 44, 0.2);
+}
+
+body.supervisor-portal .chat-bubble--incoming {
+    border-color: var(--sup-border);
+    background: linear-gradient(180deg, var(--sup-card) 0%, var(--sup-surface) 100%);
+}
+
+body.supervisor-portal .chat-bubble--announcement {
+    border-color: var(--sup-blue-muted);
+    background: linear-gradient(180deg, var(--sup-blue-soft) 0%, var(--sup-card) 100%);
+}
+
+body.supervisor-portal .chat-bubble-avatar {
+    background: var(--sup-charcoal);
+    color: #ffffff;
+}
+
+body.supervisor-portal .chat-bubble--outgoing .chat-bubble-avatar {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.supervisor-portal .chat-bubble-author {
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .chat-bubble-text {
+    color: var(--sup-text);
+}
+
+body.supervisor-portal .chat-bubble--outgoing .chat-bubble-author,
+body.supervisor-portal .chat-bubble--outgoing .chat-bubble-text {
+    color: #f0f6ff;
+}
+
+body.supervisor-portal .chat-compose-panel {
+    background: var(--sup-surface);
+    border-color: var(--sup-blue-muted);
 }
 
 body.supervisor-portal .reply-bubble {
     margin-top: 0.75rem;
     padding: 0.85rem 1rem;
-    background: var(--sup-blue-soft, var(--sup-gold-soft));
+    background: var(--sup-blue-soft);
     border-radius: 10px;
-    border-left: 3px solid var(--sup-blue, var(--sup-gold));
+    border-left: 3px solid var(--sup-blue);
     font-size: 0.9rem;
+    line-height: 1.55;
 }
 
 body.supervisor-portal .reply-bubble label {
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--sup-blue-deep, var(--sup-gold-deep));
+    color: var(--sup-blue-deep);
+    display: block;
+    margin-bottom: 0.35rem;
 }
 
 body.supervisor-portal .profile-card {
@@ -146,10 +428,7 @@ body.supervisor-portal .profile-card {
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 1.25rem;
-}
-
-body.supervisor-portal .profile-card h3 {
-    color: var(--sup-text);
+    box-shadow: 0 2px 12px var(--sup-shadow);
 }
 
 body.supervisor-portal .profile-row {
@@ -157,6 +436,7 @@ body.supervisor-portal .profile-row {
     gap: 0.75rem;
     padding: 0.65rem 0;
     border-bottom: 1px solid var(--sup-border-soft);
+    flex-wrap: wrap;
 }
 
 body.supervisor-portal .profile-row label {
@@ -181,13 +461,25 @@ body.supervisor-portal .history-panel.active-content {
 }
 
 body.supervisor-portal .message-compose-card {
-    margin-top: 1.5rem;
+    margin-top: 0;
 }
 
-body.supervisor-portal .reply-form-inline {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--sup-border);
+@media (max-width: 700px) {
+    body.supervisor-portal .decision-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.supervisor-portal .decision-actions__reject-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.supervisor-portal .decision-actions .btn-primary,
+    body.supervisor-portal .decision-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Supervisor tab bar — mobile (matches student responsive behavior) */

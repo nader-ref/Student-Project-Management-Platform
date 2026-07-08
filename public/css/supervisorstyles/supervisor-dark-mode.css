@@ -351,7 +351,96 @@ body.supervisor-portal.dark-mode .history-subtab.active {
     color: var(--sup-dm-text);
 }
 
+body.supervisor-portal.dark-mode .tab-panel-alert--pending {
+    background: var(--sup-dm-blue-soft);
+    color: var(--sup-dm-blue);
+    border-color: var(--sup-dm-border-soft);
+}
+
+body.supervisor-portal.dark-mode .decision-actions,
+body.supervisor-portal.dark-mode .review-form-panel,
+body.supervisor-portal.dark-mode .reply-form-inline {
+    background: var(--sup-dm-elevated);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .decision-actions__reject-field input {
+    background: var(--sup-dm-input);
+    border-color: var(--sup-dm-border);
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .decision-actions__reject-field input:focus {
+    border-color: var(--sup-dm-blue-dim);
+    box-shadow: 0 0 0 3px rgba(107, 159, 212, 0.2);
+}
+
+body.supervisor-portal.dark-mode .decision-actions__reject-field label {
+    color: var(--sup-dm-text-muted);
+}
+
+body.supervisor-portal.dark-mode .reply-bubble--revision {
+    background: #2a2418;
+    border-left-color: #f59e0b;
+}
+
+body.supervisor-portal.dark-mode .reply-bubble--revision label {
+    color: #fbbf24;
+}
+
+body.supervisor-portal.dark-mode .field-hint,
+body.supervisor-portal.dark-mode .report-empty-note {
+    color: var(--sup-dm-text-muted);
+}
+
+body.supervisor-portal.dark-mode .review-form-panel .form-pro-actions,
+body.supervisor-portal.dark-mode .reply-form-inline .form-pro-actions,
+body.supervisor-portal.dark-mode .password-settings-card .form-pro-actions {
+    background: transparent;
+    border: none;
+}
+
 /* Misc */
+body.supervisor-portal.dark-mode .chat-bubble--outgoing {
+    background: linear-gradient(135deg, #1a2028 0%, var(--sup-dm-blue-deep) 100%);
+    border-color: var(--sup-dm-blue-dim);
+}
+
+body.supervisor-portal.dark-mode .chat-bubble--incoming {
+    background: linear-gradient(180deg, var(--sup-dm-card) 0%, var(--sup-dm-elevated) 100%);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .chat-bubble--announcement {
+    background: linear-gradient(180deg, var(--sup-dm-blue-soft) 0%, var(--sup-dm-card) 100%);
+    border-color: var(--sup-dm-border-soft);
+}
+
+body.supervisor-portal.dark-mode .chat-bubble-author,
+body.supervisor-portal.dark-mode .chat-bubble-text {
+    color: var(--sup-dm-text);
+}
+
+body.supervisor-portal.dark-mode .chat-bubble--outgoing .chat-bubble-author,
+body.supervisor-portal.dark-mode .chat-bubble--outgoing .chat-bubble-text {
+    color: #e8ecf0;
+}
+
+body.supervisor-portal.dark-mode .chat-bubble-avatar {
+    background: var(--sup-dm-elevated);
+    color: var(--sup-dm-blue);
+    border: 1px solid var(--sup-dm-border-soft);
+}
+
+body.supervisor-portal.dark-mode .chat-compose-panel {
+    background: var(--sup-dm-elevated);
+    border-color: var(--sup-dm-border);
+}
+
+body.supervisor-portal.dark-mode .message-thread-list .message-chat-thread {
+    border-top-color: var(--sup-dm-border);
+}
+
 body.supervisor-portal.dark-mode .reply-bubble {
     background: var(--sup-dm-elevated);
     border-left-color: var(--sup-dm-blue);

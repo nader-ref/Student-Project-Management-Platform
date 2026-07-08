@@ -118,12 +118,28 @@ body.supervisor-portal .dash-nav-shell--compact {
 
 body.supervisor-portal .tabs-container.dash-nav,
 body.supervisor-portal .dash-nav.tabs-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.4rem;
+    margin-bottom: 0;
     background: rgba(255, 255, 255, 0.96);
     border: 1px solid var(--sup-border);
     border-bottom: none;
     border-radius: 14px;
     box-shadow: 0 10px 24px var(--sup-shadow);
+    backdrop-filter: blur(12px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
     scrollbar-color: rgba(30, 36, 44, 0.18) transparent;
+    width: fit-content;
+    max-width: 100%;
+    min-width: 0;
 }
 
 body.supervisor-portal .dash-nav::-webkit-scrollbar-thumb {
@@ -131,13 +147,37 @@ body.supervisor-portal .dash-nav::-webkit-scrollbar-thumb {
 }
 
 body.supervisor-portal .dash-nav .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 2.75rem;
+    max-height: 3.25rem;
+    padding: 0.5rem 0.95rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.84rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     color: var(--sup-text-muted);
     border: 1px solid transparent;
     background: transparent;
 }
 
 body.supervisor-portal .dash-nav .tab-btn i {
+    width: 1rem;
+    text-align: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
     color: #7a8794;
+    transition: color 0.2s ease;
 }
 
 body.supervisor-portal .dash-nav .tab-btn:hover:not(.active) {
@@ -172,6 +212,39 @@ body.supervisor-portal .dash-nav .tab-btn .tab-label {
 
 body.supervisor-portal .supervisor-tabs .tab-btn {
     scroll-margin-inline: 0.35rem;
+}
+
+body.supervisor-portal .dash-nav .tab-btn .badge-inline {
+    margin-left: 0.15rem;
+    flex-shrink: 0;
+}
+
+body.supervisor-portal .status-pill.rejected {
+    background: #ffe8e8;
+    color: #b30000;
+    border: 1px solid #f5c6c6;
+}
+
+body.supervisor-portal .status-pill.accepted {
+    background: #e8f8ea;
+    color: #0a7a0a;
+    border: 1px solid #b8e6bc;
+}
+
+body.supervisor-portal .status-pill.pending {
+    border: 1px solid #b8cfe6;
+}
+
+body.supervisor-portal .request-item.is-rejected {
+    border-left: 4px solid #c0392b;
+}
+
+body.supervisor-portal .project-item.is-available {
+    border-left: 4px solid #0a7a0a;
+}
+
+body.supervisor-portal .project-item.is-taken {
+    border-left: 4px solid var(--sup-blue);
 }
 
 /* KPI */
