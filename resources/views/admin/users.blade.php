@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="admin-page-header">
-        <h1>Users</h1>
-        <p>Account overview with lifecycle actions.</p>
+        <span class="admin-page-header-icon"><i class="fas fa-users"></i></span>
+        <div>
+            <h1>Users</h1>
+            <p>Account overview with lifecycle actions.</p>
+        </div>
     </div>
 
     @if (session('success'))

@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="admin-page-header">
-        <h1>Reset Password</h1>
-        <p>Set a temporary password for {{ $user['name'] }}.</p>
+        <span class="admin-page-header-icon"><i class="fas fa-key"></i></span>
+        <div>
+            <h1>Reset Password</h1>
+            <p>Set a temporary password for {{ $user['name'] }}.</p>
+        </div>
     </div>
 
     @if ($errors->any())
@@ -75,7 +78,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">Reset password</button>
+                <button type="submit" class="btn-primary"><i class="fas fa-key"></i> Reset password</button>
                 <a href="{{ route('admin.users') }}" class="btn-link">Back to users</a>
             </div>
         </form>

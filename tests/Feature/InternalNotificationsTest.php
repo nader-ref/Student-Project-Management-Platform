@@ -317,6 +317,24 @@ it('marks all notifications as read', function () {
     expect($student->fresh()->readNotifications)->toHaveCount(2);
 });
 
+it('redirects admin notification open actions to admin routes', function () {
+    $admin = User::factory()->create();
+    $admin->addRole('admin');
+
+    $admin->notify(new WorkflowNotification(
+        type: 'request_submitted',
+        title: 'Admin notification',
+        body: 'Open this from admin.',
+        actionUrl: '/StudentDashboard/acceptance',
+    ));
+
+    $notificationId = $admin->notifications()->first()->id;
+
+    $this->actingAs($admin)
+        ->post(route('notifications.read', $notificationId), ['redirect' => 1])
+        ->assertRedirect(route('admin.requests'));
+});
+
 it('allows no-email users to receive database notifications', function () {
     /** @var \App\Models\User $student */
     $student = User::factory()->create([

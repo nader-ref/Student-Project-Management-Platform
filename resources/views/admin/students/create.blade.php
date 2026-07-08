@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="admin-page-header">
-        <h1>Create Student</h1>
-        <p>Provision a new student account with university number login access.</p>
+        <span class="admin-page-header-icon"><i class="fas fa-user-graduate"></i></span>
+        <div>
+            <h1>Create Student</h1>
+            <p>Provision a new student account with university number login access.</p>
+        </div>
     </div>
 
     @if (session('success'))
@@ -53,7 +56,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">Create student account</button>
+                <button type="submit" class="btn-primary"><i class="fas fa-user-graduate"></i> Create student account</button>
                 <a href="{{ route('admin.users') }}" class="btn-link">Back to users</a>
                 <a href="{{ route('admin.dashboard') }}" class="btn-link">Dashboard</a>
             </div>
