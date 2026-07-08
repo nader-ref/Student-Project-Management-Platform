@@ -7,7 +7,7 @@
     <h2><i class="fas fa-file-upload"></i> Student Submissions</h2>
     <p>Review files uploaded by your project teams and provide feedback.</p>
     @if ($pendingCount > 0)
-        <p style="margin-top: 0.5rem; font-weight: 600; color: #b45309;">
+        <p class="tab-panel-alert tab-panel-alert--pending">
             <i class="fas fa-hourglass-half"></i> {{ $pendingCount }} submission{{ $pendingCount === 1 ? '' : 's' }} pending review
         </p>
     @endif
@@ -32,6 +32,10 @@
                         <span class="status-pill {{ $sub->isApproved() ? 'accepted' : ($sub->needsRevision() ? 'rejected' : 'pending') }}">
                             @if ($sub->isPending())
                                 <i class="fas fa-hourglass-half"></i>
+                            @elseif ($sub->needsRevision())
+                                <i class="fas fa-exclamation-circle"></i>
+                            @elseif ($sub->isApproved())
+                                <i class="fas fa-check-circle"></i>
                             @endif
                             {{ $sub->statusLabel() }}
                         </span>
@@ -67,12 +71,12 @@
                         </div>
                     @endif
                     @if ($sub->supervisor_feedback)
-                        <div class="reply-bubble">
-                            <label>Current Feedback</label>
+                        <div class="reply-bubble {{ $sub->needsRevision() ? 'reply-bubble--revision' : '' }}">
+                            <label>{{ $sub->needsRevision() ? 'Revision Required — Current Feedback' : 'Current Feedback' }}</label>
                             {{ $sub->supervisor_feedback }}
                         </div>
                     @endif
-                    <form action="{{ url('/supervisor/submission/review') }}" method="POST" class="reply-form-inline">
+                    <form action="{{ url('/supervisor/submission/review') }}" method="POST" class="review-form-panel">
                         @csrf
                         <input type="hidden" name="submission_id" value="{{ $sub->id }}">
                         <div class="form-grid">
@@ -85,14 +89,14 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-field form-field-pro" style="margin-top: 0.75rem;">
+                        <div class="form-field form-field-pro form-field-pro--spaced">
                             <label>
                                 Feedback
-                                <span class="form-badge optional-badge field-required-badge">Required for revision</span>
+                                <span class="form-badge required-badge field-required-badge">Required for revision</span>
                             </label>
-                            <textarea name="supervisor_feedback" rows="3" placeholder="Provide feedback for the student...">{{ old('supervisor_feedback', $sub->supervisor_feedback) }}</textarea>
+                            <textarea name="supervisor_feedback" rows="4" placeholder="Provide feedback for the student. Required when marking as Revision Required.">{{ old('supervisor_feedback', $sub->supervisor_feedback) }}</textarea>
                         </div>
-                        <div class="form-pro-actions" style="padding: 0; margin-top: 0.75rem; gap: 0.5rem;">
+                        <div class="form-pro-actions form-pro-actions--compact">
                             <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Review</button>
                             <a href="{{ route('supervisor.submission.download', $sub) }}" class="btn-secondary">
                                 <i class="fas fa-download"></i> Download

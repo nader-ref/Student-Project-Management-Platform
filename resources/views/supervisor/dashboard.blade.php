@@ -89,12 +89,12 @@
 
         <div class="content-panel">
             @if (Session::has('success'))
-                <div class="form-pro-alert success" style="margin-bottom: 1rem;">
+                <div class="form-pro-alert success form-pro-notice compact">
                     <i class="fas fa-check-circle"></i> {{ Session::get('success') }}
                 </div>
             @endif
             @if (Session::has('error'))
-                <div class="form-pro-alert error" style="margin-bottom: 1rem;">
+                <div class="form-pro-alert error form-pro-notice compact">
                     <i class="fas fa-exclamation-circle"></i> {{ Session::get('error') }}
                 </div>
             @endif
@@ -410,7 +410,7 @@
                                 <input type="text" name="project_name" required value="{{ old('project_name') }}">
                                 @error('project_name')<span class="error-text">{{ $message }}</span>@enderror
                             </div>
-                            <div class="form-field form-field-pro" style="margin-top: 1rem;">
+                            <div class="form-field form-field-pro form-field-pro--spaced">
                                 <label>Description</label>
                                 <textarea name="description" rows="4" required>{{ old('description') }}</textarea>
                                 @error('description')<span class="error-text">{{ $message }}</span>@enderror
@@ -418,7 +418,14 @@
                         </div>
                     </div>
 
-                    <div class="form-pro-card" style="margin-top: 1rem;">
+                    <div class="form-pro-card form-field-pro--spaced">
+                        <div class="form-pro-card-header">
+                            <span class="form-step-badge">02</span>
+                            <div>
+                                <h3>Department & Schedule</h3>
+                                <p>Classification and milestone dates</p>
+                            </div>
+                        </div>
                         <div class="form-pro-card-body">
                             <div class="form-grid">
                                 <div class="form-field form-field-pro">
@@ -436,9 +443,10 @@
                                         <option value="No" {{ old('taken', 'No') == 'No' ? 'selected' : '' }}>No</option>
                                         <option value="Yes" {{ old('taken') == 'Yes' ? 'selected' : '' }}>Yes</option>
                                     </select>
+                                    <span class="field-hint">Set to Yes if a team is already assigned.</span>
                                 </div>
                             </div>
-                            <div class="form-grid" style="margin-top: 1rem;">
+                            <div class="form-grid form-field-pro--spaced">
                                 <div class="form-field form-field-pro">
                                     <label>Seminar 1</label>
                                     <input type="date" name="seminar1_date" required value="{{ old('seminar1_date') }}">
@@ -456,6 +464,7 @@
                                     <input type="date" name="final_date" required value="{{ old('final_date') }}">
                                 </div>
                             </div>
+                            <span class="field-hint">Seminar dates should follow your department's academic calendar.</span>
                         </div>
                     </div>
 
@@ -515,18 +524,20 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                    <div class="form-pro-actions" style="margin-top: 1rem; padding: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-                                        <form action="{{ url('/acceptrequest') }}" method="POST">
+                                    <div class="decision-actions">
+                                        <div class="decision-actions__accept">
+                                            <form action="{{ url('/acceptrequest') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="request" value="{{ $req->id }}">
+                                                <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Accept</button>
+                                            </form>
+                                        </div>
+                                        <form action="{{ url('/rejectrequest') }}" method="POST" class="decision-actions__reject-form decision-actions__reject">
                                             @csrf
                                             <input type="hidden" name="request" value="{{ $req->id }}">
-                                            <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Accept</button>
-                                        </form>
-                                        <form action="{{ url('/rejectrequest') }}" method="POST" class="form-field-pro" style="display: flex; gap: 0.5rem; align-items: flex-end; flex: 1; min-width: 240px;">
-                                            @csrf
-                                            <input type="hidden" name="request" value="{{ $req->id }}">
-                                            <div style="flex: 1;">
-                                                <label>Rejection reason</label>
-                                                <input type="text" name="reason" required placeholder="Why is this request declined?">
+                                            <div class="decision-actions__reject-field">
+                                                <label for="reject-reason-req-{{ $req->id }}">Rejection reason</label>
+                                                <input type="text" id="reject-reason-req-{{ $req->id }}" name="reason" required placeholder="Why is this request declined?">
                                             </div>
                                             <button type="submit" class="btn-secondary"><i class="fas fa-times"></i> Reject</button>
                                         </form>
@@ -568,18 +579,20 @@
                                         <label>Team</label>
                                         <span>{{ $ideaMembers->pluck('user.name')->implode(', ') }}</span>
                                     </div>
-                                    <div class="form-pro-actions" style="margin-top: 1rem; padding: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-                                        <form action="{{ url('/acceptidea') }}" method="POST">
+                                    <div class="decision-actions">
+                                        <div class="decision-actions__accept">
+                                            <form action="{{ url('/acceptidea') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="idea" value="{{ $idea->id }}">
+                                                <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Accept</button>
+                                            </form>
+                                        </div>
+                                        <form action="{{ url('/rejectidea') }}" method="POST" class="decision-actions__reject-form decision-actions__reject">
                                             @csrf
                                             <input type="hidden" name="idea" value="{{ $idea->id }}">
-                                            <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Accept</button>
-                                        </form>
-                                        <form action="{{ url('/rejectidea') }}" method="POST" class="form-field-pro" style="display: flex; gap: 0.5rem; align-items: flex-end; flex: 1; min-width: 240px;">
-                                            @csrf
-                                            <input type="hidden" name="idea" value="{{ $idea->id }}">
-                                            <div style="flex: 1;">
-                                                <label>Rejection reason</label>
-                                                <input type="text" name="reason" required placeholder="Reason for rejection">
+                                            <div class="decision-actions__reject-field">
+                                                <label for="reject-reason-idea-{{ $idea->id }}">Rejection reason</label>
+                                                <input type="text" id="reject-reason-idea-{{ $idea->id }}" name="reason" required placeholder="Reason for rejection">
                                             </div>
                                             <button type="submit" class="btn-secondary"><i class="fas fa-times"></i> Reject</button>
                                         </form>
@@ -645,26 +658,27 @@
                     @endif
                 </div>
 
-                <div class="profile-card">
+                <div class="profile-card password-settings-card">
                     <h3><i class="fas fa-key"></i> Change Password</h3>
+                    <p class="field-hint">Use at least 8 characters. Your current password is required to confirm the change.</p>
                     <form method="POST" action="{{ url('/supervisor/changepassword') }}">
                         @csrf
                         <div class="form-field form-field-pro">
                             <label>Current Password</label>
-                            <input type="password" name="old_password" required>
+                            <input type="password" name="old_password" required autocomplete="current-password">
                             @error('old_password')<span class="error-text">{{ $message }}</span>@enderror
                         </div>
-                        <div class="form-grid" style="margin-top: 0.75rem;">
+                        <div class="form-grid form-field-pro--spaced">
                             <div class="form-field form-field-pro">
                                 <label>New Password</label>
-                                <input type="password" name="new_password" required minlength="8">
+                                <input type="password" name="new_password" required minlength="8" autocomplete="new-password">
                             </div>
                             <div class="form-field form-field-pro">
                                 <label>Confirm Password</label>
-                                <input type="password" name="new_password_confirmation" required minlength="8">
+                                <input type="password" name="new_password_confirmation" required minlength="8" autocomplete="new-password">
                             </div>
                         </div>
-                        <div class="form-pro-actions" style="padding: 0; margin-top: 1rem;">
+                        <div class="form-pro-actions form-pro-actions--compact">
                             <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Update Password</button>
                         </div>
                     </form>

@@ -42,7 +42,7 @@
 <div class="report-card" style="margin-bottom: 1.5rem;">
     <h3><i class="fas fa-building"></i> Projects by Department</h3>
     @if ($byDepartment->isEmpty())
-        <p style="color: #6b4423; font-size: 0.9rem;">No projects to report yet.</p>
+        <p class="report-empty-note">No projects to report yet.</p>
     @else
         @php $maxDept = $byDepartment->max() ?: 1; @endphp
         @foreach ($byDepartment as $dept => $count)
