@@ -729,6 +729,96 @@ button.btn-hero-solid {
     display: none;
 }
 
+/* Student messages / replay page */
+.messages-center-page .acceptance-kpi-grid {
+    margin-bottom: 1.75rem;
+}
+
+.messages-center-page .dash-nav {
+    margin-bottom: 1.5rem;
+}
+
+.messages-center-page .message-thread-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.messages-center-page .message-thread-list .request-item {
+    margin: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.messages-center-page .message-thread-list .request-item:hover {
+    transform: translateY(-1px);
+}
+
+.messages-center-page .message-content-block {
+    margin-bottom: 1rem;
+    padding: 0.9rem 1.05rem;
+    background: #f8fbff;
+    border: 1px solid #eef3f8;
+    border-radius: 12px;
+}
+
+.messages-center-page .message-content-block:last-of-type {
+    margin-bottom: 0;
+}
+
+.messages-center-page .message-content-block--reply {
+    background: #eef6ff;
+    border-color: #dce6f3;
+}
+
+.messages-center-page .message-content-block .message-body-text {
+    display: block;
+    margin-top: 0.35rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.9rem;
+    color: #0a2942;
+}
+
+.messages-center-page .message-content-block--reply .message-body-text {
+    color: #0a5c14;
+}
+
+.messages-center-page .request-progress {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eef3f8;
+}
+
+.messages-center-page .empty-state {
+    margin-top: 0.5rem;
+}
+
+.messages-center-page #messages .tab-panel-header {
+    margin-bottom: 1.5rem;
+}
+
+body.dark-mode .messages-center-page .message-content-block {
+    background: #1c2128;
+    border-color: #30363d;
+}
+
+body.dark-mode .messages-center-page .message-content-block--reply {
+    background: #161b22;
+    border-color: #3d4654;
+}
+
+body.dark-mode .messages-center-page .message-content-block .message-body-text {
+    color: #e6edf3;
+}
+
+body.dark-mode .messages-center-page .message-content-block--reply .message-body-text {
+    color: #7dcea0;
+}
+
+body.dark-mode .messages-center-page .request-progress {
+    border-top-color: #30363d;
+}
+
 body.dark-mode .acceptance-hero {
     background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0a2942 100%);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);

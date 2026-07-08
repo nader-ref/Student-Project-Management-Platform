@@ -6,10 +6,12 @@
         </a>
 
         <div class="auth-brand">
-            <span class="auth-brand-icon"><i class="fas fa-cubes" aria-hidden="true"></i></span>
+            <span class="auth-brand-icon auth-brand-icon--logo">
+                @include('partials.brand-logo')
+            </span>
             <div class="auth-brand-text">
                 <strong>Projects Hub</strong>
-                <small>Student Portal</small>
+                <small>Graduation Projects Portal</small>
             </div>
         </div>
 

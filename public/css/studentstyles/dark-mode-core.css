@@ -15,7 +15,8 @@ body.dark-mode .dashboard {
 }
 
 body.dark-mode .dashboard-footer-accent {
-    background: #21262d;
+    background: linear-gradient(90deg, #161b22 0%, #21262d 50%, #388bfd 100%);
+    opacity: 1;
 }
 
 body.dark-mode .content-panel {

@@ -37,7 +37,7 @@
             @enderror
         </div>
 
-        <button type="submit" class="auth-btn">
+        <button type="submit" class="auth-btn" data-loading-label="Sending link...">
             <i class="fas fa-paper-plane" aria-hidden="true"></i>
             Send Reset Link
         </button>

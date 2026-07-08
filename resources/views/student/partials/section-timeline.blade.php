@@ -37,11 +37,11 @@
                 <div class="milestone-body">
                     <strong>{{ $state['label'] }}</strong>
                     <span>{{ $state['formatted'] }}</span>
-                    <span class="status-pill {{ $pillClass }}" style="margin-top: 0.35rem; display: inline-flex;">
+                    <span class="status-pill {{ $pillClass }} status-pill--stacked">
                         {{ $state['status_label'] }}
                     </span>
                     @if ($state['latest_submission'])
-                        <span style="display: block; margin-top: 0.35rem; color: #64748b; font-size: 0.9rem;">
+                        <span class="meta-subtext">
                             Latest: {{ $state['latest_submission']->title }}
                             ({{ $state['latest_submission']->statusLabel() }})
                         </span>

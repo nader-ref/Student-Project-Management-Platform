@@ -27,19 +27,21 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 
     <div class="content-panel">
         @if (Session::has('success'))
-        <div class="form-pro-alert success" style="margin-bottom: 1rem;">
+        <div class="form-pro-alert success form-pro-alert--spaced">
             <i class="fas fa-check-circle"></i> {{ Session::get('success') }}
         </div>
         @endif
         @if (Session::has('error'))
-        <div class="form-pro-alert error" style="margin-bottom: 1rem;">
+        <div class="form-pro-alert error form-pro-alert--spaced">
             <i class="fas fa-exclamation-circle"></i> {{ Session::get('error') }}
         </div>
         @endif
 
         @include('student.partials.dashboard-hero')
 
-        @include('student.partials.dashboard-nav')
+        <div class="dash-nav-shell">
+            @include('student.partials.dashboard-nav')
+        </div>
 
         {{-- OVERVIEW --}}
         <div id="dashboard" class="tab-content active-content">
@@ -118,6 +120,13 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                     <div>
                         <strong>Contact Supervisor</strong>
                         <span>Send a message or question</span>
+                    </div>
+                </button>
+                <button type="button" class="quick-action-card quick-action-card--settings dash-tab-trigger" data-tab="settings">
+                    <span class="quick-action-icon"><i class="fas fa-sliders-h"></i></span>
+                    <div>
+                        <strong>Settings</strong>
+                        <span>Password, dark mode &amp; preferences</span>
                     </div>
                 </button>
             </div>
@@ -257,25 +266,6 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 
             <div class="form-pro-layout">
                 <div class="form-pro-main">
-                    <div class="form-pro-steps" aria-label="Form steps">
-                        <div class="form-pro-step active">
-                            <span class="form-pro-step-num">1</span>
-                            Project Details
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">2</span>
-                            Team Leader
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">3</span>
-                            Team Members
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">4</span>
-                            Submit
-                        </div>
-                    </div>
-
                     <form method="POST" action="{{ url('/RequstAdd') }}" class="request-form-pro">
                         @csrf
 
@@ -329,7 +319,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                         @include('student.partials.student-members-form-pro')
 
                         <div class="form-pro-actions">
-                            <button type="submit" class="btn-primary">
+                            <button type="submit" class="btn-primary" data-loading-label="Submitting application...">
                                 <i class="fas fa-paper-plane"></i> Submit Application
                             </button>
                             <button type="reset" class="btn-secondary">
@@ -385,25 +375,6 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 
             <div class="form-pro-layout">
                 <div class="form-pro-main">
-                    <div class="form-pro-steps" aria-label="Form steps">
-                        <div class="form-pro-step active">
-                            <span class="form-pro-step-num">1</span>
-                            Idea Details
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">2</span>
-                            Team Leader
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">3</span>
-                            Team Members
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">4</span>
-                            Submit
-                        </div>
-                    </div>
-
                     <form method="POST" action="{{ url('/RequstIdea') }}" class="request-form-pro">
                         @csrf
 
@@ -454,7 +425,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                         ])
 
                         <div class="form-pro-actions">
-                            <button type="submit" class="btn-primary">
+                            <button type="submit" class="btn-primary" data-loading-label="Submitting idea...">
                                 <i class="fas fa-lightbulb"></i> Submit Idea
                             </button>
                             <button type="reset" class="btn-secondary">
@@ -541,25 +512,6 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 
             <div class="form-pro-layout">
                 <div class="form-pro-main">
-                    <div class="form-pro-steps" aria-label="Form steps">
-                        <div class="form-pro-step active">
-                            <span class="form-pro-step-num">1</span>
-                            Recipient
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">2</span>
-                            Subject
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">3</span>
-                            Message
-                        </div>
-                        <div class="form-pro-step">
-                            <span class="form-pro-step-num">4</span>
-                            Send
-                        </div>
-                    </div>
-
                     <form method="POST" action="{{ url('/Message') }}" class="request-form-pro">
                         @csrf
 
@@ -645,7 +597,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                         </div>
 
                         <div class="form-pro-actions">
-                            <button type="submit" class="btn-primary">
+                            <button type="submit" class="btn-primary" data-loading-label="Sending message...">
                                 <i class="fas fa-paper-plane"></i> Send Message
                             </button>
                             <button type="reset" class="btn-secondary">
@@ -696,43 +648,74 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
         <div id="settings" class="tab-content">
             <div class="tab-panel-header">
                 <h2><i class="fas fa-cog"></i> Workspace Settings</h2>
-                <p>Customize your dashboard experience and appearance preferences.</p>
+                <p>Customize your dashboard appearance and account security. You can also open this page from your profile menu in the top bar.</p>
             </div>
 
-            <div class="settings-grid">
-                <div class="setting-card">
+            <p class="settings-section-label">Account</p>
+            <div class="settings-grid settings-grid--single">
+                <a href="{{ url('/ChangePassword') }}" class="setting-card setting-card--functional setting-card--link">
+                    <div class="setting-info">
+                        <i class="fas fa-key"></i>
+                        <span class="setting-info-text">
+                            Change Password
+                            <small>Update your login credentials</small>
+                        </span>
+                    </div>
+                    <i class="fas fa-chevron-right setting-card-arrow"></i>
+                </a>
+            </div>
+
+            <p class="settings-section-label">Appearance</p>
+            <div class="settings-grid settings-grid--single">
+                <div class="setting-card setting-card--functional">
                     <div class="setting-info">
                         <i class="fas fa-moon"></i>
-                        <span>Dark Mode</span>
+                        <span class="setting-info-text">
+                            Dark Mode
+                            <small>Synced to this browser</small>
+                        </span>
                     </div>
-                    <div class="toggle-switch off" id="dark-toggle"></div>
+                    <div class="toggle-switch off" id="dark-toggle" role="switch" aria-label="Toggle dark mode"></div>
                 </div>
-                <div class="setting-card">
+            </div>
+
+            <p class="settings-section-label">Preferences <span class="setting-soon-badge">Coming soon</span></p>
+            <div class="settings-grid">
+                <div class="setting-card setting-card--preview" aria-disabled="true">
                     <div class="setting-info">
                         <i class="fas fa-bell"></i>
-                        <span>Notifications</span>
+                        <span class="setting-info-text">
+                            Email Notifications
+                            <small>Alerts for requests, messages, and submissions</small>
+                        </span>
                     </div>
-                    <div class="toggle-switch off"></div>
+                    <span class="setting-soon-badge">Coming soon</span>
                 </div>
-                <div class="setting-card">
+                <div class="setting-card setting-card--preview" aria-disabled="true">
                     <div class="setting-info">
-                        <i class="fas fa-lock"></i>
-                        <span>Privacy Mode</span>
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="setting-info-text">
+                            Privacy
+                            <small>Control what supervisors can see on your profile</small>
+                        </span>
                     </div>
-                    <div class="toggle-switch"></div>
+                    <span class="setting-soon-badge">Coming soon</span>
                 </div>
-                <div class="setting-card">
+                <div class="setting-card setting-card--preview" aria-disabled="true">
                     <div class="setting-info">
                         <i class="fas fa-palette"></i>
-                        <span>Accent Color</span>
+                        <span class="setting-info-text">
+                            Accent Color
+                            <small>Personalize highlight colors in the portal</small>
+                        </span>
                     </div>
-                    <div class="color-badge">Dark Blue</div>
+                    <span class="setting-soon-badge">Coming soon</span>
                 </div>
             </div>
 
             <div class="settings-note">
                 <i class="fas fa-info-circle"></i>
-                Dark mode is saved in your browser. Other settings are visual only.
+                Dark mode is saved in this browser. Notification, privacy, and accent options are planned for a future release.
             </div>
         </div>
     </div>
@@ -745,9 +728,14 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 <script>
     (function() {
         const dashboard = document.querySelector('.dashboard');
-        const mode = dashboard?.dataset.enrollmentMode || 'discovery';
-        const tabButtons = document.querySelectorAll('#main-tabs .tab-btn');
-        const tabTriggers = document.querySelectorAll('.dash-tab-trigger');
+        if (!dashboard) return;
+
+        const mainTabs = document.getElementById('main-tabs');
+        if (!mainTabs) return;
+
+        const mode = dashboard.dataset.enrollmentMode || 'discovery';
+        const tabButtons = mainTabs.querySelectorAll('.tab-btn[data-tab]');
+        const tabTriggers = document.querySelectorAll('.dash-tab-trigger[data-tab]');
 
         const discoveryTabs = ['dashboard', 'projects', 'request', 'idea', 'message', 'settings'];
         const pendingTabs = ['dashboard', 'pending-status', 'message', 'settings'];
@@ -757,28 +745,39 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 
         function activateTab(tabId) {
             if (!tabIds.includes(tabId)) return;
-            tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
-            tabIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.toggle('active-content', id === tabId);
+
+            tabButtons.forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+
+            tabIds.forEach(function(id) {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.classList.toggle('active-content', id === tabId);
+                }
             });
         }
 
-        tabButtons.forEach(btn => {
+        tabButtons.forEach(function(btn) {
             btn.addEventListener('click', function() {
-                if (this.dataset.tab) activateTab(this.dataset.tab);
+                activateTab(btn.dataset.tab);
             });
         });
 
-        tabTriggers.forEach(trigger => {
+        tabTriggers.forEach(function(trigger) {
             trigger.addEventListener('click', function() {
-                if (this.dataset.tab) activateTab(this.dataset.tab);
+                if (trigger.dataset.tab) {
+                    activateTab(trigger.dataset.tab);
+                }
             });
         });
 
         const urlTab = new URLSearchParams(window.location.search).get('tab');
-        const sessionTab = dashboard?.dataset.activeTab || '';
-        const initial = [urlTab, sessionTab].find(t => t && tabIds.includes(t)) || 'dashboard';
+        const sessionTab = dashboard.dataset.activeTab || '';
+        const initial = [urlTab, sessionTab].find(function(t) {
+            return t && tabIds.includes(t);
+        }) || 'dashboard';
+
         activateTab(initial);
 
         const projectFilters = document.querySelectorAll('[data-project-filter]');
@@ -787,7 +786,9 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
         projectFilters.forEach(function(button) {
             button.addEventListener('click', function() {
                 const filter = button.dataset.projectFilter;
-                projectFilters.forEach(btn => btn.classList.toggle('active', btn === button));
+                projectFilters.forEach(function(btn) {
+                    btn.classList.toggle('active', btn === button);
+                });
                 projectItems.forEach(function(item) {
                     const status = item.dataset.status;
                     item.classList.toggle('hidden', filter !== 'all' && status !== filter);
@@ -815,6 +816,56 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
             }
 
             localStorage.setItem('theme', willBeDark ? 'dark' : 'light');
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('submission-file-input');
+        const fileZone = document.getElementById('submission-file-zone');
+        const fileName = document.getElementById('submission-file-name');
+
+        if (!fileInput || !fileZone) return;
+
+        function updateFileDisplay() {
+            const file = fileInput.files[0];
+            if (file) {
+                fileZone.classList.add('has-file');
+                if (fileName) {
+                    fileName.textContent = file.name;
+                    fileName.hidden = false;
+                }
+            } else {
+                fileZone.classList.remove('has-file');
+                if (fileName) {
+                    fileName.textContent = '';
+                    fileName.hidden = true;
+                }
+            }
+        }
+
+        fileInput.addEventListener('change', updateFileDisplay);
+
+        ['dragenter', 'dragover'].forEach(function(eventName) {
+            fileZone.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                fileZone.classList.add('is-dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(function(eventName) {
+            fileZone.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                fileZone.classList.remove('is-dragover');
+            });
+        });
+
+        fileZone.addEventListener('drop', function(e) {
+            if (e.dataTransfer?.files?.length) {
+                fileInput.files = e.dataTransfer.files;
+                updateFileDisplay();
+            }
         });
     });
 </script>

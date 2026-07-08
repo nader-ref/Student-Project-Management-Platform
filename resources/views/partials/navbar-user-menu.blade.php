@@ -24,14 +24,24 @@
         @if ($menuOnDashboard)
             <button type="button" class="navbar-dropdown-item dash-tab-trigger" data-tab="settings" role="menuitem">
                 <i class="fas fa-sliders-h"></i>
-                <span>Settings</span>
+                <span class="navbar-dropdown-item-text">
+                    Settings
+                    <small>Password, dark mode &amp; preferences</small>
+                </span>
             </button>
         @else
             <a href="{{ $menuDashboardUrl }}?tab=settings" class="navbar-dropdown-item" role="menuitem">
                 <i class="fas fa-sliders-h"></i>
-                <span>Settings</span>
+                <span class="navbar-dropdown-item-text">
+                    Settings
+                    <small>Password, dark mode &amp; preferences</small>
+                </span>
             </a>
         @endif
+        <a href="{{ url('/ChangePassword') }}" class="navbar-dropdown-item" role="menuitem">
+            <i class="fas fa-key"></i>
+            <span>Change Password</span>
+        </a>
         <form method="POST" action="{{ $menuLogoutUrl }}">
             @csrf
             <button type="submit" class="navbar-dropdown-item is-danger" role="menuitem">

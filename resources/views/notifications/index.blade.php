@@ -67,6 +67,8 @@
 
                 @include('notifications.partials.list')
             </div>
+
+            <div class="dashboard-footer-accent"></div>
         </div>
     @endif
 @endsection

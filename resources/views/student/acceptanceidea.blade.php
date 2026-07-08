@@ -34,7 +34,7 @@
                         <a href="{{ url('/StudentDashboard') }}" class="btn-hero-outline">
                             <i class="fas fa-arrow-left"></i> Dashboard
                         </a>
-                        <a href="{{ url('/StudentDashboard') }}" class="btn-hero-solid">
+                        <a href="{{ url('/StudentDashboard?tab=idea') }}" class="btn-hero-solid">
                             <i class="fas fa-lightbulb"></i> Submit New Idea
                         </a>
                     </div>
@@ -89,7 +89,7 @@
                     <h3>No idea submissions yet</h3>
                     <p>You have not proposed any project ideas. Go to the dashboard to submit your first concept with your team.</p>
                     <div class="empty-state-actions">
-                        <a href="{{ url('/StudentDashboard') }}" class="btn-primary">
+                        <a href="{{ url('/StudentDashboard?tab=idea') }}" class="btn-primary">
                             <i class="fas fa-lightbulb"></i> Submit an Idea
                         </a>
                         <a href="{{ url('/StudentDashboard/acceptance') }}" class="btn-secondary">

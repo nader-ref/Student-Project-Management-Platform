@@ -37,13 +37,18 @@
         align-items: stretch;
     }
 
-    .navbar-quick-links {
-        justify-content: flex-start;
+    .navbar-portal-nav {
         order: 3;
         width: 100%;
+        justify-content: flex-start;
         overflow-x: auto;
         flex-wrap: nowrap;
         padding-bottom: 0.15rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .navbar-portal-nav .navbar-link span {
+        display: none;
     }
 
     .navbar-actions {
@@ -79,6 +84,37 @@
         padding: 1rem 0.9rem 2rem;
     }
 
+    .dash-nav-shell {
+        margin-bottom: 1.25rem;
+    }
+
+    .dash-nav {
+        padding: 0.35rem;
+        gap: 0.3rem;
+        border-radius: 12px;
+        justify-content: center;
+    }
+
+    .dash-nav .tab-btn {
+        min-height: 2.5rem;
+        padding: 0.45rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .dash-nav .tab-btn .tab-label {
+        display: none;
+    }
+
+    .dash-nav .tab-btn i {
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    .dash-nav .tab-btn {
+        min-width: 2.5rem;
+        padding: 0.5rem 0.65rem;
+    }
+
     .acceptance-kpi-grid {
         grid-template-columns: 1fr;
     }
@@ -107,19 +143,6 @@
         gap: 0.85rem;
     }
 
-    .dash-nav {
-        margin-bottom: 1.25rem;
-        overflow-x: auto;
-    }
-
-    .dash-nav .tab-btn {
-        flex: 1 1 calc(50% - 0.35rem);
-        font-size: 0.82rem;
-        padding: 0.65rem 0.75rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
     .form-pro-layout {
         grid-template-columns: 1fr;
     }
@@ -128,8 +151,42 @@
         position: static;
     }
 
+    .dashboard .form-pro-sections {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding-bottom: 0.15rem;
+    }
+
+    .dashboard .form-pro-section {
+        flex: 0 0 auto;
+    }
+
+    .form-pro-step,
+    .form-pro-section {
+        min-width: 150px;
+    }
+
     .member-cards-grid {
         grid-template-columns: 1fr;
+    }
+
+    .messages-center-page .message-thread-list {
+        gap: 1.15rem;
+    }
+
+    .messages-center-page .message-content-block {
+        padding: 0.8rem 0.9rem;
+    }
+
+    .messages-center-page .message-chat-thread {
+        gap: 0.75rem;
+    }
+
+    .chat-bubble--incoming {
+        margin-left: 0.75rem;
     }
 }
 
@@ -137,6 +194,32 @@
     .dash-kpi-grid,
     .acceptance-kpi-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dash-nav-shell {
+        margin-bottom: 1rem;
+    }
+
+    .dash-nav {
+        padding: 0.3rem;
+        gap: 0.25rem;
+    }
+
+    .dash-nav .tab-btn {
+        min-height: 2.375rem;
+        padding: 0.4rem 0.55rem;
+        font-size: 0.78rem;
+        gap: 0.25rem;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1100px) {
+    .dash-nav.enrolled-mode .tab-btn .tab-label {
+        font-size: 0.76rem;
+    }
+
+    .dash-nav.enrolled-mode .tab-btn {
+        padding: 0.45rem 0.7rem;
     }
 }
 

@@ -15,7 +15,7 @@
         $pendingRate = $totalSent > 0 ? round(($pendingReplyCount / $totalSent) * 100) : 0;
     @endphp
 
-    <div class="dashboard">
+    <div class="dashboard messages-center-page">
         @include('student.partials.navbar')
 
         <div class="content-panel">
@@ -34,7 +34,7 @@
                         <a href="{{ url('/StudentDashboard') }}" class="btn-hero-outline">
                             <i class="fas fa-arrow-left"></i> Dashboard
                         </a>
-                        <a href="{{ url('/StudentDashboard') }}" class="btn-hero-solid">
+                        <a href="{{ url('/StudentDashboard?tab=message') }}" class="btn-hero-solid">
                             <i class="fas fa-envelope"></i> New Message
                         </a>
                     </div>
@@ -71,16 +71,20 @@
                 </div>
             </div>
 
-            <div class="tabs-container dash-nav">
-                <button class="tab-btn active" data-tab="replay">
-                    <i class="fas fa-inbox"></i> My Messages
-                </button>
-                <button class="tab-btn" data-tab="messages">
-                    <i class="fas fa-bullhorn"></i> Supervisor Announcements
-                    @if ($broadcastCount > 0)
-                        <span class="form-badge optional-badge badge-inline">{{ $broadcastCount }}</span>
-                    @endif
-                </button>
+            <div class="dash-nav-shell">
+                <nav class="tabs-container dash-nav" id="replay-tabs" aria-label="Message views">
+                    <button type="button" class="tab-btn active" data-tab="replay" title="My Messages">
+                        <i class="fas fa-inbox"></i>
+                        <span class="tab-label">My Messages</span>
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="messages" title="Supervisor Announcements">
+                        <i class="fas fa-bullhorn"></i>
+                        <span class="tab-label">Announcements</span>
+                        @if ($broadcastCount > 0)
+                            <span class="form-badge optional-badge badge-inline">{{ $broadcastCount }}</span>
+                        @endif
+                    </button>
+                </nav>
             </div>
 
             <div id="replay" class="tab-content active-content">
@@ -104,13 +108,13 @@
                         <h3>No messages sent yet</h3>
                         <p>You have not contacted any supervisor. Use the Contact tab on your dashboard to send your first message.</p>
                         <div class="empty-state-actions">
-                            <a href="{{ url('/StudentDashboard') }}" class="btn-primary">
+                            <a href="{{ url('/StudentDashboard?tab=message') }}" class="btn-primary">
                                 <i class="fas fa-paper-plane"></i> Send a Message
                             </a>
                         </div>
                     </div>
                 @else
-                    <div class="request-list" id="message-list">
+                    <div class="request-list message-thread-list" id="message-list">
                         @foreach ($myMessages as $message)
                             @php $hasReply = !empty($message->Replay); @endphp
                             <article
@@ -146,14 +150,22 @@
                                         </div>
                                     </div>
 
-                                    <div class="meta-block team-block">
-                                        <label>Your Message</label>
-                                        <span class="message-body-text">{{ $message->Message ?: '—' }}</span>
-                                    </div>
+                                    <div class="message-chat-thread">
+                                        <div class="chat-bubble chat-bubble--outgoing">
+                                            <div class="chat-bubble-header">
+                                                <span class="chat-bubble-author">{{ $message->student?->name ?? $studentName }}</span>
+                                                <time>{{ $message->created_at?->format('M d, Y') ?? '—' }}</time>
+                                            </div>
+                                            <p class="chat-bubble-text">{{ $message->Message ?: '—' }}</p>
+                                        </div>
 
-                                    <div class="meta-block team-block">
-                                        <label>Supervisor Reply</label>
-                                        <span class="message-body-text">{{ $message->Replay ?? 'No reply yet — check back later.' }}</span>
+                                        <div class="chat-bubble chat-bubble--incoming {{ $hasReply ? '' : 'is-pending' }}">
+                                            <div class="chat-bubble-header">
+                                                <span class="chat-bubble-author">{{ $message->supervisor?->name ?? 'Supervisor' }}</span>
+                                                <span class="chat-bubble-status">{{ $hasReply ? 'Replied' : 'Awaiting reply' }}</span>
+                                            </div>
+                                            <p class="chat-bubble-text">{{ $message->Replay ?? 'No reply yet — check back later.' }}</p>
+                                        </div>
                                     </div>
 
                                     <div class="request-progress" aria-label="Message progress">
@@ -196,7 +208,7 @@
                         <p>Your supervisors have not posted any announcements. Check back later for updates.</p>
                     </div>
                 @else
-                    <div class="request-list">
+                    <div class="request-list message-thread-list">
                         @foreach ($supmessages as $message)
                             <article class="request-item is-available">
                                 <div class="request-item-body">
@@ -223,9 +235,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="meta-block team-block">
+                                    <div class="meta-block message-content-block message-content-block--announcement">
                                         <label>Announcement</label>
-                                        <span class="message-body-text">{{ $message->Message }}</span>
+                                        <div class="chat-bubble chat-bubble--announcement">
+                                            <p class="chat-bubble-text">{{ $message->Message }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </article>
@@ -247,22 +261,31 @@
 @push('scripts')
     <script>
         (function() {
-            const tabButtons = document.querySelectorAll('.tab-btn');
+            const mainTabs = document.getElementById('replay-tabs');
+            if (!mainTabs) return;
+
+            const tabButtons = mainTabs.querySelectorAll('.tab-btn[data-tab]');
             const contents = {
                 replay: document.getElementById('replay'),
                 messages: document.getElementById('messages'),
             };
 
             function activateTab(tabId) {
-                tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
-                Object.entries(contents).forEach(([id, section]) => {
-                    if (section) section.classList.toggle('active-content', id === tabId);
+                tabButtons.forEach(function(btn) {
+                    btn.classList.toggle('active', btn.dataset.tab === tabId);
+                });
+                Object.entries(contents).forEach(function(entry) {
+                    const id = entry[0];
+                    const section = entry[1];
+                    if (section) {
+                        section.classList.toggle('active-content', id === tabId);
+                    }
                 });
             }
 
-            tabButtons.forEach(btn => {
+            tabButtons.forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    if (this.dataset.tab) activateTab(this.dataset.tab);
+                    activateTab(btn.dataset.tab);
                 });
             });
 

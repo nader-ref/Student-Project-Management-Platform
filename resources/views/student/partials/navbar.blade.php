@@ -8,10 +8,12 @@
 <header class="navbar-pro">
     <div class="navbar-pro-inner {{ $onDashboard ? 'navbar-pro-inner--dashboard' : '' }}">
         <a href="{{ url('/StudentDashboard') }}" class="navbar-brand">
-            <span class="navbar-brand-icon"><i class="fas fa-cubes"></i></span>
+            <span class="navbar-brand-icon">
+                @include('partials.brand-logo')
+            </span>
             <span class="navbar-brand-text">
                 <strong>Projects Hub</strong>
-                <small>Student Portal</small>
+                <small>Graduation Projects Portal</small>
             </span>
         </a>
 
