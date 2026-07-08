@@ -39,11 +39,11 @@
                     @if (!empty($step['date']))
                         <span>{{ $step['date'] }}</span>
                     @endif
-                    <span class="status-pill {{ $pillClass }}" style="margin-top: 0.35rem; display: inline-flex;">
+                    <span class="status-pill {{ $pillClass }} status-pill--stacked">
                         {{ $step['status_label'] ?? ($step['done'] ? 'Completed' : 'Upcoming') }}
                     </span>
                     @if (!empty($step['latest_submission_title']))
-                        <span style="display: block; margin-top: 0.25rem; color: #64748b; font-size: 0.9rem;">
+                        <span class="meta-subtext">
                             {{ $step['latest_submission_title'] }}
                         </span>
                     @endif
@@ -52,12 +52,12 @@
         @endforeach
     </div>
 
-    <div class="insight-card" style="margin-top: 1.25rem;">
+    <div class="insight-card insight-card--spaced">
         <h3><i class="fas fa-file-upload"></i> Submission Summary</h3>
         <div class="report-stat-row"><span>Total uploads</span><span>{{ $submissions->count() }}</span></div>
         <div class="report-stat-row"><span>Approved</span><span>{{ $submissions->where('status', 'approved')->count() }}</span></div>
         <div class="report-stat-row"><span>Needs revision</span><span>{{ $submissions->where('status', 'needs_revision')->count() }}</span></div>
-        <div class="empty-state-actions" style="margin-top: 1rem;">
+        <div class="empty-state-actions empty-state-actions--spaced">
             <button type="button" class="btn-primary dash-tab-trigger" data-tab="submissions">
                 <i class="fas fa-upload"></i> Submit a File
             </button>

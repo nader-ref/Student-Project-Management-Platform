@@ -32,6 +32,13 @@
             <span>Contact your supervisor</span>
         </div>
     </a>
+    <button type="button" class="quick-action-card quick-action-card--settings dash-tab-trigger" data-tab="settings">
+        <span class="quick-action-icon"><i class="fas fa-sliders-h"></i></span>
+        <div>
+            <strong>Settings</strong>
+            <span>Password &amp; appearance</span>
+        </div>
+    </button>
 </div>
 
 <div class="activity-card">

@@ -62,7 +62,7 @@
             >
         </div>
 
-        <button type="submit" class="auth-btn">
+        <button type="submit" class="auth-btn" data-loading-label="Updating password...">
             <i class="fas fa-check" aria-hidden="true"></i>
             Reset Password
         </button>

@@ -9,11 +9,11 @@
     <p>Upload seminar reports, presentations, and deliverables for your supervisor to review.</p>
 </div>
 
-<form method="POST" action="{{ url('/student/submission') }}" enctype="multipart/form-data" class="request-form-pro" style="margin-bottom: 1.5rem;">
+<form method="POST" action="{{ url('/student/submission') }}" enctype="multipart/form-data" class="request-form-pro submission-upload-form">
     @csrf
 
     @if ($errors->hasAny(['milestone', 'title', 'file', 'notes']))
-        <div class="form-pro-alert error" style="margin-bottom: 1rem;">
+        <div class="form-pro-alert error form-pro-alert--spaced">
             <i class="fas fa-exclamation-circle"></i>
             Please fix the errors below and try uploading again.
         </div>
@@ -51,42 +51,57 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-field form-field-pro" style="margin-top: 1rem;">
-                <label>
+            <div class="form-field form-field-pro form-field-pro--spaced">
+                <span class="form-field-label" id="submission-file-label">
                     <i class="fas fa-paperclip"></i> File
                     <span class="form-badge required-badge field-required-badge">Required</span>
-                </label>
-                <input type="file" name="file" required accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar">
-                <p class="form-field-hint">
-                    Allowed types: PDF, Word (.doc, .docx), PowerPoint (.ppt, .pptx), ZIP, or RAR. Maximum size: 10 MB.
-                </p>
+                </span>
+                <div
+                    class="file-upload-zone"
+                    id="submission-file-zone"
+                    role="group"
+                    aria-labelledby="submission-file-label"
+                >
+                    <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                    <span class="file-upload-zone-text">Click or drag a file here</span>
+                    <span class="file-upload-zone-hint">PDF, Word, PowerPoint, ZIP, or RAR — max 10 MB</span>
+                    <span class="file-upload-filename" id="submission-file-name" hidden></span>
+                    <input
+                        type="file"
+                        name="file"
+                        required
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.rar"
+                        id="submission-file-input"
+                        aria-labelledby="submission-file-label"
+                    >
+                </div>
                 @error('file')
                     <span class="error-text">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="form-field form-field-pro" style="margin-top: 1rem;">
+            <div class="form-field form-field-pro form-field-pro--spaced">
                 <label><i class="fas fa-comment"></i> Notes <span class="form-badge optional-badge field-required-badge">Optional</span></label>
                 <textarea name="notes" rows="3" placeholder="Brief description for your supervisor...">{{ old('notes') }}</textarea>
                 @error('notes')
                     <span class="error-text">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="form-pro-actions" style="padding: 0; margin-top: 1rem;">
-                <button type="submit" class="btn-primary"><i class="fas fa-upload"></i> Upload</button>
+            <div class="form-pro-actions form-pro-actions--compact">
+                <button type="submit" class="btn-primary" data-loading-label="Uploading..."><i class="fas fa-upload"></i> Upload</button>
             </div>
         </div>
     </div>
 </form>
 
-<h3 style="font-size: 1rem; margin-bottom: 1rem; color: #0a2942;"><i class="fas fa-user"></i> My Uploads</h3>
+<h3 class="subsection-heading"><i class="fas fa-user"></i> My Uploads</h3>
 @if ($mySubmissions->isEmpty())
-    <div class="empty-state" style="margin-bottom: 1.5rem;">
+    <div class="empty-state subsection-block">
         <div class="empty-state-icon"><i class="fas fa-file-upload"></i></div>
         <h3>No files uploaded yet</h3>
         <p>Submit your first deliverable using the form above.</p>
     </div>
 @else
-    <div class="request-list" style="margin-bottom: 1.5rem;">
+    <div class="request-list subsection-block">
         @foreach ($mySubmissions as $sub)
             <article class="request-item {{ $sub->isApproved() ? 'is-accepted' : ($sub->needsRevision() ? 'is-rejected' : 'is-pending') }}">
                 <div class="request-item-body">
@@ -119,7 +134,7 @@
                         @endif
                     </div>
                     @if ($sub->needsRevision())
-                        <div class="reply-bubble" style="border-color: #f59e0b; background: #fffbeb;">
+                        <div class="reply-bubble reply-bubble--revision">
                             <label><i class="fas fa-redo"></i> Revision Required — Supervisor Feedback</label>
                             {{ $sub->supervisor_feedback }}
                         </div>
@@ -129,7 +144,7 @@
                             {{ $sub->supervisor_feedback }}
                         </div>
                     @endif
-                    <div class="empty-state-actions" style="margin-top: 0.75rem;">
+                    <div class="empty-state-actions empty-state-actions--compact">
                         <a href="{{ route('student.submission.download', $sub) }}" class="btn-secondary">
                             <i class="fas fa-download"></i> Download
                         </a>
@@ -141,7 +156,7 @@
 @endif
 
 @if ($teamSubmissions->isNotEmpty())
-    <h3 style="font-size: 1rem; margin-bottom: 1rem; color: #0a2942;"><i class="fas fa-users"></i> Team Uploads</h3>
+    <h3 class="subsection-heading"><i class="fas fa-users"></i> Team Uploads</h3>
     <div class="request-list">
         @foreach ($teamSubmissions as $sub)
             <article class="request-item">

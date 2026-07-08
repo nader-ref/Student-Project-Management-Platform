@@ -34,7 +34,7 @@
                         <a href="{{ url('/StudentDashboard') }}" class="btn-hero-outline">
                             <i class="fas fa-arrow-left"></i> Dashboard
                         </a>
-                        <a href="{{ url('/StudentDashboard') }}" class="btn-hero-solid">
+                        <a href="{{ url('/StudentDashboard?tab=request') }}" class="btn-hero-solid">
                             <i class="fas fa-plus"></i> New Request
                         </a>
                     </div>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="kpi-value">{{ $totalCount }}</div>
                     <div class="kpi-meta">All requests linked to your account</div>
-                    <div class="kpi-bar"><div class="kpi-bar-fill" @style(['width' => '100%'])></div></div>
+                    <div class="kpi-bar" @style(['--bar-width: 100%' => true])><div class="kpi-bar-fill"></div></div>
                 </div>
                 <div class="kpi-card accepted">
                     <div class="kpi-card-top">
@@ -58,7 +58,7 @@
                     </div>
                     <div class="kpi-value">{{ $acceptedCount }}</div>
                     <div class="kpi-meta">{{ $acceptanceRate }}% approval rate</div>
-                    <div class="kpi-bar"><div class="kpi-bar-fill" @style(['width' => $acceptanceRate . '%'])></div></div>
+                    <div class="kpi-bar" @style(['--bar-width: '.$acceptanceRate.'%' => true])><div class="kpi-bar-fill"></div></div>
                 </div>
                 <div class="kpi-card pending">
                     <div class="kpi-card-top">
@@ -67,7 +67,7 @@
                     </div>
                     <div class="kpi-value">{{ $pendingCount }}</div>
                     <div class="kpi-meta">Awaiting supervisor decision</div>
-                    <div class="kpi-bar"><div class="kpi-bar-fill" @style(['width' => $pendingRate . '%'])></div></div>
+                    <div class="kpi-bar" @style(['--bar-width: '.$pendingRate.'%' => true])><div class="kpi-bar-fill"></div></div>
                 </div>
             </div>
 
@@ -79,10 +79,10 @@
                     <h3>No project requests found</h3>
                     <p>You have not submitted any applications yet. Start by choosing a project and building your team from the dashboard.</p>
                     <div class="empty-state-actions">
-                        <a href="{{ url('/StudentDashboard') }}" class="btn-primary">
+                        <a href="{{ url('/StudentDashboard?tab=request') }}" class="btn-primary">
                             <i class="fas fa-paper-plane"></i> Submit Request
                         </a>
-                        <a href="{{ url('/StudentDashboard') }}" class="btn-secondary">
+                        <a href="{{ url('/StudentDashboard?tab=projects') }}" class="btn-secondary">
                             <i class="fas fa-th-large"></i> Browse Projects
                         </a>
                     </div>

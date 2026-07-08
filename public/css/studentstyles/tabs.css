@@ -37,12 +37,12 @@
 
 .tab-btn.active {
     background: #0a2942;
-    color: #0a2942;
+    color: #ffffff;
     border-color: #0a2942;
 }
 
 .tab-btn.active i {
-    color: #0a2942;
+    color: #4fc3f7;
 }
 
 

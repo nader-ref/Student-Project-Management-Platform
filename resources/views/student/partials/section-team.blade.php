@@ -12,27 +12,24 @@
         <p>Team member information has not been recorded for this project yet.</p>
     </div>
 @else
-    <div class="request-list">
+    <div class="team-grid">
         @foreach ($teamMembers as $member)
-            <article class="request-item {{ $member['is_you'] ? 'is-accepted' : '' }}">
-                <div class="request-item-body">
-                    <div class="request-item-top">
-                        <div>
-                            <div class="request-ref">
-                                <i class="fas fa-user-graduate"></i>
-                                {{ $member['is_you'] ? 'You' : 'Team Member' }}
-                            </div>
-                            <h3>{{ $member['name'] }}</h3>
-                        </div>
-                        @if ($member['is_you'])
-                            <span class="status-pill accepted"><i class="fas fa-star"></i> You</span>
-                        @endif
-                    </div>
-                    <div class="meta-block">
-                        <label>Student ID</label>
-                        <span>{{ $member['id'] ?? '—' }}</span>
-                    </div>
+            <article class="team-member-card {{ $member['is_you'] ? 'is-you' : '' }}">
+                <span class="team-member-avatar">{{ strtoupper(substr($member['name'], 0, 1)) }}</span>
+                <div class="team-member-info">
+                    <strong>{{ $member['name'] }}</strong>
+                    <span class="team-member-id">
+                        <i class="fas fa-id-card"></i>
+                        {{ $member['id'] ?? '—' }}
+                    </span>
                 </div>
+                @if ($member['is_you'])
+                    <span class="status-pill accepted team-you-badge">
+                        <i class="fas fa-star"></i> You
+                    </span>
+                @else
+                    <span class="status-pill pending team-role-badge">Member</span>
+                @endif
             </article>
         @endforeach
     </div>

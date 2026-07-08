@@ -403,6 +403,13 @@ body.auth-page--supervisor {
     transform: translateY(0);
 }
 
+.auth-btn.is-loading,
+.auth-btn:disabled {
+    opacity: 0.85;
+    cursor: wait;
+    transform: none;
+}
+
 .auth-card-footer {
     margin-top: 1.5rem;
     padding-top: 1.25rem;

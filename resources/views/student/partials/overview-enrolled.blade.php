@@ -27,7 +27,7 @@
             <span class="kpi-label">My Project</span>
             <span class="kpi-icon"><i class="fas fa-graduation-cap"></i></span>
         </div>
-        <div class="kpi-value" style="font-size: 1.15rem; line-height: 1.3;">{{ \Illuminate\Support\Str::limit($enrolledProject->name, 28) }}</div>
+        <div class="kpi-value kpi-value--compact">{{ \Illuminate\Support\Str::limit($enrolledProject->name, 28) }}</div>
         <div class="kpi-meta">Active enrollment</div>
     </div>
     <div class="kpi-card supervisors">
@@ -35,7 +35,7 @@
             <span class="kpi-label">Supervisor</span>
             <span class="kpi-icon"><i class="fas fa-user-tie"></i></span>
         </div>
-        <div class="kpi-value" style="font-size: 1.1rem;">{{ $enrolledProject->supervisor->name ?? '—' }}</div>
+        <div class="kpi-value kpi-value--compact-sm">{{ $enrolledProject->supervisor->name ?? '—' }}</div>
         <div class="kpi-meta">Your project guide</div>
     </div>
     <div class="kpi-card available">
@@ -184,6 +184,21 @@
                     @endforeach
                 </div>
             @endif
+        </div>
+
+        <div class="overview-section-card settings-shortcut-card">
+            <div class="overview-section-header">
+                <h3><i class="fas fa-sliders-h"></i> Account &amp; Settings</h3>
+            </div>
+            <p class="settings-shortcut-text">Manage your password, dark mode, and workspace preferences.</p>
+            <div class="settings-shortcut-actions">
+                <button type="button" class="btn-secondary dash-tab-trigger" data-tab="settings">
+                    <i class="fas fa-cog"></i> Open Settings
+                </button>
+                <a href="{{ url('/ChangePassword') }}" class="btn-secondary">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+            </div>
         </div>
     </aside>
 </section>
