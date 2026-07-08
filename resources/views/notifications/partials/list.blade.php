@@ -1,5 +1,11 @@
 @if (session('success'))
-    <div class="{{ ($isAdmin ?? false) ? 'alert alert-success' : 'form-pro-alert success' }}">{{ session('success') }}</div>
+    <div @class([
+        'form-pro-alert success',
+        'form-pro-alert--spaced' => ! ($isAdmin ?? false),
+    ])>
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        {{ session('success') }}
+    </div>
 @endif
 
 @if ($notifications->isEmpty())

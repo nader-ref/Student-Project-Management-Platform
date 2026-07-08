@@ -3,17 +3,19 @@
 @section('title', 'Projects · Admin · Projects Hub')
 
 @section('content')
-    <div class="admin-page-header">
-        <span class="admin-page-header-icon"><i class="fas fa-diagram-project"></i></span>
-        <div>
-            <h1>Projects</h1>
-            <p>Read-only project overview.</p>
-        </div>
-    </div>
+    @include('admin.partials.page-hero', [
+        'title' => 'Projects',
+        'description' => 'Read-only project overview.',
+        'breadcrumb' => '<span>Admin</span><span class="sep">/</span><span>Projects</span>',
+    ])
 
     <section class="data-card">
+        <div class="data-card-header-bar">
+            <h2><i class="fas fa-diagram-project"></i> Project registry</h2>
+            <span>{{ count($projects) }} listed</span>
+        </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table data-table--compact">
                 <thead>
                     <tr>
                         <th>Project</th>

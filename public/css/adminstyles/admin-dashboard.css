@@ -1,0 +1,656 @@
+/* Admin dashboard – tables, cards, badges, forms, notifications */
+
+body.admin-portal .admin-page-hero {
+    margin-bottom: 1.5rem;
+}
+
+body.admin-portal .admin-page-hero .acceptance-hero-inner {
+    align-items: center;
+}
+
+body.admin-portal .dashboard-section {
+    margin-top: 2rem;
+}
+
+body.admin-portal .dashboard-section:first-of-type {
+    margin-top: 0;
+}
+
+body.admin-portal .dashboard-section-heading,
+body.admin-portal .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--adm-text-muted);
+}
+
+body.admin-portal .dashboard-section-heading a,
+body.admin-portal .overview-link-btn {
+    margin-left: auto;
+    color: var(--adm-violet);
+    font-weight: 700;
+    letter-spacing: normal;
+    text-transform: none;
+    font-size: 0.88rem;
+    text-decoration: none;
+}
+
+body.admin-portal .dashboard-section-heading a:hover,
+body.admin-portal .overview-link-btn:hover {
+    text-decoration: underline;
+    color: var(--adm-violet-deep);
+}
+
+body.admin-portal .dash-kpi-grid--admin-8 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+body.admin-portal .dash-kpi-grid--compact {
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+body.admin-portal .overview-section-card,
+body.admin-portal .data-card {
+    background: var(--adm-card);
+    border: 1px solid var(--adm-border);
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 4px 16px var(--adm-shadow);
+    overflow: hidden;
+    min-width: 0;
+}
+
+body.admin-portal .data-card--spaced {
+    margin-top: 1rem;
+}
+
+body.admin-portal .data-card-header,
+body.admin-portal .overview-section-header {
+    padding: 1.25rem 1.5rem 0;
+    margin-bottom: 0;
+}
+
+body.admin-portal .data-card-header h2,
+body.admin-portal .overview-section-header h3 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--adm-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.admin-portal .table-wrap {
+    overflow-x: auto;
+}
+
+body.admin-portal .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+body.admin-portal .data-table th,
+body.admin-portal .data-table td {
+    padding: 0.8rem 1.1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--adm-border);
+    vertical-align: middle;
+}
+
+body.admin-portal .data-table--compact th,
+body.admin-portal .data-table--compact td {
+    padding: 0.72rem 1rem;
+    font-size: 0.84rem;
+}
+
+body.admin-portal .data-table--activity td {
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+body.admin-portal .data-table--activity .cell-description {
+    max-width: 28rem;
+    color: var(--adm-text);
+}
+
+body.admin-portal .data-table--activity .cell-metadata {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    color: var(--adm-text-muted);
+    word-break: break-word;
+    max-width: 16rem;
+}
+
+body.admin-portal .data-table--activity .cell-time {
+    white-space: nowrap;
+    font-size: 0.82rem;
+    color: var(--adm-text-muted);
+}
+
+body.admin-portal .data-card-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.1rem 1.35rem;
+    border-bottom: 1px solid var(--adm-border);
+    background: linear-gradient(180deg, var(--adm-violet-soft) 0%, var(--adm-card) 100%);
+}
+
+body.admin-portal .data-card-header-bar h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--adm-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.admin-portal .data-card-header-bar span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--adm-text-muted);
+}
+
+body.admin-portal .status-stack {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+}
+
+body.admin-portal .action-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+body.admin-portal .user-name-cell strong {
+    color: var(--adm-text);
+    font-weight: 700;
+}
+
+body.admin-portal .form-pro-alert {
+    margin-bottom: 1.25rem;
+}
+
+body.admin-portal .data-table th {
+    background: linear-gradient(135deg, var(--adm-ink) 0%, #3a1e7a 100%);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+body.admin-portal .data-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+body.admin-portal .data-table tbody tr:hover {
+    background: var(--adm-violet-soft);
+}
+
+body.admin-portal .data-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+body.admin-portal .admin-notifications-page .btn-notification-primary {
+    background: linear-gradient(135deg, var(--adm-violet) 0%, var(--adm-violet-light) 100%);
+    color: #ffffff;
+}
+
+body.admin-portal .admin-notifications-page .btn-notification-secondary {
+    background: var(--adm-violet-soft);
+    color: var(--adm-violet-deep);
+}
+
+body.admin-portal .empty-state {
+    padding: 2.75rem 1.15rem;
+    text-align: center;
+    color: var(--adm-text-muted);
+    font-weight: 600;
+}
+
+body.admin-portal .pagination-wrap {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--adm-border);
+}
+
+body.admin-portal .pagination-wrap a,
+body.admin-portal .pagination-wrap span {
+    color: var(--adm-violet);
+}
+
+body.admin-portal .report-count {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--adm-text);
+}
+
+/* Badges */
+body.admin-portal .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+body.admin-portal .badge-success {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+body.admin-portal .badge-pending {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+body.admin-portal .badge-neutral {
+    background: #eef0f6;
+    color: #4b5675;
+}
+
+body.admin-portal .badge-danger {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+body.admin-portal .badge-info {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+body.admin-portal .badge-warning {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+body.admin-portal .badge-taken {
+    background: var(--adm-violet-soft);
+    color: var(--adm-violet);
+}
+
+body.admin-portal .badge-available {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+body.admin-portal .request-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--adm-violet);
+    background: var(--adm-violet-soft);
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+}
+
+body.admin-portal .text-muted {
+    color: var(--adm-text-muted);
+    font-style: italic;
+}
+
+/* Action buttons */
+body.admin-portal .action-btn {
+    border: 1px solid var(--adm-violet-muted);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--adm-text);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.4rem 0.75rem;
+    transition: 0.2s ease;
+    font-family: inherit;
+}
+
+body.admin-portal .action-btn:hover {
+    background: var(--adm-violet-soft);
+    border-color: var(--adm-violet-light);
+    color: var(--adm-violet-deep);
+}
+
+body.admin-portal .action-btn--danger {
+    color: #dc2626;
+    border-color: #fecaca;
+    background: #fef2f2;
+}
+
+body.admin-portal .action-btn--danger:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+body.admin-portal .action-btn--success {
+    color: #059669;
+    border-color: #a7f3d0;
+    background: #ecfdf5;
+}
+
+body.admin-portal .action-btn--success:hover {
+    background: #d1fae5;
+    border-color: #6ee7b7;
+}
+
+/* Alerts */
+body.admin-portal .form-pro-alert.success {
+    border-color: #a7f3d0;
+}
+
+body.admin-portal .form-pro-alert.error {
+    border-color: #fecaca;
+}
+
+/* Legacy form/summary cards mapped to form-pro */
+body.admin-portal .form-card,
+body.admin-portal .summary-card {
+    background: var(--adm-card);
+    border: 1px solid var(--adm-border);
+    border-radius: 16px;
+    box-shadow: 0 4px 16px var(--adm-shadow);
+    padding: 1.75rem;
+    max-width: 640px;
+}
+
+body.admin-portal .summary-card {
+    margin-bottom: 1.25rem;
+    padding: 1.5rem 1.75rem;
+}
+
+body.admin-portal .summary-card h2 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--adm-text);
+}
+
+body.admin-portal .summary-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+body.admin-portal .summary-item span {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--adm-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+body.admin-portal .summary-item strong {
+    font-size: 0.95rem;
+}
+
+body.admin-portal .note {
+    margin: 0 0 1.25rem;
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+    max-width: 640px;
+}
+
+body.admin-portal .note--inactive {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+body.admin-portal .form-grid {
+    display: grid;
+    gap: 1.1rem;
+}
+
+body.admin-portal .form-field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--adm-text);
+}
+
+body.admin-portal .form-field input {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--adm-violet-muted);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #ffffff;
+    color: var(--adm-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.admin-portal .form-field input:focus {
+    outline: none;
+    border-color: var(--adm-violet-light);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+}
+
+body.admin-portal .form-field.has-error input {
+    border-color: #dc2626;
+}
+
+body.admin-portal .field-error {
+    margin-top: 0.35rem;
+    color: #dc2626;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+body.admin-portal .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+body.admin-portal .btn-link {
+    color: var(--adm-violet);
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+}
+
+body.admin-portal .btn-link:hover {
+    text-decoration: underline;
+}
+
+body.admin-portal .optional-hint {
+    color: var(--adm-text-muted);
+    font-weight: 400;
+}
+
+body.admin-portal .request-form-pro {
+    max-width: 640px;
+}
+
+/* Notifications */
+body.admin-portal .admin-notifications-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+body.admin-portal .admin-mark-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--adm-violet-muted);
+    background: var(--adm-card);
+    color: var(--adm-violet);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-family: inherit;
+}
+
+body.admin-portal .admin-mark-all-btn:hover {
+    background: var(--adm-violet-soft);
+    border-color: var(--adm-violet-light);
+}
+
+body.admin-portal .admin-notifications-page .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+body.admin-portal .admin-notifications-page .notification-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    background: var(--adm-card);
+    border: 1px solid var(--adm-border);
+    box-shadow: 0 4px 16px var(--adm-shadow);
+}
+
+body.admin-portal .admin-notifications-page .notification-item--unread {
+    border-left: 4px solid var(--adm-violet-light);
+    background: linear-gradient(90deg, var(--adm-violet-soft), var(--adm-card) 22%);
+}
+
+body.admin-portal .admin-notifications-page .notification-item-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--adm-text);
+}
+
+body.admin-portal .admin-notifications-page .notification-item-body {
+    margin: 0 0 0.75rem;
+    color: var(--adm-text-muted);
+    line-height: 1.5;
+}
+
+body.admin-portal .admin-notifications-page .notification-item-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--adm-text-muted);
+}
+
+body.admin-portal .admin-notifications-page .btn-notification-primary,
+body.admin-portal .admin-notifications-page .btn-notification-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s ease;
+}
+
+body.admin-portal .admin-notifications-page .notification-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--adm-violet-soft);
+    color: var(--adm-violet);
+}
+
+body.admin-portal .admin-notifications-page .notification-status-badge--read {
+    background: #eef0f6;
+    color: var(--adm-text-muted);
+}
+
+body.admin-portal .admin-notification-empty h2 {
+    margin: 0 0 0.5rem;
+    color: var(--adm-text);
+}
+
+body.admin-portal .admin-notification-empty p {
+    margin: 0;
+    color: var(--adm-text-muted);
+}
+
+body.admin-portal .admin-notification-empty {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    border-radius: 16px;
+    background: var(--adm-card);
+    border: 1px dashed var(--adm-violet-muted);
+}
+
+body.admin-portal .admin-notification-empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--adm-violet-soft);
+    color: var(--adm-violet);
+    font-size: 1.5rem;
+}
+
+@media (max-width: 1100px) {
+    body.admin-portal .dash-kpi-grid--admin-8 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    body.admin-portal .dash-kpi-grid--admin-8 {
+        grid-template-columns: 1fr;
+    }
+
+    body.admin-portal .form-card,
+    body.admin-portal .summary-card {
+        padding: 1.35rem;
+    }
+
+    body.admin-portal .data-card-header-bar {
+        padding: 1rem 1.1rem;
+    }
+
+    body.admin-portal .data-table--compact th,
+    body.admin-portal .data-table--compact td {
+        padding: 0.65rem 0.8rem;
+    }
+
+    body.admin-portal .action-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

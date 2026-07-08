@@ -15,7 +15,7 @@
     </header>
 
     @if (session('status'))
-        <p class="auth-flash auth-flash--success" role="status">{{ session('status') }}</p>
+        <p class="auth-flash auth-flash--success" role="status"><i class="fas fa-check-circle" aria-hidden="true"></i><span>{{ session('status') }}</span></p>
     @endif
 
     <form method="POST" action="{{ route('password.email') }}" class="auth-form">

@@ -158,3 +158,27 @@ body.dark-mode .notifications-page .notification-empty h2 {
 body.dark-mode .notifications-page .notification-item--unread {
     background: linear-gradient(90deg, rgba(79, 195, 247, 0.1), rgba(18, 45, 68, 0.92) 18%);
 }
+
+/* Supervisor portal tint */
+body.supervisor-portal .notifications-page .notification-item--unread {
+    border-left-color: #5b8fc4;
+    background: linear-gradient(90deg, rgba(61, 107, 158, 0.1), rgba(255, 255, 255, 0.92) 18%);
+}
+
+body.supervisor-portal .notifications-page .notification-status-badge {
+    background: rgba(61, 107, 158, 0.14);
+    color: #2d5580;
+}
+
+body.supervisor-portal .notifications-page .btn-notification-primary {
+    background: linear-gradient(135deg, #3d4654, #2c3238);
+}
+
+body.supervisor-portal.dark-mode .notifications-page .notification-item--unread {
+    background: linear-gradient(90deg, rgba(107, 159, 212, 0.12), rgba(26, 32, 40, 0.92) 18%);
+}
+
+body.supervisor-portal.dark-mode .notifications-page .notification-status-badge {
+    background: rgba(107, 159, 212, 0.16);
+    color: #6b9fd4;
+}

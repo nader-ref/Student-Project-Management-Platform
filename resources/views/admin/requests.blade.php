@@ -3,17 +3,19 @@
 @section('title', 'Requests · Admin · Projects Hub')
 
 @section('content')
-    <div class="admin-page-header">
-        <span class="admin-page-header-icon"><i class="fas fa-inbox"></i></span>
-        <div>
-            <h1>Project Requests</h1>
-            <p>Read-only request overview.</p>
-        </div>
-    </div>
+    @include('admin.partials.page-hero', [
+        'title' => 'Project Requests',
+        'description' => 'Read-only request overview.',
+        'breadcrumb' => '<span>Admin</span><span class="sep">/</span><span>Requests</span>',
+    ])
 
     <section class="data-card">
+        <div class="data-card-header-bar">
+            <h2><i class="fas fa-inbox"></i> Request queue</h2>
+            <span>{{ count($requests) }} total</span>
+        </div>
         <div class="table-wrap">
-            <table class="data-table">
+            <table class="data-table data-table--compact">
                 <thead>
                     <tr>
                         <th>Request</th>
