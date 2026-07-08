@@ -16,6 +16,7 @@ class NotificationController extends Controller
 
         return view('notifications.index', [
             'notifications' => $notifications,
+            'isAdmin' => $user->hasRole('admin'),
             'isSupervisor' => $user->hasRole('supervisor'),
         ]);
     }
@@ -31,13 +32,30 @@ class NotificationController extends Controller
             $record->markAsRead();
         }
 
-        $actionUrl = $record->data['action_url'] ?? null;
+        $actionUrl = $this->resolveActionUrlForUser(Auth::user(), $record->data['action_url'] ?? null);
 
         if ($request->boolean('redirect') && filled($actionUrl)) {
             return redirect($actionUrl);
         }
 
         return redirect()->route('notifications.index');
+    }
+
+    private function resolveActionUrlForUser($user, ?string $actionUrl): ?string
+    {
+        if (blank($actionUrl) || ! $user->hasRole('admin')) {
+            return $actionUrl;
+        }
+
+        $adminRoutes = [
+            '/StudentDashboard/acceptance' => route('admin.requests'),
+            '/StudentDashboard/acceptanceidea' => route('admin.ideas'),
+            '/StudentDashboard/replay' => route('admin.dashboard'),
+            '/StudentDashboard' => route('admin.dashboard'),
+            '/supervisorDashboard' => route('admin.dashboard'),
+        ];
+
+        return $adminRoutes[$actionUrl] ?? route('admin.dashboard');
     }
 
     public function markAllAsRead(): RedirectResponse

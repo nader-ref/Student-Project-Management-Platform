@@ -13,8 +13,11 @@
 
 @section('content')
     <div class="admin-page-header">
-        <h1>Submissions</h1>
-        <p>Read-only submission overview.</p>
+        <span class="admin-page-header-icon"><i class="fas fa-file-arrow-up"></i></span>
+        <div>
+            <h1>Submissions</h1>
+            <p>Read-only submission overview.</p>
+        </div>
     </div>
 
     <section class="data-card">

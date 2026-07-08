@@ -185,6 +185,27 @@ it('shows a read-only submissions page to admins', function () {
     $response->assertSee($student->name);
 });
 
+it('shows admin layout on notifications page', function () {
+    [$admin] = createAdminFixture();
+
+    $this->actingAs($admin)
+        ->get(route('notifications.index'))
+        ->assertOk()
+        ->assertSee('Admin Command Center', false)
+        ->assertDontSee('Student Portal');
+});
+
+it('keeps admin signed in when navigating from notifications to admin dashboard', function () {
+    [$admin] = createAdminFixture();
+
+    $this->actingAs($admin)->get(route('notifications.index'))->assertOk();
+
+    $this->actingAs($admin)
+        ->get(route('admin.dashboard'))
+        ->assertOk()
+        ->assertSee('Welcome back, System Administrator');
+});
+
 function createAdminFixture(): array
 {
     $admin = User::factory()->create([

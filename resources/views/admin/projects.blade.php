@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="admin-page-header">
-        <h1>Projects</h1>
-        <p>Read-only project overview.</p>
+        <span class="admin-page-header-icon"><i class="fas fa-diagram-project"></i></span>
+        <div>
+            <h1>Projects</h1>
+            <p>Read-only project overview.</p>
+        </div>
     </div>
 
     <section class="data-card">

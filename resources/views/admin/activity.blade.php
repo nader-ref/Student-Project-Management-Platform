@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="admin-page-header">
-        <h1>Activity Log</h1>
-        <p>Read-only audit trail of important administrative and workflow events.</p>
+        <span class="admin-page-header-icon"><i class="fas fa-clock-rotate-left"></i></span>
+        <div>
+            <h1>Activity Log</h1>
+            <p>Read-only audit trail of important administrative and workflow events.</p>
+        </div>
     </div>
 
     <section class="data-card">
