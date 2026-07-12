@@ -182,3 +182,40 @@ body.supervisor-portal.dark-mode .notifications-page .notification-status-badge 
     background: rgba(107, 159, 212, 0.16);
     color: #6b9fd4;
 }
+
+/* PM-022 — responsive */
+@media (max-width: 768px) {
+    .notifications-page .notification-item {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1.1rem 1.15rem;
+    }
+
+    .notifications-page .notification-item-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .notifications-page .btn-notification-primary,
+    .notifications-page .btn-notification-secondary {
+        width: 100%;
+        justify-content: center;
+        min-height: 2.5rem;
+    }
+
+    .notifications-page .notification-empty {
+        padding: 2rem 1.15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .notifications-page .notification-item-header h2 {
+        font-size: 0.98rem;
+    }
+
+    .notifications-page .notification-item-meta {
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+}
