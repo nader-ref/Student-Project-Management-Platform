@@ -113,11 +113,17 @@ body.admin-portal .breadcrumb a {
 }
 
 /* Section navigation */
-body.admin-portal .dash-nav-shell {
+body.admin-portal .dash-nav-shell,
+body.admin-portal .admin-tabs-shell {
     display: flex;
     justify-content: center;
     margin-bottom: 1.5rem;
     width: 100%;
+}
+
+body.admin-portal .admin-tabs-shell {
+    margin-top: 0;
+    margin-bottom: 1.75rem;
 }
 
 body.admin-portal .tabs-container.dash-nav,
