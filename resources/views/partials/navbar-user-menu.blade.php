@@ -2,6 +2,8 @@
     $menuOnDashboard = $menuOnDashboard ?? false;
     $menuLogoutUrl = $menuLogoutUrl ?? route('logout');
     $menuDashboardUrl = $menuDashboardUrl ?? url('/StudentDashboard');
+    $menuChangePasswordUrl = $menuChangePasswordUrl ?? url('/ChangePassword');
+    $menuShowChangePassword = $menuShowChangePassword ?? true;
 @endphp
 
 <div class="navbar-user-menu">
@@ -38,11 +40,13 @@
                 </span>
             </a>
         @endif
-        <a href="{{ url('/ChangePassword') }}" class="navbar-dropdown-item" role="menuitem">
-            <i class="fas fa-key"></i>
-            <span>Change Password</span>
-        </a>
-        <form method="POST" action="{{ $menuLogoutUrl }}">
+        @if ($menuShowChangePassword)
+            <a href="{{ $menuChangePasswordUrl }}" class="navbar-dropdown-item" role="menuitem">
+                <i class="fas fa-key"></i>
+                <span>Change Password</span>
+            </a>
+        @endif
+        <form method="POST" action="{{ $menuLogoutUrl }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-dropdown-item is-danger" role="menuitem">
                 <i class="fas fa-sign-out-alt"></i>
@@ -88,11 +92,28 @@
                 else closeMenu();
             });
 
+            dropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
             dropdown.querySelectorAll('.navbar-dropdown-item').forEach(function(item) {
                 item.addEventListener('click', function() {
+                    if (item.type === 'submit') {
+                        return;
+                    }
                     closeMenu();
                 });
             });
+
+            const logoutForm = dropdown.querySelector('.navbar-logout-form');
+            if (logoutForm) {
+                logoutForm.addEventListener('submit', function() {
+                    const submitButton = logoutForm.querySelector('[type="submit"]');
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
+                });
+            }
         });
 
         document.addEventListener('click', function() {

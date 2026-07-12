@@ -21,6 +21,7 @@
                 'menuOnDashboard' => $onDashboard,
                 'menuLogoutUrl' => route('logout'),
                 'menuDashboardUrl' => url('/supervisorDashboard'),
+                'menuShowChangePassword' => false,
             ])
         </div>
     </div>

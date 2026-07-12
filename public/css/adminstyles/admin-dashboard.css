@@ -1,7 +1,13 @@
 /* Admin dashboard – tables, cards, badges, forms, notifications */
 
-body.admin-portal .admin-page-hero {
-    margin-bottom: 1.5rem;
+body.admin-portal .admin-page-hero,
+body.admin-portal .admin-dashboard-hero {
+    margin-bottom: 0;
+}
+
+body.admin-portal .admin-tabs-shell {
+    margin-top: 1rem;
+    margin-bottom: 1.75rem;
 }
 
 body.admin-portal .admin-page-hero .acceptance-hero-inner {
@@ -560,6 +566,13 @@ body.admin-portal .admin-notifications-page .notification-item-meta {
     color: var(--adm-text-muted);
 }
 
+body.admin-portal .admin-notifications-page .notification-item-actions {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 body.admin-portal .admin-notifications-page .btn-notification-primary,
 body.admin-portal .admin-notifications-page .btn-notification-secondary {
     display: inline-flex;
@@ -628,10 +641,78 @@ body.admin-portal .admin-notification-empty-icon {
     body.admin-portal .dash-kpi-grid--admin-8 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    body.admin-portal .dash-kpi-grid--compact {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1024px) {
+    body.admin-portal .dash-nav-shell,
+    body.admin-portal .admin-tabs-shell {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    body.admin-portal .dash-nav {
+        width: 100%;
+        max-width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    body.admin-portal .content-panel {
+        padding: 1.35rem 1.1rem 2.25rem;
+    }
+
+    body.admin-portal .admin-page-hero .acceptance-hero {
+        padding: 1.35rem 1.25rem;
+    }
+
+    body.admin-portal .admin-page-hero .acceptance-hero h1 {
+        font-size: 1.45rem;
+    }
+
+    body.admin-portal .data-table {
+        min-width: 36rem;
+    }
+
+    body.admin-portal .data-table--activity {
+        min-width: 42rem;
+    }
+
+    body.admin-portal .table-wrap {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body.admin-portal .admin-notifications-toolbar {
+        margin-bottom: 1rem;
+    }
+
+    body.admin-portal .admin-mark-all-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 2.5rem;
+    }
+
+    body.admin-portal .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.admin-portal .form-actions .btn-primary,
+    body.admin-portal .form-actions .btn-secondary,
+    body.admin-portal .form-actions a {
+        width: 100%;
+        justify-content: center;
+        min-height: 2.5rem;
+    }
 }
 
 @media (max-width: 720px) {
-    body.admin-portal .dash-kpi-grid--admin-8 {
+    body.admin-portal .dash-kpi-grid--admin-8,
+    body.admin-portal .dash-kpi-grid--compact {
         grid-template-columns: 1fr;
     }
 
@@ -642,6 +723,8 @@ body.admin-portal .admin-notification-empty-icon {
 
     body.admin-portal .data-card-header-bar {
         padding: 1rem 1.1rem;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     body.admin-portal .data-table--compact th,
@@ -651,6 +734,66 @@ body.admin-portal .admin-notification-empty-icon {
 
     body.admin-portal .action-group {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    body.admin-portal .action-group .btn-primary,
+    body.admin-portal .action-group .btn-secondary,
+    body.admin-portal .action-group a {
+        width: 100%;
+        justify-content: center;
+        min-height: 2.5rem;
+    }
+
+    body.admin-portal .dash-nav {
+        padding: 0.35rem;
+        gap: 0.3rem;
+        justify-content: flex-start;
+    }
+
+    body.admin-portal .dash-nav .admin-tab-link {
+        min-height: 2.5rem;
+        min-width: 2.5rem;
+        padding: 0.5rem 0.65rem;
+    }
+
+    body.admin-portal .dash-nav .admin-tab-link .tab-label {
+        display: none;
+    }
+
+    body.admin-portal .admin-notifications-page .notification-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.admin-portal .admin-notifications-page .notification-item-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.admin-portal .admin-notifications-page .btn-notification-primary,
+    body.admin-portal .admin-notifications-page .btn-notification-secondary {
+        width: 100%;
+        justify-content: center;
+        min-height: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body.admin-portal .content-panel {
+        padding: 1rem 0.9rem 2rem;
+    }
+
+    body.admin-portal .data-table th,
+    body.admin-portal .data-table td {
+        padding: 0.6rem 0.7rem;
+        font-size: 0.82rem;
+    }
+
+    body.admin-portal .data-table--activity .cell-description,
+    body.admin-portal .data-table--activity .cell-metadata {
+        max-width: none;
     }
 }

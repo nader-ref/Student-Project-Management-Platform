@@ -636,4 +636,95 @@ a {
     .welcome-header-signin {
         display: none;
     }
+
+    .welcome-header-inner {
+        padding-block: 0.85rem;
+    }
+
+    .welcome-brand-text strong {
+        font-size: 0.95rem;
+    }
+
+    .welcome-brand-text small {
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+    }
+
+    .welcome-hero-grid {
+        gap: 2rem;
+        padding-block: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    .welcome-hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .welcome-hero-cta .welcome-btn-primary,
+    .welcome-hero-cta .welcome-btn-outline {
+        width: 100%;
+        justify-content: center;
+        min-height: 2.75rem;
+    }
+
+    .welcome-trust-row {
+        flex-direction: column;
+        gap: 0.55rem;
+        margin-top: 1.5rem;
+    }
+
+    .welcome-section {
+        padding-block: clamp(2rem, 4vw, 3rem);
+    }
+
+    .welcome-section-heading {
+        margin-bottom: 2rem;
+    }
+
+    .welcome-portal-card {
+        padding: 1.35rem;
+    }
+
+    .welcome-portal-card h3 {
+        font-size: 1.25rem;
+    }
+
+    .welcome-preview-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .welcome-preview-highlight-top {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .welcome-soft-card,
+    .welcome-step-card {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .welcome-container {
+        padding-inline: 1rem;
+    }
+
+    .welcome-hero h1 {
+        font-size: 1.75rem;
+        max-width: none;
+    }
+
+    .welcome-glass-card {
+        padding: 1rem;
+        border-radius: 1.25rem;
+    }
+
+    .welcome-preview {
+        padding: 1.15rem;
+    }
+
+    .welcome-preview-stat strong {
+        font-size: 1.45rem;
+    }
 }

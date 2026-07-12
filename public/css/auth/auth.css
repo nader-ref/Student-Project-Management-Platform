@@ -529,3 +529,45 @@ body.auth-page--supervisor {
         padding: 1.5rem 1.35rem 1.35rem;
     }
 }
+
+@media (max-width: 480px) {
+    .auth-brand-panel {
+        padding: 1.35rem 1.15rem 1.5rem;
+    }
+
+    .auth-brand-text strong {
+        font-size: 1.15rem;
+    }
+
+    .auth-headline {
+        font-size: 1.2rem;
+        max-width: none;
+    }
+
+    .auth-form-panel {
+        padding: 0 0.85rem 1.75rem;
+    }
+
+    .auth-card-body {
+        padding: 1.25rem 1.1rem 1.15rem;
+    }
+
+    .auth-card-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .auth-form-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.65rem;
+    }
+
+    .auth-btn {
+        min-height: 2.75rem;
+    }
+
+    .auth-field input,
+    .auth-field select {
+        min-height: 2.75rem;
+    }
+}

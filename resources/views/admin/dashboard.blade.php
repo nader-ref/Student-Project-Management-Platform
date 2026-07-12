@@ -3,7 +3,7 @@
 @section('title', 'Admin Dashboard · Projects Hub')
 
 @section('content')
-    <section class="acceptance-hero">
+    <section class="acceptance-hero admin-page-hero admin-dashboard-hero">
         <div class="acceptance-hero-inner">
             <div>
                 <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -24,6 +24,8 @@
             </div>
         </div>
     </section>
+
+    @include('admin.partials.tabs')
 
     <section class="dashboard-section" aria-labelledby="overview-heading">
         <h2 id="overview-heading" class="dashboard-section-heading"><i class="fas fa-chart-pie"></i> Overview</h2>

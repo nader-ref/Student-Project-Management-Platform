@@ -22,3 +22,5 @@
         @endisset
     </div>
 </section>
+
+@include('admin.partials.tabs')
