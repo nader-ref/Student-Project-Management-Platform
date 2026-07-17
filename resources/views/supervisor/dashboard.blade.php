@@ -579,6 +579,23 @@
                                         <label>Team</label>
                                         <span>{{ $ideaMembers->pluck('user.name')->implode(', ') }}</span>
                                     </div>
+                                    <div class="idea-proposal-actions">
+                                        @if (filled($idea->proposal_description))
+                                            <button
+                                                type="button"
+                                                class="btn-secondary js-view-proposal-details"
+                                                data-proposal-title="{{ $idea->projectname }}"
+                                                data-proposal-team="{{ $ideaMembers->pluck('user.name')->implode(', ') }}"
+                                                data-proposal-ref="IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}"
+                                                data-proposal-src="proposal-src-pending-{{ $idea->id }}"
+                                            >
+                                                <i class="fas fa-file-alt"></i> View Proposal Details
+                                            </button>
+                                            <pre id="proposal-src-pending-{{ $idea->id }}" class="proposal-src-hidden" hidden>{{ $idea->proposal_description }}</pre>
+                                        @else
+                                            <p class="idea-proposal-empty">No proposal details provided.</p>
+                                        @endif
+                                    </div>
                                     <div class="decision-actions">
                                         <div class="decision-actions__accept">
                                             <form action="{{ url('/acceptidea') }}" method="POST">
@@ -698,6 +715,32 @@
 
         <div class="dashboard-footer-accent"></div>
     </div>
+
+    <div class="proposal-modal" id="proposal-details-modal" hidden>
+        <div class="proposal-modal__backdrop js-proposal-modal-close" tabindex="-1"></div>
+        <div class="proposal-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="proposal-modal-title">
+            <div class="proposal-modal__header">
+                <div>
+                    <p class="proposal-modal__ref" id="proposal-modal-ref"></p>
+                    <h3 id="proposal-modal-title"></h3>
+                </div>
+                <button type="button" class="proposal-modal__close js-proposal-modal-close" aria-label="Close proposal details">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="proposal-modal__meta">
+                <label>Team</label>
+                <p id="proposal-modal-team"></p>
+            </div>
+            <div class="proposal-modal__body">
+                <label>Submitted proposal description</label>
+                <div class="proposal-modal__content" id="proposal-modal-body"></div>
+            </div>
+            <div class="proposal-modal__footer">
+                <button type="button" class="btn-secondary js-proposal-modal-close">Close</button>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -787,5 +830,48 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('theme', willBeDark ? 'dark' : 'light');
     });
 });
+
+(function() {
+    const modal = document.getElementById('proposal-details-modal');
+    if (!modal) return;
+
+    const titleEl = document.getElementById('proposal-modal-title');
+    const refEl = document.getElementById('proposal-modal-ref');
+    const teamEl = document.getElementById('proposal-modal-team');
+    const bodyEl = document.getElementById('proposal-modal-body');
+
+    function openModal(button) {
+        const srcId = button.getAttribute('data-proposal-src');
+        const src = srcId ? document.getElementById(srcId) : null;
+        titleEl.textContent = button.getAttribute('data-proposal-title') || '';
+        refEl.textContent = button.getAttribute('data-proposal-ref') || '';
+        teamEl.textContent = button.getAttribute('data-proposal-team') || '—';
+        bodyEl.textContent = src ? (src.textContent || '') : '';
+        modal.hidden = false;
+        document.body.classList.add('proposal-modal-open');
+    }
+
+    function closeModal() {
+        modal.hidden = true;
+        document.body.classList.remove('proposal-modal-open');
+        bodyEl.textContent = '';
+    }
+
+    document.querySelectorAll('.js-view-proposal-details').forEach(function(button) {
+        button.addEventListener('click', function() {
+            openModal(button);
+        });
+    });
+
+    modal.querySelectorAll('.js-proposal-modal-close').forEach(function(el) {
+        el.addEventListener('click', closeModal);
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && !modal.hidden) {
+            closeModal();
+        }
+    });
+})();
 </script>
 @endpush

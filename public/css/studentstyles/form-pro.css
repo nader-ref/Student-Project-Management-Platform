@@ -330,6 +330,17 @@
     margin-top: 1rem;
 }
 
+.form-help-text {
+    margin: 0.4rem 0 0;
+    font-size: 0.8rem;
+    color: #5a6b7d;
+    line-height: 1.45;
+}
+
+body.dark-mode .form-help-text {
+    color: #8b9cb3;
+}
+
 .form-pro-actions--compact {
     padding: 0;
     margin-top: 1rem;
@@ -826,6 +837,207 @@ body.dark-mode .navbar-dropdown-item.is-danger i {
 
 body.dark-mode .navbar-dropdown-item.is-danger:hover {
     background: rgba(229, 57, 53, 0.15);
+}
+
+/* AI Project Proposal Assistant (advisory only) */
+.ai-proposal-assistant {
+    margin-bottom: 0.25rem;
+}
+
+.ai-proposal-notice {
+    margin-bottom: 1rem;
+}
+
+.ai-raw-idea-input {
+    width: 100%;
+    min-height: 6.5rem;
+    resize: vertical;
+    border: 1px solid #dce6f3;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font: inherit;
+    color: #0a2942;
+    background: #fff;
+    line-height: 1.5;
+}
+
+.ai-raw-idea-input:focus {
+    outline: none;
+    border-color: #7aa7d4;
+    box-shadow: 0 0 0 3px rgba(122, 167, 212, 0.25);
+}
+
+.ai-proposal-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    color: #5a6b7d;
+}
+
+.ai-proposal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.ai-proposal-error {
+    margin-top: 1rem;
+}
+
+.ai-proposal-error[hidden],
+.ai-proposal-notice-banner[hidden],
+.ai-proposal-result[hidden] {
+    display: none !important;
+}
+
+.ai-proposal-notice-banner {
+    margin-top: 1rem;
+    background: #fff8e8;
+    border: 1px solid #f0d9a0;
+    color: #8a6200;
+}
+
+.ai-proposal-result {
+    margin-top: 1.25rem;
+    padding-top: 1.15rem;
+    border-top: 1px solid #dce6f3;
+}
+
+.ai-proposal-result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ai-proposal-result-header h4 {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+    color: #0a2942;
+}
+
+.ai-proposal-disclaimer {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #5a6b7d;
+    line-height: 1.45;
+}
+
+.ai-mode-badge {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid #dce6f3;
+    background: #f4f7fb;
+    color: #5a6b7d;
+}
+
+.ai-mode-badge.is-ai {
+    background: #e8f4ff;
+    border-color: #b7d4f0;
+    color: #0a4a7a;
+}
+
+.ai-mode-badge.is-fallback {
+    background: #fff8e8;
+    border-color: #f0d9a0;
+    color: #8a6200;
+}
+
+.ai-suggestion-block {
+    margin-bottom: 0.95rem;
+}
+
+.ai-suggestion-block label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #5a6b7d;
+    margin-bottom: 0.35rem;
+}
+
+.ai-suggestion-block p,
+.ai-suggestion-block ul {
+    margin: 0;
+    color: #0a2942;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.ai-suggestion-block ul {
+    padding-left: 1.15rem;
+}
+
+.ai-suggestion-block li + li {
+    margin-top: 0.25rem;
+}
+
+body.dark-mode .ai-raw-idea-input {
+    background: #161b22;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark-mode .ai-proposal-result {
+    border-top-color: #30363d;
+}
+
+body.dark-mode .ai-proposal-result-header h4,
+body.dark-mode .ai-suggestion-block p,
+body.dark-mode .ai-suggestion-block ul {
+    color: #e6edf3;
+}
+
+body.dark-mode .ai-mode-badge.is-ai {
+    background: rgba(56, 139, 253, 0.15);
+    border-color: #388bfd;
+    color: #79b8ff;
+}
+
+body.dark-mode .ai-mode-badge.is-fallback {
+    background: rgba(210, 153, 34, 0.15);
+    border-color: #d29922;
+    color: #e3b341;
+}
+
+.ai-apply-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%) translateY(1rem);
+    z-index: 1200;
+    max-width: min(32rem, calc(100vw - 2rem));
+    padding: 0.85rem 1.15rem;
+    border-radius: 12px;
+    background: #0a2942;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    box-shadow: 0 10px 28px rgba(10, 41, 66, 0.28);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.ai-apply-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+body.dark-mode .ai-apply-toast {
+    background: #1f6feb;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 

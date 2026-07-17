@@ -120,6 +120,7 @@ class ProjectrequestController extends Controller
     {
         $validated = $request->validate([
             'projectname' => 'required|string',
+            'proposal_description' => 'nullable|string|max:5000',
             'count' => 'required|integer|min:1|max:3',
             'supervisor_id' => 'required|integer|exists:supervisors,id',
             'oneid' => 'required|string',
@@ -150,6 +151,9 @@ class ProjectrequestController extends Controller
         $idea = DB::transaction(function () use ($validated, $supervisor, $memberResult) {
             $idea = Idea::create([
                 'projectname' => $validated['projectname'],
+                'proposal_description' => filled($validated['proposal_description'] ?? null)
+                    ? $validated['proposal_description']
+                    : null,
                 'supervisor_id' => $supervisor->id,
                 'requested_by_user_id' => Auth::id(),
                 'count' => count($memberResult['members']),

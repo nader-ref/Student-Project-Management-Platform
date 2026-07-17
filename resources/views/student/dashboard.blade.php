@@ -375,6 +375,8 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 
             <div class="form-pro-layout">
                 <div class="form-pro-main">
+                    @include('student.partials.ai-proposal-assistant')
+
                     <form method="POST" action="{{ url('/RequstIdea') }}" class="request-form-pro">
                         @csrf
 
@@ -414,6 +416,21 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                                 @error('supervisor_id')
                                 <span class="error-text">{{ $message }}</span>
                                 @enderror
+
+                                <div class="form-field form-field-pro form-field-pro--spaced">
+                                    <label for="proposal_description"><i class="fas fa-align-left"></i> Proposal Description</label>
+                                    <textarea
+                                        id="proposal_description"
+                                        name="proposal_description"
+                                        rows="8"
+                                        maxlength="5000"
+                                        placeholder="Problem statement, objectives, scope, and initial functional requirements…"
+                                    >{{ old('proposal_description') }}</textarea>
+                                    <p class="form-help-text">Optional. Write manually or use Apply AI Suggestion to populate this field before submitting.</p>
+                                    @error('proposal_description')
+                                    <span class="error-text">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 
