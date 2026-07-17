@@ -8,6 +8,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProjectSubmissionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\AiProposalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,9 @@ Route::middleware(['auth', 'account.active', 'email.complete', 'student'])->grou
     Route::post('/RequstAdd', [ProjectrequestController::class, 'request']);
     Route::get('/StudentDashboard/acceptance', [ProjectrequestController::class, 'accept']);
     Route::post('/RequstIdea', [ProjectrequestController::class, 'idea']);
+    Route::post('/student/ai/proposal', [AiProposalController::class, 'suggest'])
+        ->middleware('throttle:10,1')
+        ->name('student.ai.proposal');
     Route::get('/StudentDashboard/acceptanceidea', [ProjectrequestController::class, 'acceptidea']);
     Route::post('/Message', [MessageController::class, 'message']);
     Route::get('/StudentDashboard/replay', [MessageController::class, 'replay']);
