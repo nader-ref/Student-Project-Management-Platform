@@ -91,6 +91,23 @@
                                 <span>{{ $idea->updated_at?->format('M d, Y') ?? '—' }}</span>
                             </div>
                         </div>
+                        <div class="idea-proposal-actions">
+                            @if (filled($idea->proposal_description))
+                                <button
+                                    type="button"
+                                    class="btn-secondary js-view-proposal-details"
+                                    data-proposal-title="{{ $idea->projectname }}"
+                                    data-proposal-team="{{ $ideaMembers->pluck('user.name')->implode(', ') }}"
+                                    data-proposal-ref="IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}"
+                                    data-proposal-src="proposal-src-history-{{ $idea->id }}"
+                                >
+                                    <i class="fas fa-file-alt"></i> View Proposal Details
+                                </button>
+                                <pre id="proposal-src-history-{{ $idea->id }}" class="proposal-src-hidden" hidden>{{ $idea->proposal_description }}</pre>
+                            @else
+                                <p class="idea-proposal-empty">No proposal details provided.</p>
+                            @endif
+                        </div>
                         @if ($idea->rejected && !empty($idea->reason))
                             <div class="reply-bubble">
                                 <label>Rejection Reason</label>
