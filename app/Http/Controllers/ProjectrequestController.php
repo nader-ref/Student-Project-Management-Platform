@@ -9,11 +9,14 @@ use App\Models\UniProject;
 use App\Models\User;
 use App\Notifications\WorkflowNotification;
 use App\Services\ActivityLogger;
+use App\Services\Ai\ProjectSimilarityService;
 use App\Services\WorkflowGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Throwable;
 
 class ProjectrequestController extends Controller
 {
@@ -169,6 +172,10 @@ class ProjectrequestController extends Controller
             return $idea;
         });
 
+        // Best-effort advisory snapshot after the idea is safely persisted.
+        // Never trust client-posted similarity_* fields; never fail submission.
+        $this->persistSimilaritySnapshot($idea);
+
         ActivityLogger::log(
             ActivityLogger::IDEA_SUBMITTED,
             "Submitted project idea: {$idea->projectname}",
@@ -198,6 +205,57 @@ class ProjectrequestController extends Controller
         }
 
         return redirect()->back()->with('success', 'Your request has been submitted successfully.');
+    }
+
+    /**
+     * Persist a privacy-safe similarity snapshot for supervisor review.
+     * Failures are isolated so idea submission always remains successful.
+     */
+    private function persistSimilaritySnapshot(Idea $idea): void
+    {
+        $started = microtime(true);
+        $model = (string) config('ai.embedding_model');
+
+        try {
+            $snapshot = app(ProjectSimilarityService::class)->buildSnapshot(
+                (string) $idea->projectname,
+                $idea->proposal_description,
+            );
+
+            $idea->forceFill($snapshot)->save();
+
+            Log::info('Idea similarity snapshot stored', [
+                'idea_id' => $idea->id,
+                'similarity_status' => $snapshot['similarity_status'],
+                'model' => $snapshot['similarity_model'] ?? $model,
+                'duration_ms' => (int) round((microtime(true) - $started) * 1000),
+            ]);
+        } catch (Throwable $e) {
+            Log::warning('Idea similarity snapshot failed', [
+                'idea_id' => $idea->id,
+                'model' => $model,
+                'diagnostic' => class_basename($e).': '.$e->getMessage(),
+                'duration_ms' => (int) round((microtime(true) - $started) * 1000),
+            ]);
+
+            try {
+                $idea->forceFill([
+                    'similarity_status' => 'unavailable',
+                    'similarity_percentage' => null,
+                    'similarity_level' => null,
+                    'similarity_match_source_type' => null,
+                    'similarity_match_source_id' => null,
+                    'similarity_match_title' => null,
+                    'similarity_checked_at' => now(),
+                    'similarity_model' => $model !== '' ? $model : null,
+                ])->save();
+            } catch (Throwable $updateError) {
+                Log::warning('Idea similarity unavailable marker failed', [
+                    'idea_id' => $idea->id,
+                    'diagnostic' => class_basename($updateError).': '.$updateError->getMessage(),
+                ]);
+            }
+        }
     }
 
     public function acceptidea()

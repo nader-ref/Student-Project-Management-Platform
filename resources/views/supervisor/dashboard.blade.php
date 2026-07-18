@@ -572,6 +572,9 @@
                                         <div>
                                             <div class="request-ref">IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}</div>
                                             <h3>{{ $idea->projectname }}</h3>
+                                            <div class="idea-similarity-row">
+                                                @include('supervisor.partials.similarity-badge', ['idea' => $idea])
+                                            </div>
                                         </div>
                                         <span class="status-pill pending">Under Review</span>
                                     </div>
@@ -580,19 +583,28 @@
                                         <span>{{ $ideaMembers->pluck('user.name')->implode(', ') }}</span>
                                     </div>
                                     <div class="idea-proposal-actions">
+                                        <button
+                                            type="button"
+                                            class="btn-secondary js-view-proposal-details"
+                                            data-proposal-title="{{ $idea->projectname }}"
+                                            data-proposal-team="{{ $ideaMembers->pluck('user.name')->implode(', ') }}"
+                                            data-proposal-ref="IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}"
+                                            data-proposal-src="proposal-src-pending-{{ $idea->id }}"
+                                            data-similarity-status="{{ $idea->similarity_status ?? '' }}"
+                                            data-similarity-label="{{ $idea->similarityDisplayLabel() }}"
+                                            data-similarity-percentage="{{ $idea->hasSimilarityMatch() ? number_format((float) $idea->similarity_percentage, 1) : '' }}"
+                                            data-similarity-level="{{ $idea->similarity_level ?? '' }}"
+                                            data-similarity-match-title="{{ $idea->similarity_match_title ?? '' }}"
+                                            data-similarity-match-source="{{ $idea->hasSimilarityMatch() ? $idea->similarityMatchSourceLabel() : '' }}"
+                                            data-similarity-checked-at="{{ $idea->similarity_checked_at?->format('M d, Y H:i') ?? '' }}"
+                                            data-similarity-model="{{ $idea->similarity_model ?? '' }}"
+                                        >
+                                            <i class="fas fa-file-alt"></i> View Proposal Details
+                                        </button>
                                         @if (filled($idea->proposal_description))
-                                            <button
-                                                type="button"
-                                                class="btn-secondary js-view-proposal-details"
-                                                data-proposal-title="{{ $idea->projectname }}"
-                                                data-proposal-team="{{ $ideaMembers->pluck('user.name')->implode(', ') }}"
-                                                data-proposal-ref="IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}"
-                                                data-proposal-src="proposal-src-pending-{{ $idea->id }}"
-                                            >
-                                                <i class="fas fa-file-alt"></i> View Proposal Details
-                                            </button>
                                             <pre id="proposal-src-pending-{{ $idea->id }}" class="proposal-src-hidden" hidden>{{ $idea->proposal_description }}</pre>
                                         @else
+                                            <pre id="proposal-src-pending-{{ $idea->id }}" class="proposal-src-hidden" hidden></pre>
                                             <p class="idea-proposal-empty">No proposal details provided.</p>
                                         @endif
                                     </div>
@@ -732,9 +744,18 @@
                 <label>Team</label>
                 <p id="proposal-modal-team"></p>
             </div>
-            <div class="proposal-modal__body">
-                <label>Submitted proposal description</label>
-                <div class="proposal-modal__content" id="proposal-modal-body"></div>
+            <div class="proposal-modal__scroll">
+                <div class="proposal-modal__body">
+                    <label>Submitted proposal description</label>
+                    <div class="proposal-modal__content" id="proposal-modal-body"></div>
+                </div>
+                <div class="proposal-modal__similarity" id="proposal-modal-similarity">
+                    <label>Semantic Similarity Analysis</label>
+                    <div class="proposal-modal__similarity-body" id="proposal-modal-similarity-body"></div>
+                    <p class="proposal-modal__similarity-disclaimer">
+                        This result is advisory only and does not determine acceptance or rejection.
+                    </p>
+                </div>
             </div>
             <div class="proposal-modal__footer">
                 <button type="button" class="btn-secondary js-proposal-modal-close">Close</button>
@@ -839,6 +860,97 @@ document.addEventListener('DOMContentLoaded', function() {
     const refEl = document.getElementById('proposal-modal-ref');
     const teamEl = document.getElementById('proposal-modal-team');
     const bodyEl = document.getElementById('proposal-modal-body');
+    const similarityBodyEl = document.getElementById('proposal-modal-similarity-body');
+
+    function renderSimilarity(button) {
+        if (!similarityBodyEl) return;
+
+        const status = (button.getAttribute('data-similarity-status') || '').trim();
+        const label = (button.getAttribute('data-similarity-label') || '').trim();
+        const percentage = (button.getAttribute('data-similarity-percentage') || '').trim();
+        const level = (button.getAttribute('data-similarity-level') || '').trim();
+        const matchTitle = (button.getAttribute('data-similarity-match-title') || '').trim();
+        const matchSource = (button.getAttribute('data-similarity-match-source') || '').trim();
+        const checkedAt = (button.getAttribute('data-similarity-checked-at') || '').trim();
+        const model = (button.getAttribute('data-similarity-model') || '').trim();
+
+        similarityBodyEl.replaceChildren();
+
+        if (status === 'matched') {
+            const summary = document.createElement('p');
+            summary.className = 'proposal-similarity-summary';
+            if (percentage && level) {
+                summary.textContent = percentage + '% · ' + level.charAt(0).toUpperCase() + level.slice(1);
+            } else if (label) {
+                summary.textContent = label;
+            } else {
+                summary.textContent = 'Similarity match recorded.';
+            }
+            similarityBodyEl.appendChild(summary);
+
+            if (matchTitle) {
+                const titleRow = document.createElement('p');
+                titleRow.className = 'proposal-similarity-meta';
+                const titleLabel = document.createElement('strong');
+                titleLabel.textContent = 'Closest match: ';
+                titleRow.appendChild(titleLabel);
+                titleRow.appendChild(document.createTextNode(matchTitle));
+                similarityBodyEl.appendChild(titleRow);
+            }
+
+            if (matchSource) {
+                const sourceRow = document.createElement('p');
+                sourceRow.className = 'proposal-similarity-meta';
+                const sourceLabel = document.createElement('strong');
+                sourceLabel.textContent = 'Source: ';
+                sourceRow.appendChild(sourceLabel);
+                sourceRow.appendChild(document.createTextNode(matchSource));
+                similarityBodyEl.appendChild(sourceRow);
+            }
+
+            if (checkedAt) {
+                const checkedRow = document.createElement('p');
+                checkedRow.className = 'proposal-similarity-meta';
+                const checkedLabel = document.createElement('strong');
+                checkedLabel.textContent = 'Checked: ';
+                checkedRow.appendChild(checkedLabel);
+                checkedRow.appendChild(document.createTextNode(checkedAt));
+                similarityBodyEl.appendChild(checkedRow);
+            }
+
+            if (model) {
+                const modelRow = document.createElement('p');
+                modelRow.className = 'proposal-similarity-model';
+                modelRow.textContent = 'Model: ' + model;
+                similarityBodyEl.appendChild(modelRow);
+            }
+
+            return;
+        }
+
+        const message = document.createElement('p');
+        message.className = 'proposal-similarity-summary';
+
+        if (status === 'no_match') {
+            message.textContent = 'No significant similarity was found in the current project records.';
+        } else if (status === 'unavailable') {
+            message.textContent = 'Similarity analysis was unavailable when this idea was submitted.';
+        } else {
+            message.textContent = 'This idea was submitted before similarity snapshots were enabled.';
+        }
+
+        similarityBodyEl.appendChild(message);
+
+        if (checkedAt && (status === 'no_match' || status === 'unavailable')) {
+            const checkedRow = document.createElement('p');
+            checkedRow.className = 'proposal-similarity-meta';
+            const checkedLabel = document.createElement('strong');
+            checkedLabel.textContent = 'Checked: ';
+            checkedRow.appendChild(checkedLabel);
+            checkedRow.appendChild(document.createTextNode(checkedAt));
+            similarityBodyEl.appendChild(checkedRow);
+        }
+    }
 
     function openModal(button) {
         const srcId = button.getAttribute('data-proposal-src');
@@ -846,7 +958,9 @@ document.addEventListener('DOMContentLoaded', function() {
         titleEl.textContent = button.getAttribute('data-proposal-title') || '';
         refEl.textContent = button.getAttribute('data-proposal-ref') || '';
         teamEl.textContent = button.getAttribute('data-proposal-team') || '—';
-        bodyEl.textContent = src ? (src.textContent || '') : '';
+        const proposalText = src ? (src.textContent || '').trim() : '';
+        bodyEl.textContent = proposalText !== '' ? proposalText : 'No proposal details provided.';
+        renderSimilarity(button);
         modal.hidden = false;
         document.body.classList.add('proposal-modal-open');
     }
@@ -855,6 +969,9 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.hidden = true;
         document.body.classList.remove('proposal-modal-open');
         bodyEl.textContent = '';
+        if (similarityBodyEl) {
+            similarityBodyEl.replaceChildren();
+        }
     }
 
     document.querySelectorAll('.js-view-proposal-details').forEach(function(button) {
