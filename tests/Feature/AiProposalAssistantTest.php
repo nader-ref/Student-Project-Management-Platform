@@ -306,6 +306,77 @@ it('accepts scope as an array from Ollama JSON', function () {
         );
 });
 
+it('recovers functional_requirements nested under an object-shaped scope', function () {
+    Config::set('ai.enabled', true);
+    Config::set('ai.provider', 'ollama');
+
+    $payload = [
+        'title' => 'University Parking Reservation System',
+        'problem_statement' => 'Campus parking is hard to find during peak hours.',
+        'objectives' => [
+            'Let students reserve parking spots',
+            'Show live availability',
+        ],
+        'scope' => [
+            'functional_requirements' => [
+                'User registration and login',
+                'Parking spot reservation',
+                'Payment confirmation',
+            ],
+        ],
+    ];
+
+    Http::fake([
+        'ollama.test/api/chat' => Http::response([
+            'message' => [
+                'role' => 'assistant',
+                'content' => json_encode($payload),
+            ],
+        ], 200),
+    ]);
+
+    $student = createAiProposalStudent();
+
+    $this->actingAs($student)
+        ->postJson(route('student.ai.proposal'), [
+            'raw_idea' => validRawIdea(),
+        ])
+        ->assertOk()
+        ->assertJsonPath('mode', 'ai')
+        ->assertJsonPath('diagnostic', 'ok')
+        ->assertJsonPath('suggestion.title', $payload['title'])
+        ->assertJsonPath('suggestion.functional_requirements.0', 'User registration and login');
+});
+
+it('sends keep_alive on Ollama chat requests', function () {
+    Config::set('ai.enabled', true);
+    Config::set('ai.provider', 'ollama');
+    Config::set('ai.keep_alive', '10m');
+
+    Http::fake([
+        'ollama.test/api/chat' => Http::response([
+            'message' => [
+                'role' => 'assistant',
+                'content' => json_encode(ollamaSuggestionPayload()),
+            ],
+        ], 200),
+    ]);
+
+    $student = createAiProposalStudent();
+
+    $this->actingAs($student)
+        ->postJson(route('student.ai.proposal'), [
+            'raw_idea' => validRawIdea(),
+        ])
+        ->assertOk()
+        ->assertJsonPath('mode', 'ai');
+
+    Http::assertSent(function ($request) {
+        return $request->url() === 'http://ollama.test/api/chat'
+            && ($request['keep_alive'] ?? null) === '10m';
+    });
+});
+
 it('includes a local diagnostic when falling back after malformed JSON', function () {
     Config::set('ai.enabled', true);
     Config::set('ai.provider', 'ollama');
