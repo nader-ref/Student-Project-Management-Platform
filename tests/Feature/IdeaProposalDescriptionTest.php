@@ -141,7 +141,8 @@ it('renders safely when proposal_description is null', function () {
         ->assertOk()
         ->assertSee('No Details Idea')
         ->assertSee('No proposal details provided.')
-        ->assertDontSee('View Proposal Details');
+        ->assertSee('View Proposal Details')
+        ->assertSee('Not analyzed');
 });
 
 it('escapes multiline proposal content for safe display', function () {

@@ -75,6 +75,9 @@
                             <div>
                                 <div class="request-ref">IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}</div>
                                 <h3>{{ $idea->projectname }}</h3>
+                                <div class="idea-similarity-row">
+                                    @include('supervisor.partials.similarity-badge', ['idea' => $idea])
+                                </div>
                             </div>
                             <span class="status-pill {{ $idea->accepted ? 'accepted' : 'rejected' }}">
                                 <i class="fas fa-{{ $idea->accepted ? 'check-circle' : 'times-circle' }}"></i>
@@ -92,19 +95,28 @@
                             </div>
                         </div>
                         <div class="idea-proposal-actions">
+                            <button
+                                type="button"
+                                class="btn-secondary js-view-proposal-details"
+                                data-proposal-title="{{ $idea->projectname }}"
+                                data-proposal-team="{{ $ideaMembers->pluck('user.name')->implode(', ') }}"
+                                data-proposal-ref="IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}"
+                                data-proposal-src="proposal-src-history-{{ $idea->id }}"
+                                data-similarity-status="{{ $idea->similarity_status ?? '' }}"
+                                data-similarity-label="{{ $idea->similarityDisplayLabel() }}"
+                                data-similarity-percentage="{{ $idea->hasSimilarityMatch() ? number_format((float) $idea->similarity_percentage, 1) : '' }}"
+                                data-similarity-level="{{ $idea->similarity_level ?? '' }}"
+                                data-similarity-match-title="{{ $idea->similarity_match_title ?? '' }}"
+                                data-similarity-match-source="{{ $idea->hasSimilarityMatch() ? $idea->similarityMatchSourceLabel() : '' }}"
+                                data-similarity-checked-at="{{ $idea->similarity_checked_at?->format('M d, Y H:i') ?? '' }}"
+                                data-similarity-model="{{ $idea->similarity_model ?? '' }}"
+                            >
+                                <i class="fas fa-file-alt"></i> View Proposal Details
+                            </button>
                             @if (filled($idea->proposal_description))
-                                <button
-                                    type="button"
-                                    class="btn-secondary js-view-proposal-details"
-                                    data-proposal-title="{{ $idea->projectname }}"
-                                    data-proposal-team="{{ $ideaMembers->pluck('user.name')->implode(', ') }}"
-                                    data-proposal-ref="IDEA-{{ str_pad($idea->id, 4, '0', STR_PAD_LEFT) }}"
-                                    data-proposal-src="proposal-src-history-{{ $idea->id }}"
-                                >
-                                    <i class="fas fa-file-alt"></i> View Proposal Details
-                                </button>
                                 <pre id="proposal-src-history-{{ $idea->id }}" class="proposal-src-hidden" hidden>{{ $idea->proposal_description }}</pre>
                             @else
+                                <pre id="proposal-src-history-{{ $idea->id }}" class="proposal-src-hidden" hidden></pre>
                                 <p class="idea-proposal-empty">No proposal details provided.</p>
                             @endif
                         </div>
