@@ -434,6 +434,8 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
                             </div>
                         </div>
 
+                        @include('student.partials.project-similarity-assistant')
+
                         @include('student.partials.student-members-form-pro', [
                         'leaderStep' => '02',
                         'member1Step' => '03',
