@@ -112,6 +112,69 @@ class ProjectSimilarityService
     }
 
     /**
+     * Build a privacy-safe persistence snapshot from a compare() result.
+     *
+     * @return array{
+     *     similarity_status: string,
+     *     similarity_percentage: float|null,
+     *     similarity_level: string|null,
+     *     similarity_match_source_type: string|null,
+     *     similarity_match_source_id: int|null,
+     *     similarity_match_title: string|null,
+     *     similarity_checked_at: \Illuminate\Support\Carbon,
+     *     similarity_model: string|null
+     * }
+     */
+    public function buildSnapshot(string $title, ?string $proposalDescription = null): array
+    {
+        $model = (string) config('ai.embedding_model');
+        $checkedAt = now();
+
+        $result = $this->compare($title, $proposalDescription);
+
+        if (! ($result['ok'] ?? false) || ($result['mode'] ?? '') === 'unavailable') {
+            return [
+                'similarity_status' => 'unavailable',
+                'similarity_percentage' => null,
+                'similarity_level' => null,
+                'similarity_match_source_type' => null,
+                'similarity_match_source_id' => null,
+                'similarity_match_title' => null,
+                'similarity_checked_at' => $checkedAt,
+                'similarity_model' => $model,
+            ];
+        }
+
+        $matches = $result['matches'] ?? [];
+
+        if ($matches === []) {
+            return [
+                'similarity_status' => 'no_match',
+                'similarity_percentage' => null,
+                'similarity_level' => null,
+                'similarity_match_source_type' => null,
+                'similarity_match_source_id' => null,
+                'similarity_match_title' => null,
+                'similarity_checked_at' => $checkedAt,
+                'similarity_model' => $model,
+            ];
+        }
+
+        $top = $matches[0];
+
+        return [
+            'similarity_status' => 'matched',
+            'similarity_percentage' => (float) $top['percentage'],
+            'similarity_level' => (string) $top['level'],
+            'similarity_match_source_type' => (string) $top['source_type'],
+            'similarity_match_source_id' => (int) $top['source_id'],
+            'similarity_match_title' => (string) $top['title'],
+            'similarity_checked_at' => $checkedAt,
+            'similarity_model' => $model,
+        ];
+    }
+
+    /**
      * @return list<array{source_type: string, source_id: int, title: string, text: string}>
      */
     private function loadCorpus(): array

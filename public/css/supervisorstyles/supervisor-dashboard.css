@@ -632,6 +632,7 @@ body.supervisor-portal .proposal-modal__header {
     gap: 1rem;
     padding: 1.15rem 1.25rem 0.85rem;
     border-bottom: 1px solid #e6eef7;
+    flex-shrink: 0;
 }
 
 body.supervisor-portal .proposal-modal__ref {
@@ -661,6 +662,13 @@ body.supervisor-portal .proposal-modal__close {
     flex-shrink: 0;
 }
 
+body.supervisor-portal .proposal-modal__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
 body.supervisor-portal .proposal-modal__meta,
 body.supervisor-portal .proposal-modal__body {
     padding: 0.9rem 1.25rem;
@@ -668,6 +676,7 @@ body.supervisor-portal .proposal-modal__body {
 
 body.supervisor-portal .proposal-modal__meta {
     border-bottom: 1px solid #e6eef7;
+    flex-shrink: 0;
 }
 
 body.supervisor-portal .proposal-modal__meta label,
@@ -689,8 +698,6 @@ body.supervisor-portal .proposal-modal__meta p {
 
 body.supervisor-portal .proposal-modal__content {
     margin: 0;
-    max-height: min(48vh, 22rem);
-    overflow: auto;
     padding: 0.9rem 1rem;
     border: 1px solid #dce6f3;
     border-radius: 12px;
@@ -707,6 +714,7 @@ body.supervisor-portal .proposal-modal__footer {
     justify-content: flex-end;
     padding: 0.85rem 1.25rem 1.15rem;
     border-top: 1px solid #e6eef7;
+    flex-shrink: 0;
 }
 
 body.supervisor-portal.dark-mode .proposal-modal__dialog {
@@ -737,5 +745,138 @@ body.supervisor-portal.dark-mode .proposal-modal__content {
 }
 
 body.supervisor-portal.dark-mode .idea-proposal-empty {
+    color: #8b949e;
+}
+
+/* Semantic similarity snapshot badges */
+body.supervisor-portal .idea-similarity-row {
+    margin-top: 0.4rem;
+}
+
+body.supervisor-portal .similarity-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 0.18rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    line-height: 1.35;
+    max-width: 100%;
+}
+
+body.supervisor-portal .similarity-badge--high {
+    color: #8a5a00;
+    background: #fff4e0;
+    border-color: #f0d29a;
+}
+
+body.supervisor-portal .similarity-badge--moderate {
+    color: #7a5b12;
+    background: #f7f1e3;
+    border-color: #e4d4b0;
+}
+
+body.supervisor-portal .similarity-badge--none {
+    color: #1f6b45;
+    background: #e8f6ee;
+    border-color: #b9dfc8;
+}
+
+body.supervisor-portal .similarity-badge--unavailable,
+body.supervisor-portal .similarity-badge--legacy {
+    color: #6b7785;
+    background: #f2f4f7;
+    border-color: #d8dee6;
+}
+
+body.supervisor-portal .proposal-modal__similarity {
+    padding: 0 1.25rem 0.35rem;
+}
+
+body.supervisor-portal .proposal-modal__similarity > label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7785;
+    margin-bottom: 0.45rem;
+}
+
+body.supervisor-portal .proposal-modal__similarity-body {
+    background: #f7fafc;
+    border: 1px solid #e6eef7;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+}
+
+body.supervisor-portal .proposal-similarity-summary {
+    margin: 0 0 0.45rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #243447;
+}
+
+body.supervisor-portal .proposal-similarity-meta {
+    margin: 0.25rem 0 0;
+    font-size: 0.86rem;
+    color: #3d4f63;
+}
+
+body.supervisor-portal .proposal-similarity-model {
+    margin: 0.55rem 0 0;
+    font-size: 0.75rem;
+    color: #8090a0;
+}
+
+body.supervisor-portal .proposal-modal__similarity-disclaimer {
+    margin: 0.55rem 0 0.85rem;
+    font-size: 0.78rem;
+    color: #7a8a9c;
+    font-style: italic;
+}
+
+body.supervisor-portal.dark-mode .similarity-badge--high {
+    color: #f0c674;
+    background: #3a2e16;
+    border-color: #5c4a22;
+}
+
+body.supervisor-portal.dark-mode .similarity-badge--moderate {
+    color: #e0c48a;
+    background: #2f2a1c;
+    border-color: #4a4128;
+}
+
+body.supervisor-portal.dark-mode .similarity-badge--none {
+    color: #7dcea0;
+    background: #1a2e24;
+    border-color: #2f4a3a;
+}
+
+body.supervisor-portal.dark-mode .similarity-badge--unavailable,
+body.supervisor-portal.dark-mode .similarity-badge--legacy {
+    color: #8b949e;
+    background: #21262d;
+    border-color: #30363d;
+}
+
+body.supervisor-portal.dark-mode .proposal-modal__similarity-body {
+    background: #0d1117;
+    border-color: #30363d;
+}
+
+body.supervisor-portal.dark-mode .proposal-similarity-summary {
+    color: #e6edf3;
+}
+
+body.supervisor-portal.dark-mode .proposal-similarity-meta {
+    color: #c9d1d9;
+}
+
+body.supervisor-portal.dark-mode .proposal-similarity-model,
+body.supervisor-portal.dark-mode .proposal-modal__similarity-disclaimer,
+body.supervisor-portal.dark-mode .proposal-modal__similarity > label {
     color: #8b949e;
 }
