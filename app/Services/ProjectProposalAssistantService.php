@@ -130,23 +130,30 @@ class ProjectProposalAssistantService
         $response = null;
 
         try {
+            $payload = [
+                'model' => (string) config('ai.model'),
+                'stream' => false,
+                'format' => 'json',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => self::SYSTEM_PROMPT,
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => 'Raw graduation project idea: '.$rawIdea,
+                    ],
+                ],
+            ];
+
+            $keepAlive = trim((string) config('ai.keep_alive', '10m'));
+            if ($keepAlive !== '') {
+                $payload['keep_alive'] = $keepAlive;
+            }
+
             $response = Http::timeout($timeout)
                 ->acceptJson()
-                ->post($url, [
-                    'model' => (string) config('ai.model'),
-                    'stream' => false,
-                    'format' => 'json',
-                    'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => self::SYSTEM_PROMPT,
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => 'Raw graduation project idea: '.$rawIdea,
-                        ],
-                    ],
-                ]);
+                ->post($url, $payload);
         } catch (Throwable $exception) {
             $durationMs = (int) round((microtime(true) - $startedAt) * 1000);
             $this->lastDiagnostic = $this->mapExceptionDiagnostic($exception);
@@ -352,9 +359,26 @@ class ProjectProposalAssistantService
     {
         $title = $this->asNonEmptyText($payload['title'] ?? null);
         $problemStatement = $this->asNonEmptyText($payload['problem_statement'] ?? null);
-        $scope = $this->asNonEmptyText($payload['scope'] ?? null);
         $objectives = $this->asStringList($payload['objectives'] ?? null);
         $requirements = $this->asStringList($payload['functional_requirements'] ?? null);
+        $scopeRaw = $payload['scope'] ?? null;
+
+        // Local models sometimes nest requirements inside an object-shaped scope.
+        if ($requirements === [] && is_array($scopeRaw) && ! array_is_list($scopeRaw)) {
+            $requirements = $this->asStringList(
+                $scopeRaw['functional_requirements']
+                ?? $scopeRaw['Functional Requirements']
+                ?? $scopeRaw['functionalRequirements']
+                ?? null
+            );
+        }
+
+        $scope = $this->normalizeScopeText($scopeRaw);
+
+        if ($scope === null && $requirements !== []) {
+            $scope = 'In scope: '.implode('; ', array_slice($requirements, 0, 4))
+                .'. Out of scope: features beyond the stated concept.';
+        }
 
         if ($title === null || $problemStatement === null || $scope === null) {
             return null;
@@ -371,6 +395,42 @@ class ProjectProposalAssistantService
             'scope' => $scope,
             'functional_requirements' => $requirements,
         ];
+    }
+
+    /**
+     * Convert list or object-shaped scope values into a single display string.
+     */
+    private function normalizeScopeText(mixed $scopeRaw): ?string
+    {
+        if (is_array($scopeRaw) && $scopeRaw !== [] && ! array_is_list($scopeRaw)) {
+            foreach (['description', 'summary', 'in_scope', 'In scope', 'text', 'scope'] as $key) {
+                if (! array_key_exists($key, $scopeRaw)) {
+                    continue;
+                }
+
+                $text = $this->asNonEmptyText($scopeRaw[$key]);
+                if ($text !== null) {
+                    return $text;
+                }
+            }
+
+            $parts = [];
+            foreach ($scopeRaw as $key => $value) {
+                $normalizedKey = strtolower(str_replace([' ', '-'], '_', (string) $key));
+                if (in_array($normalizedKey, ['functional_requirements', 'functionalrequirements'], true)) {
+                    continue;
+                }
+
+                $text = $this->asNonEmptyText($value);
+                if ($text !== null) {
+                    $parts[] = is_string($key) ? $key.': '.$text : $text;
+                }
+            }
+
+            return $parts === [] ? null : implode(' ', $parts);
+        }
+
+        return $this->asNonEmptyText($scopeRaw);
     }
 
     /**

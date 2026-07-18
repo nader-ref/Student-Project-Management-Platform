@@ -9,6 +9,7 @@ use App\Http\Controllers\ProjectSubmissionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\AiProposalController;
+use App\Http\Controllers\ProjectSimilarityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,9 @@ Route::middleware(['auth', 'account.active', 'email.complete', 'student'])->grou
     Route::post('/student/ai/proposal', [AiProposalController::class, 'suggest'])
         ->middleware('throttle:10,1')
         ->name('student.ai.proposal');
+    Route::post('/student/ai/similarity', [ProjectSimilarityController::class, 'check'])
+        ->middleware('throttle:6,1')
+        ->name('student.ai.similarity');
     Route::get('/StudentDashboard/acceptanceidea', [ProjectrequestController::class, 'acceptidea']);
     Route::post('/Message', [MessageController::class, 'message']);
     Route::get('/StudentDashboard/replay', [MessageController::class, 'replay']);
