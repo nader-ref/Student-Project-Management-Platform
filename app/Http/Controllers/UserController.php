@@ -356,12 +356,12 @@ class UserController extends Controller
 
         return view('student.dashboard', [
             'projects' => $projects,
-            'supervisors' => Supervisor::orderBy('name')->get(),
+            'supervisors' => Supervisor::orderBy('name', 'asc')->get(),
             'stats' => [
                 'totalProjects' => $projects->count(),
                 'availableProjects' => $projects->where('taken', 0)->count(),
                 'takenProjects' => $projects->where('taken', 1)->count(),
-                'supervisors' => Supervisor::count(),
+                'supervisors' => Supervisor::count('*'),
             ],
             'enrollmentMode' => $enrollment['mode'],
             'enrolledProject' => $enrollment['project'],
