@@ -4,10 +4,20 @@ use App\Models\Idea;
 use App\Models\Supervisor;
 use App\Models\User;
 use App\Notifications\WorkflowNotification;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Laratrust\Models\Role;
+
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseCount;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\get;
+use function Pest\Laravel\post;
+use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     foreach (['student', 'supervisor', 'admin'] as $roleName) {
@@ -58,11 +68,11 @@ function ollamaSuggestionPayload(): array
 }
 
 it('blocks guests from the AI proposal assistant', function () {
-    $this->postJson(route('student.ai.proposal'), [
+    postJson(route('student.ai.proposal'), [
         'raw_idea' => validRawIdea(),
     ])->assertUnauthorized();
 
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
 });
 
 it('blocks non-students from the AI proposal assistant', function () {
@@ -81,7 +91,7 @@ it('blocks non-students from the AI proposal assistant', function () {
         ])
         ->assertRedirect('/Login');
 
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
 });
 
 it('validates raw idea length for the AI proposal assistant', function () {
@@ -101,7 +111,7 @@ it('validates raw idea length for the AI proposal assistant', function () {
         ->assertStatus(422)
         ->assertJsonValidationErrors(['raw_idea']);
 
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
 });
 
 it('returns AI mode when Ollama succeeds', function () {
@@ -139,7 +149,7 @@ it('returns AI mode when Ollama succeeds', function () {
     expect($response->json('disclaimer'))->not->toBeEmpty();
 
     Http::assertSentCount(1);
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
     Notification::assertNothingSent();
 });
 
@@ -176,7 +186,7 @@ it('falls back when Ollama fails', function () {
     expect($response->json('suggestion.objectives'))->toBeArray()->not->toBeEmpty();
     expect($response->json('suggestion.functional_requirements'))->toBeArray()->not->toBeEmpty();
 
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
     Notification::assertNothingSent();
 });
 
@@ -204,7 +214,7 @@ it('falls back when Ollama returns malformed JSON', function () {
         ->assertJsonPath('ok', true)
         ->assertJsonPath('mode', 'fallback');
 
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
     Notification::assertNothingSent();
 });
 
@@ -224,7 +234,7 @@ it('uses fallback mode when AI is disabled and does not create an idea', functio
         ->assertJsonPath('mode', 'fallback');
 
     Http::assertNothingSent();
-    $this->assertDatabaseCount('ideas', 0);
+    assertDatabaseCount('ideas', 0);
     Notification::assertNothingSent();
 });
 
