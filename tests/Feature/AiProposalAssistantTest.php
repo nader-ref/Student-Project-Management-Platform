@@ -85,7 +85,7 @@ it('blocks non-students from the AI proposal assistant', function () {
         'user_id' => $supervisorUser->id,
     ]);
 
-    $this->actingAs($supervisorUser)
+    actingAs($supervisorUser)
         ->post(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -97,14 +97,14 @@ it('blocks non-students from the AI proposal assistant', function () {
 it('validates raw idea length for the AI proposal assistant', function () {
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => 'too short',
         ])
         ->assertStatus(422)
         ->assertJsonValidationErrors(['raw_idea']);
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => str_repeat('a', 2001),
         ])
@@ -132,7 +132,7 @@ it('returns AI mode when Ollama succeeds', function () {
 
     $student = createAiProposalStudent();
 
-    $response = $this->actingAs($student)
+    $response = actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ]);
@@ -164,7 +164,7 @@ it('falls back when Ollama fails', function () {
 
     $student = createAiProposalStudent();
 
-    $response = $this->actingAs($student)
+    $response = actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ]);
@@ -206,7 +206,7 @@ it('falls back when Ollama returns malformed JSON', function () {
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -225,7 +225,7 @@ it('uses fallback mode when AI is disabled and does not create an idea', functio
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -245,7 +245,7 @@ it('uses fallback when provider is not ollama', function () {
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -273,7 +273,7 @@ it('parses Ollama message.content when wrapped in markdown fences', function () 
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -303,7 +303,7 @@ it('accepts scope as an array from Ollama JSON', function () {
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -347,7 +347,7 @@ it('recovers functional_requirements nested under an object-shaped scope', funct
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -374,7 +374,7 @@ it('sends keep_alive on Ollama chat requests', function () {
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -402,7 +402,7 @@ it('includes a local diagnostic when falling back after malformed JSON', functio
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -428,7 +428,7 @@ it('does not send notifications when generating an AI proposal suggestion', func
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
@@ -448,7 +448,7 @@ it('leaves the existing idea submission workflow unchanged', function () {
         'user_id' => $supervisorUser->id,
     ]);
 
-    $this->actingAs($student)
+    actingAs($student)
         ->post('/RequstIdea', [
             'projectname' => 'Smart Campus Navigator',
             'count' => 1,
@@ -458,7 +458,7 @@ it('leaves the existing idea submission workflow unchanged', function () {
         ->assertSessionHas('success');
 
     expect(Idea::count())->toBe(1);
-    $this->assertDatabaseHas('ideas', [
+    assertDatabaseHas('ideas', [
         'projectname' => 'Smart Campus Navigator',
         'requested_by_user_id' => $student->id,
         'supervisor_id' => $supervisor->id,
@@ -468,7 +468,7 @@ it('leaves the existing idea submission workflow unchanged', function () {
 it('shows the AI proposal assistant on the discovery New Idea tab', function () {
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->get('/StudentDashboard')
         ->assertOk()
         ->assertSee('Project Proposal Assistant')
@@ -499,7 +499,7 @@ it('raises max_execution_time on the AI endpoint for Herd web PHP vs CLI', funct
 
     $student = createAiProposalStudent();
 
-    $this->actingAs($student)
+    actingAs($student)
         ->postJson(route('student.ai.proposal'), [
             'raw_idea' => validRawIdea(),
         ])
