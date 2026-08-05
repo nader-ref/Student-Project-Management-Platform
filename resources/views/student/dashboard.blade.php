@@ -744,6 +744,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
 @endsection
 
 @push('scripts')
+{{-- TABS --}}
 <script>
     (function() {
         const dashboard = document.querySelector('.dashboard');
@@ -817,6 +818,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
     })();
 </script>
 
+{{-- DARK MODE --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const body = document.getElementById('main-body');
@@ -839,6 +841,7 @@ $enrolledSupervisorId = $enrolledProject?->supervisor?->id;
     });
 </script>
 
+{{-- SUBMISSION FILE INPUT --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const fileInput = document.getElementById('submission-file-input');

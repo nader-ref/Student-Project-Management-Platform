@@ -84,14 +84,6 @@ class UserController extends Controller
                     ]);
                    
                     if(!Auth::attempt($log, $request->boolean('remember'))){
-                    //    $admin = Admin::where('email',request('email'))->first();
-                    //    if($admin){
-                    //      if(Hash::check(request('password'), $admin->password)&& $admin->name == request('name')){
-                    //         Session::put('email',request('email'));
-                    //         Session::put('name',request('name'));
-                    //         return view('admin.dashboard',['users'=>MyUser::All(),'finishs'=>finish::All(),'rates'=>rate::All(), 'contacts'=>AdminRate::All(),'images'=>Adminprofile::all()]);
-                    //      }
-                    //    }
 
                         throw ValidationException::withMessages([
                         'university_number' =>'sorry you dont have an account',

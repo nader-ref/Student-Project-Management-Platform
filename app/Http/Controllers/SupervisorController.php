@@ -542,7 +542,7 @@ class SupervisorController extends Controller
             return back()->withErrors($validator)->with('active_tab', 'Idea');
         }
 
-        $idea = Idea::find($request->idea);
+        $idea = Idea::query()->find($request->idea);
 
         if (! $idea || (int) $idea->supervisor_id !== (int) $supervisor->id) {
             return back()->with('error', 'Idea not found.');
