@@ -48,7 +48,9 @@
     </div>
 </div>
 
+{{-- JavaScript code for the Project Similarity Assistant --}}
 <script>
+    
 (function () {
     const root = document.getElementById('project-similarity-assistant');
     if (!root) return;

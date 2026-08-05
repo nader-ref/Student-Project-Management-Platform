@@ -310,7 +310,7 @@ class ProjectrequestController extends Controller
                 continue;
             }
 
-            $user = User::where('university_number', (string) $universityNumber)->first();
+            $user = User::query()->where('university_number', (string) $universityNumber)->first();
 
             if (! $user) {
                 return ['error' => "No student account found for university number {$universityNumber}."];

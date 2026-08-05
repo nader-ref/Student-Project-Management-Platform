@@ -766,6 +766,7 @@
 
 @push('scripts')
 <script>
+    
 (function() {
     const tabButtons = document.querySelectorAll('#main-tabs .tab-btn');
     const tabTriggers = document.querySelectorAll('.dash-tab-trigger');

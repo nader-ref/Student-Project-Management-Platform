@@ -26,11 +26,7 @@ class WorkflowGuard
      */
     public static function anyUserEnrolledInProject(array $userIds): bool
     {
-        if ($userIds === []) {
-            return false;
-        }
-
-        return ProjectMember::whereIn('user_id', $userIds)->exists();
+        return self::anyUserEnrolledInOtherProject($userIds);
     }
 
     /**
@@ -42,9 +38,12 @@ class WorkflowGuard
             return false;
         }
 
-        return ProjectMember::query()
+        /** @var \Illuminate\Database\Eloquent\Builder<ProjectMember> $query */
+        $query = ProjectMember::query();
+
+        return $query
             ->whereIn('user_id', $userIds)
-            ->when($exceptProjectId !== null, fn ($query) => $query->where('project_id', '!=', $exceptProjectId))
+            ->when($exceptProjectId !== null, fn ($builder) => $builder->where('project_id', '!=', $exceptProjectId))
             ->exists();
     }
 

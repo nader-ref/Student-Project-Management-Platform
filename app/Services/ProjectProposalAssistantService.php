@@ -58,7 +58,8 @@ class ProjectProposalAssistantService
             $this->logOutcome('ai', 'ok');
 
             return $this->response('ai', $suggestion);
-        } catch (Throwable $exception) {
+        } 
+        catch (Throwable $exception) {
             $this->lastDiagnostic ??= $this->mapExceptionDiagnostic($exception);
             $this->logOutcome('fallback', $this->lastDiagnostic);
             Log::warning('AI proposal assistant unavailable', [
