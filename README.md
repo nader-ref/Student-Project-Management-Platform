@@ -84,7 +84,7 @@ The platform includes an AI-assisted proposal analysis feature designed to help 
 -nomic-embed-text
 -Text embeddings
 -Cosine similarity
-![AI Proposal Assistant](screenshots/ai-proposal-assistant.png)
+![AI Proposal Assistant](screenshots/AI-proposal-assistant.png)
 
 ## 👥 User Roles
 
@@ -111,7 +111,7 @@ Version Control Git & GitHub
 
 The application follows the Laravel MVC architecture and uses Eloquent ORM for database interaction.
 The AI Proposal Assistant communicates with a local Ollama instance for embedding generation and proposal similarity analysis.
-![Architecture Diagram](screenshots/architecture-diagram.png)
+![Architecture Diagram](screenshots/System-Architecture-Diagram.png)
 
 ## 🧪 Testing
 
@@ -126,9 +126,9 @@ AI proposal similarity
 
 ### Running Tests
 
-+'''bash
+```bash
 php artisan test
-+'''markdown
+```
 
 ## 👨‍💻 Author
 
