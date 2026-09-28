@@ -16,7 +16,7 @@ Supervisor Dashboard
 Admin Dashboard
 ![Admin Dashboard](screenshots/admin-dashboard.png)
 Workflow Overview
-![Workflow Overview](screenshots/workflow-overview.png)
+![Workflow Overview](screenshots/project-workflow.png)
 
 ## ✨ Overview
 
