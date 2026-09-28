@@ -10,13 +10,13 @@ A web-based platform designed to manage and streamline the graduation project li
 ## 📸 Screenshots
 
 Student Dashboard
-![Student Dashboard](./screenshots/student-dashboard.png)
+![Student Dashboard](screenshots/student-dashboard.png)
 Supervisor Dashboard
-![Supervisor Dashboard](./screenshots/supervisor-dashboard.png)
+![Supervisor Dashboard](screenshots/supervisor-dashboard.png)
 Admin Dashboard
-![Admin Dashboard](./screenshots/admin-dashboard.png)
+![Admin Dashboard](screenshots/admin-dashboard.png)
 Workflow Overview
-![Workflow Overview](./screenshots/workflow-overview.png)
+![Workflow Overview](screenshots/workflow-overview.png)
 
 ## ✨ Overview
 
