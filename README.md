@@ -21,7 +21,7 @@ Admin Dashboard
 
 ![Admin Dashboard](screenshots/admin-dashboard.png)
 
-Workflow Overview
+Project Workflow
 
 ![Project Workflow](screenshots/project-workflow.png)
 
@@ -126,9 +126,9 @@ AI proposal similarity
 
 ### Running Tests
 
-'''bash
++'''bash
 php artisan test
-'''markdown
++'''markdown
 
 ## 👨‍💻 Author
 
