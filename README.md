@@ -1,6 +1,7 @@
 # 🎓 Graduation Project Management Platform
 
 A web-based platform designed to manage and streamline the graduation project lifecycle between students, supervisors, and administrators.
+
 ![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel)
 ![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php)
 ![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite)
@@ -9,62 +10,57 @@ A web-based platform designed to manage and streamline the graduation project li
 
 ## 📸 Screenshots
 
-Student Dashboard
+**Student Dashboard**
 
 ![Student Dashboard](screenshots/student-dashboard.png)
 
-Supervisor Dashboard
+**Supervisor Dashboard**
 
 ![Supervisor Dashboard](screenshots/supervisor-dashboard.png)
 
-Admin Dashboard
+**Admin Dashboard**
 
 ![Admin Dashboard](screenshots/admin-dashboard.png)
 
-Project Workflow
+**Project Workflow**
 
 ![Project Workflow](screenshots/project-workflow.png)
 
 ## ✨ Overview
 
-The Graduation Project Management Platform is a centralized web application developed to simplify the management of graduation projects within an academic environment.
-The platform connects three main user roles:
-Students
-Supervisors
-Administrators
-It provides a structured workflow for managing project ideas, applications, supervision, submissions, reviews, and administrative operations.
+The Graduation Project Management Platform is a centralized web application developed to simplify the management of graduation projects within an academic environment. It connects three main user roles: students, supervisors, and administrators. The platform provides a structured workflow for managing project ideas, applications, supervision, submissions, reviews, and administrative operations.
 
 ## 🎯 Key Features
 
 ### 🔐 Authentication & Authorization
 
-University-number based login
-Role-based access control
-Separate workflows for students, supervisors, and administrators
+- University number-based login
+- Role-based access control
+- Separate workflows for students, supervisors, and administrators
 
 ### 🎓 Student Features
 
-Submit project ideas
-Apply to projects
-Manage project participation
-Submit project-related materials
-Track project status
+- Submit project ideas
+- Apply to projects
+- Manage project participation
+- Submit project-related materials
+- Track project status
 
 ### 👨‍🏫 Supervisor Features
 
-Review project ideas
-Manage supervised projects
-Handle student requests
-Review submissions
-Monitor project progress
+- Review project ideas
+- Manage supervised projects
+- Handle student requests
+- Review submissions
+- Monitor project progress
 
 ### 🛠️ Administration
 
-Manage users
-Manage roles
-Manage supervisors
-Monitor system activity
-Handle administrative workflows
+- Manage users
+- Manage roles
+- Manage supervisors
+- Monitor system activity
+- Handle administrative workflows
 
 ## 🤖 AI Proposal Assistant
 
@@ -80,49 +76,52 @@ The platform includes an AI-assisted proposal analysis feature designed to help 
 
 ### AI Technologies
 
--Ollama
--nomic-embed-text
--Text embeddings
--Cosine similarity
+- Ollama
+- `nomic-embed-text`
+- Text embeddings
+- Cosine similarity
+
 ![AI Proposal Assistant](screenshots/AI-proposal-assistant.png)
 
 ## 👥 User Roles
 
-Role Main Responsibilities
-Student Submit ideas, apply to projects, manage participation and submissions
-Supervisor Review ideas, manage projects, handle student requests
-Administrator Manage users, roles, supervisors, and system operations
+| Role          | Main Responsibilities                                                 |
+| ------------- | --------------------------------------------------------------------- |
+| Student       | Submit ideas, apply to projects, manage participation and submissions |
+| Supervisor    | Review ideas, manage projects, handle student requests                |
+| Administrator | Manage users, roles, supervisors, and system operations               |
 
 ## 🛠️ Tech Stack
 
-Category Technology
-Backend Laravel
-Programming Language PHP
-Frontend Blade, HTML, CSS, JavaScript
-Database SQLite
-ORM Eloquent
-Authorization Laratrust
-AI Ollama
-Embeddings nomic-embed-text
-Testing Pest
-Version Control Git & GitHub
+| Category             | Technology                   |
+| -------------------- | ---------------------------- |
+| Backend              | Laravel                      |
+| Programming language | PHP                          |
+| Frontend             | Blade, HTML, CSS, JavaScript |
+| Database             | SQLite                       |
+| ORM                  | Eloquent                     |
+| Authorization        | Laratrust                    |
+| AI                   | Ollama                       |
+| Embeddings           | `nomic-embed-text`           |
+| Testing              | Pest                         |
+| Version control      | Git and GitHub               |
 
 ## 🏗️ Architecture
 
-The application follows the Laravel MVC architecture and uses Eloquent ORM for database interaction.
-The AI Proposal Assistant communicates with a local Ollama instance for embedding generation and proposal similarity analysis.
+The application follows the Laravel MVC architecture and uses Eloquent ORM for database interaction. The AI Proposal Assistant communicates with a local Ollama instance for embedding generation and proposal similarity analysis.
+
 ![Architecture Diagram](screenshots/System-Architecture-Diagram.png)
 
 ## 🧪 Testing
 
-Automated tests were implemented using Pest to verify important application workflows and business rules.
-The test suite includes coverage for areas such as:
-Authentication
-Role-based access
-Student workflows
-Supervisor workflows
-Project management workflows
-AI proposal similarity
+Automated tests are implemented using Pest to verify important application workflows and business rules. The test suite includes coverage for areas such as:
+
+- Authentication
+- Role-based access
+- Student workflows
+- Supervisor workflows
+- Project management workflows
+- AI proposal similarity
 
 ### Running Tests
 
@@ -133,5 +132,6 @@ php artisan test
 ## 👨‍💻 Author
 
 **Nader Alrifai**
+
 Software Engineering Graduate
 [LinkedIn](https://www.linkedin.com/in/nader-alrifai-52801b270)
