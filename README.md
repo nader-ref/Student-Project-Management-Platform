@@ -110,10 +110,9 @@ The platform includes an AI-assisted proposal analysis feature designed to help 
 
 The system combines three complementary architectural patterns:
 
-• MVC (Model–View–Controller): Separates the application into models, views, and controllers so data, presentation, and request handling remain organized.
-• Client–Server Architecture: Keeps the interface on the client side while server-side components manage business logic, authentication, and data services.
-• Layered Architecture: Divides the system into distinct layers to improve maintainability, scalability, and separation of concerns.
-
+- MVC (Model–View–Controller): Separates the application into models, views, and controllers so data, presentation, and request handling remain organized.
+- Client–Server Architecture: Keeps the interface on the client side while server-side components manage business logic, authentication, and data services.
+- Layered Architecture: Divides the system into distinct layers to improve maintainability, scalability, and separation of concerns.
 ![Architecture Diagram](screenshots/System-Architecture-Diagram.png)
 
 ## 🚀 Getting Started
