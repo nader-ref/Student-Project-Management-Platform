@@ -108,7 +108,11 @@ The platform includes an AI-assisted proposal analysis feature designed to help 
 
 ## 🏗️ Architecture
 
-The application follows the Laravel MVC architecture and uses Eloquent ORM for database interaction. The AI Proposal Assistant communicates with a local Ollama instance for embedding generation and proposal similarity analysis.
+The system follows a combination of three architectural approaches:
+
+• MVC (Model–View–Controller): Organizes the application into models, views, and controllers.
+• Client–Server Architecture: Separates the client-side interface from server-side application logic and data services.
+• Layered Architecture: Separates the system into distinct layers to improve maintainability and separation of concerns.
 
 ![Architecture Diagram](screenshots/System-Architecture-Diagram.png)
 
